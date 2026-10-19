@@ -1,6 +1,6 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T19:11:23.922Z",
+  "updated": "2026-10-19T19:35:53.214Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -436,32 +436,6 @@
           "Full editing walkthrough of my video"
         ]
       }
-    },
-    {
-      "code": "BLACK-OUTRO",
-      "cat": "outro",
-      "auto": true,
-      "noform": false,
-      "title": {
-        "ru": "Black outro",
-        "en": "Black outro"
-      },
-      "price": 150,
-      "preview": "media/BLACK-OUTRO.mp4",
-      "poster": "media/BLACK-OUTRO.jpg"
-    },
-    {
-      "code": "GALAXY-OUTRO",
-      "cat": "outro",
-      "auto": true,
-      "noform": false,
-      "title": {
-        "ru": "Galaxy outro",
-        "en": "Galaxy outro"
-      },
-      "price": 200,
-      "preview": "media/GALAXY-OUTRO.mp4",
-      "poster": "media/GALAXY-OUTRO.jpg"
     },
     {
       "code": "SPRING-OUTRO",
