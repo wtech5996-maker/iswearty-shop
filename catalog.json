@@ -1,0 +1,388 @@
+{
+  "bot": "Isy_shopbot",
+  "updated": "2026-10-19T09:54:21.116Z",
+  "items": [
+    {
+      "code": "BO-SUPER-MARIO",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "Bo Super Mario",
+        "en": "Bo Super Mario"
+      },
+      "preview": "media/BO-SUPER-MARIO.mp4",
+      "poster": "media/BO-SUPER-MARIO.jpg"
+    },
+    {
+      "code": "CHAOS-OLD1",
+      "cat": "watermark",
+      "price": 150,
+      "title": {
+        "ru": "Chaos Old1",
+        "en": "Chaos Old1"
+      },
+      "preview": "media/CHAOS-OLD1.mp4",
+      "poster": "media/CHAOS-OLD1.jpg"
+    },
+    {
+      "code": "ICE-WM",
+      "cat": "watermark",
+      "price": 250,
+      "title": {
+        "ru": "Ice WM",
+        "en": "Ice WM"
+      },
+      "preview": "media/ICE-WM.mp4",
+      "poster": "media/ICE-WM.jpg"
+    },
+    {
+      "code": "IMORTAL-LOGO-STAR",
+      "cat": "watermark",
+      "price": 250,
+      "title": {
+        "ru": "Imortal Logo Star",
+        "en": "Imortal Logo Star"
+      },
+      "preview": "media/IMORTAL-LOGO-STAR.mp4",
+      "poster": "media/IMORTAL-LOGO-STAR.jpg"
+    },
+    {
+      "code": "KAZUMI",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "Kazumi",
+        "en": "Kazumi"
+      },
+      "preview": "media/KAZUMI.mp4",
+      "poster": "media/KAZUMI.jpg"
+    },
+    {
+      "code": "KIRBY-PURPLE",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "Kirby Purple",
+        "en": "Kirby Purple"
+      },
+      "preview": "media/KIRBY-PURPLE.mp4",
+      "poster": "media/KIRBY-PURPLE.jpg"
+    },
+    {
+      "code": "KIRBY-WHITE",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "Kirby White",
+        "en": "Kirby White"
+      },
+      "preview": "media/KIRBY-WHITE.mp4",
+      "poster": "media/KIRBY-WHITE.jpg"
+    },
+    {
+      "code": "MITO-WM-RED",
+      "cat": "watermark",
+      "price": 250,
+      "title": {
+        "ru": "Mito WM Red",
+        "en": "Mito WM Red"
+      },
+      "preview": "media/MITO-WM-RED.mp4",
+      "poster": "media/MITO-WM-RED.jpg"
+    },
+    {
+      "code": "TEETH-WM",
+      "cat": "watermark",
+      "price": 350,
+      "title": {
+        "ru": "Teeth WM",
+        "en": "Teeth WM"
+      },
+      "preview": "media/TEETH-WM.mp4",
+      "poster": "media/TEETH-WM.jpg"
+    },
+    {
+      "code": "VQRXZV",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "VQRXZV",
+        "en": "VQRXZV"
+      },
+      "preview": "media/VQRXZV.mp4",
+      "poster": "media/VQRXZV.jpg"
+    },
+    {
+      "code": "VQRZXV-IMORTAL",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "VQRZXV Imortal",
+        "en": "VQRZXV Imortal"
+      },
+      "preview": "media/VQRZXV-IMORTAL.mp4",
+      "poster": "media/VQRZXV-IMORTAL.jpg"
+    },
+    {
+      "code": "CUSTOM-WM",
+      "cat": "custom",
+      "price": 500,
+      "title": {
+        "ru": "Кастомная водянка",
+        "en": "Custom watermark"
+      },
+      "desc": {
+        "ru": "Сделаю водянку под вас с нуля: стиль, цвета, анимация.",
+        "en": "A watermark made for you from scratch: style, colours, animation."
+      },
+      "prompt": {
+        "ru": "Опишите водянку: ник, стиль, цвета, примеры (ссылки можно).",
+        "en": "Describe the watermark: nickname, style, colours, examples (links are fine)."
+      }
+    },
+    {
+      "code": "AVATAR",
+      "cat": "avatar",
+      "price": 500,
+      "title": {
+        "ru": "Аватарка на заказ",
+        "en": "Custom avatar"
+      },
+      "desc": {
+        "ru": "Нарисую аватарку по вашему описанию.",
+        "en": "An avatar drawn from your description."
+      },
+      "prompt": {
+        "ru": "Опишите аватарку: ник, стиль, персонаж, цвета, примеры.",
+        "en": "Describe the avatar: nickname, style, character, colours, examples."
+      }
+    },
+    {
+      "code": "VOICE-1",
+      "cat": "voice",
+      "price": 250,
+      "title": {
+        "ru": "Пример 1",
+        "en": "Sample 1"
+      },
+      "prompt": {
+        "ru": "Напишите ник для озвучки и пожелания.",
+        "en": "Write the nickname for the voice-over and any wishes."
+      },
+      "notice": {
+        "ru": "Тональность и голос могут отличаться от примера.",
+        "en": "Tone and voice may differ from the sample."
+      },
+      "audio": "media/VOICE-1.mp3"
+    },
+    {
+      "code": "VOICE-2",
+      "cat": "voice",
+      "price": 250,
+      "title": {
+        "ru": "Пример 2",
+        "en": "Sample 2"
+      },
+      "prompt": {
+        "ru": "Напишите ник для озвучки и пожелания.",
+        "en": "Write the nickname for the voice-over and any wishes."
+      },
+      "notice": {
+        "ru": "Тональность и голос могут отличаться от примера.",
+        "en": "Tone and voice may differ from the sample."
+      },
+      "audio": "media/VOICE-2.mp3"
+    },
+    {
+      "code": "VOICE-3",
+      "cat": "voice",
+      "price": 250,
+      "title": {
+        "ru": "Пример 3",
+        "en": "Sample 3"
+      },
+      "prompt": {
+        "ru": "Напишите ник для озвучки и пожелания.",
+        "en": "Write the nickname for the voice-over and any wishes."
+      },
+      "notice": {
+        "ru": "Тональность и голос могут отличаться от примера.",
+        "en": "Tone and voice may differ from the sample."
+      },
+      "audio": "media/VOICE-3.mp3"
+    },
+    {
+      "code": "VOICE-4",
+      "cat": "voice",
+      "price": 250,
+      "title": {
+        "ru": "Пример 4",
+        "en": "Sample 4"
+      },
+      "prompt": {
+        "ru": "Напишите ник для озвучки и пожелания.",
+        "en": "Write the nickname for the voice-over and any wishes."
+      },
+      "notice": {
+        "ru": "Тональность и голос могут отличаться от примера.",
+        "en": "Tone and voice may differ from the sample."
+      },
+      "audio": "media/VOICE-4.mp3"
+    },
+    {
+      "code": "VOICE-5",
+      "cat": "voice",
+      "price": 250,
+      "title": {
+        "ru": "Пример 5",
+        "en": "Sample 5"
+      },
+      "prompt": {
+        "ru": "Напишите ник для озвучки и пожелания.",
+        "en": "Write the nickname for the voice-over and any wishes."
+      },
+      "notice": {
+        "ru": "Тональность и голос могут отличаться от примера.",
+        "en": "Tone and voice may differ from the sample."
+      },
+      "audio": "media/VOICE-5.mp3"
+    },
+    {
+      "code": "PRIVATE-WM",
+      "cat": "private",
+      "price": 1000,
+      "title": {
+        "ru": "Приват WM",
+        "en": "WM private"
+      },
+      "desc": {
+        "ru": "Всё для водяных знаков: ресурсы, уроки, мои работы и чат со мной.",
+        "en": "Everything for watermarks: resources, tutorials, my work and a chat with me."
+      },
+      "features": {
+        "ru": [
+          "Креативные эффекты для ваших водяных знаков",
+          "Бесплатные ресурсы After Effects",
+          "Видеоуроки по установке плагинов",
+          "Видеоуроки по созданию водяных знаков",
+          "Коллекция 3D-моделей",
+          "Текстуры",
+          "Мои работы из магазина (After Effects)",
+          "Чат, где можно задать мне любой вопрос",
+          "Материалы постепенно пополняются"
+        ],
+        "en": [
+          "Creative effects for your watermarks",
+          "Free After Effects resources",
+          "Video tutorials on installing plugins",
+          "Video tutorials on making watermarks",
+          "A collection of 3D models",
+          "Textures",
+          "My works from the shop (After Effects)",
+          "A chat where you can ask me anything",
+          "New materials are added over time"
+        ]
+      },
+      "examples": [
+        "https://t.me/shopwms/179",
+        "https://t.me/shopwms/94",
+        "https://t.me/shopwms/85",
+        "https://t.me/shopwms/81",
+        "https://t.me/shopwms/56"
+      ]
+    },
+    {
+      "code": "PRIVATE-EDITS",
+      "cat": "private",
+      "price": 500,
+      "title": {
+        "ru": "Приват по эдитам",
+        "en": "Edits private"
+      },
+      "desc": {
+        "ru": "Две группы с материалами для эдитов. После оплаты вы получите доступ в обе.",
+        "en": "Two groups with editing materials. After payment you get access to both."
+      },
+      "features": {
+        "ru": [
+          "Исходы Car-HardStyle",
+          "Готовые backgrounds для кар-эдитов",
+          "Spam Cars",
+          "AE presets",
+          "Clips 4:3 (prvst)",
+          "XML для Alight Motion",
+          "Плагины для водяных знаков",
+          "Project files (по типу Санчеза и т.д.)",
+          "Оверлеи",
+          "Particle footage",
+          "SpeedRamp clips",
+          "Шрифты для водяных знаков",
+          "SFX звуки",
+          "Материалы для водяных знаков",
+          "Clips serials",
+          "Anime green screen",
+          "3D исходы (Galaxy, Mito for AE)",
+          "Халявные вд (Node Video)",
+          "Quality Method (PC, mobile)",
+          "Туторы CapCut (Shake, Aura, вылеты, пресеты и т.д.)",
+          "Method 120 fps (PC)",
+          "Upload Method (PC, Android, iPhone)",
+          "Мои пресеты для CapCut",
+          "Туториалы по водяным знакам (будут пополняться)",
+          "Shake для After Effects",
+          "Aura для After Effects",
+          "Другие материалы для After Effects",
+          "Motion blur (CapCut, Node Video)",
+          "Topaz settings",
+          "ЦК CapCut",
+          "Проекты vqrzxv (CapCut)",
+          "Shake editors (rxwalq и т.д.)",
+          "Aura editors",
+          "Графики",
+          "VPN для CapCut Pro",
+          "Где купить CapCut Pro",
+          "Видео с полным монтажом моего видео"
+        ],
+        "en": [
+          "Car-HardStyle sources",
+          "Ready backgrounds for car edits",
+          "Spam Cars",
+          "AE presets",
+          "Clips 4:3 (prvst)",
+          "XML for Alight Motion",
+          "Plugins for watermarks",
+          "Project files (Sanchez style and more)",
+          "Overlays",
+          "Particle footage",
+          "SpeedRamp clips",
+          "Fonts for watermarks",
+          "SFX sounds",
+          "Watermark materials",
+          "Clips serials",
+          "Anime green screen",
+          "3D sources (Galaxy, Mito for AE)",
+          "Free watermarks (Node Video)",
+          "Quality Method (PC, mobile)",
+          "CapCut tutorials (Shake, Aura, crashes, presets and more)",
+          "Method 120 fps (PC)",
+          "Upload Method (PC, Android, iPhone)",
+          "My CapCut presets",
+          "Watermark tutorials (more coming)",
+          "Shake for After Effects",
+          "Aura for After Effects",
+          "Other After Effects materials",
+          "Motion blur (CapCut, Node Video)",
+          "Topaz settings",
+          "CapCut colour correction",
+          "vqrzxv projects (CapCut)",
+          "Shake editors (rxwalq and others)",
+          "Aura editors",
+          "Graphs",
+          "VPN for CapCut Pro",
+          "Where to buy CapCut Pro",
+          "Full editing walkthrough of my video"
+        ]
+      }
+    }
+  ]
+}

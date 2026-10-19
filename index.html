@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ISWEARTY SHOP</title>
+<meta name="theme-color" content="#1a060c">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+@font-face { font-family: "Press Start 2P"; src: url("fonts/PressStart2P.woff") format("woff"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Onest"; src: url("fonts/Onest.woff") format("woff"); font-weight: 100 900; font-display: swap; }
+:root {
+  --night: #1a060c;
+  --wine: #4a0f1f;
+  --crimson: #e8193c;
+  --crimson-deep: #8f0f26;
+  --blush: #ff6f91;
+  --sakura: #ffb8cb;
+  --gold: #ffd36b;
+  --ink: #fff2f5;
+  --muted: rgba(255, 226, 233, 0.68);
+  --faint: rgba(255, 226, 233, 0.44);
+  --glass: linear-gradient(160deg, rgba(255, 236, 241, 0.14), rgba(255, 236, 241, 0.04));
+  --glass-edge: rgba(255, 200, 215, 0.22);
+  --pixel: "Press Start 2P", ui-monospace, monospace;
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --spring: cubic-bezier(0.22, 1.28, 0.36, 1);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: radial-gradient(120% 70% at 50% -10%, #7a1430 0%, var(--wine) 38%, var(--night) 78%) fixed, var(--night);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+#petals { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.app { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 12px 16px calc(28px + env(safe-area-inset-bottom)); min-height: 100vh; display: flex; flex-direction: column; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--sakura); outline-offset: 3px; }
+svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* glass surfaces */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
+/* touch response: press in, spring back */
+.tap { transition: transform 0.45s var(--spring), filter 0.2s, border-color 0.2s; }
+.tap:active { transform: scale(0.965); transition-duration: 0.12s; transition-timing-function: var(--ease); filter: brightness(1.12); }
+
+/* entrance: plates rise from the bottom one after another */
+.rise { animation: rise 0.7s var(--spring) both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(36px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* top bar */
+.top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.back { display: none; border: 0; width: 42px; height: 42px; border-radius: 14px; place-items: center; color: var(--ink); }
+.back.on { display: grid; }
+.brand { display: flex; align-items: center; gap: 8px; font: 400 10px/1 var(--pixel); color: var(--sakura); }
+.brand svg { width: 18px; height: 18px; }
+.lang { margin-left: auto; display: flex; padding: 3px; gap: 2px; border-radius: 999px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--glass-edge); }
+.lang button { border: 0; border-radius: 999px; background: transparent; padding: 7px 11px; font: 600 12px/1 var(--body); color: var(--muted); }
+.lang button[aria-pressed="true"] { background: var(--crimson); color: #fff; }
+
+/* hero */
+.hero { padding: 26px 2px 22px; }
+.logo { margin: 0; font: 400 clamp(28px, 9.2vw, 46px)/1.15 var(--pixel); letter-spacing: -0.02em; color: #fff; text-shadow: 3px 3px 0 var(--crimson), 6px 6px 0 var(--crimson-deep); }
+.logo small { display: block; margin-top: 10px; font-size: 0.4em; color: var(--sakura); text-shadow: 2px 2px 0 var(--crimson-deep); }
+.hero p { margin: 18px 0 0; max-width: 32ch; color: var(--muted); }
+.boot .logo { animation: boot 900ms steps(8) both; }
+.boot p { animation: rise 0.8s var(--spring) 0.5s both; }
+@keyframes boot { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* home tiles */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile { position: relative; overflow: hidden; border-radius: 22px; padding: 16px; text-align: left; color: var(--ink); min-height: 132px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; isolation: isolate; }
+.tile.wide { grid-column: span 2; min-height: 220px; border-radius: 26px; }
+.tile.mid { grid-column: span 2; min-height: 104px; flex-direction: row; align-items: center; justify-content: flex-start; gap: 14px; }
+.tile h3 { margin: 0; font: 800 22px/1.1 var(--body); letter-spacing: -0.01em; text-shadow: 2px 2px 0 var(--crimson-deep); }
+.tile.wide h3 { font-size: 32px; }
+.tile .sub { color: var(--muted); font-size: 13.5px; }
+.badge { width: 46px; height: 46px; flex: none; border-radius: 15px; display: grid; place-items: center; color: var(--sakura); background: linear-gradient(160deg, rgba(232, 25, 60, 0.45), rgba(143, 15, 38, 0.35)); border: 1px solid rgba(255, 184, 203, 0.3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+.tile.small .badge { margin-bottom: auto; }
+.from { font: 500 13.5px/1 var(--body); color: var(--sakura); display: inline-flex; align-items: center; gap: 6px; }
+.tile .media { position: absolute; inset: 0; z-index: -1; background: #2b2b2b; }
+.tile .media video, .tile .media img { position: absolute; top: 0; right: -8%; width: 78%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.9s var(--ease); }
+.tile .media .on { opacity: 1; }
+.tile.wide::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(26, 6, 12, 0.92) 18%, rgba(26, 6, 12, 0.35) 60%, rgba(26, 6, 12, 0) 100%), linear-gradient(0deg, rgba(26, 6, 12, 0.6), rgba(26, 6, 12, 0) 50%); }
+
+/* section heads */
+.head { padding: 18px 2px 14px; }
+.head h2 { margin: 0; font: 800 30px/1.1 var(--body); letter-spacing: -0.015em; text-shadow: 3px 3px 0 var(--crimson-deep); }
+.head p { margin: 8px 0 0; color: var(--muted); max-width: 40ch; }
+
+/* choice rows */
+.choices { display: grid; gap: 12px; }
+.choice { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 16px; border-radius: 20px; text-align: left; }
+.choice h3 { margin: 0 0 2px; font: 800 19px/1.15 var(--body); }
+.choice p { margin: 0; color: var(--muted); font-size: 13.5px; }
+.stackthumbs { position: relative; width: 70px; height: 52px; }
+.stackthumbs img { position: absolute; top: 0; width: 46px; height: 46px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.7); }
+.stackthumbs img:nth-child(1) { left: 0; transform: rotate(-8deg); }
+.stackthumbs img:nth-child(2) { left: 12px; top: 3px; }
+.stackthumbs img:nth-child(3) { left: 24px; transform: rotate(8deg); }
+
+/* price */
+.price { display: inline-flex; align-items: center; gap: 6px; font: 400 13px/1 var(--pixel); color: #fff; white-space: nowrap; }
+.price svg { width: 15px; height: 15px; }
+.price.big { font-size: 18px; }
+.price.big svg { width: 20px; height: 20px; }
+.star { fill: var(--gold); filter: drop-shadow(0 0 4px rgba(255, 211, 107, 0.45)); }
+
+/* watermark grid */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.card { border-radius: 20px; overflow: hidden; padding: 0; text-align: left; display: flex; flex-direction: column; color: var(--ink); }
+.card .thumb { position: relative; aspect-ratio: 1; background: #2b2b2b; }
+.card .thumb video, .card .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.card .meta { padding: 10px 12px 12px; display: grid; gap: 6px; }
+.card .meta b { font: 600 14.5px/1.2 var(--body); }
+.ph { display: grid; place-items: center; background: linear-gradient(135deg, rgba(232, 25, 60, 0.3), rgba(74, 15, 31, 0.6)); }
+.ph span { font: 400 18px/1 var(--pixel); color: var(--sakura); }
+
+/* voices */
+.voices { display: grid; gap: 10px; }
+.voice { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 12px; border-radius: 20px; }
+.play { width: 52px; height: 52px; border: 0; border-radius: 50%; background: var(--crimson); color: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px -10px rgba(232, 25, 60, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+.play svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+.play:disabled { background: rgba(255, 236, 241, 0.1); box-shadow: none; cursor: not-allowed; }
+.voice b { display: block; font-weight: 700; }
+.bar { position: relative; height: 4px; margin-top: 9px; border-radius: 4px; background: rgba(255, 226, 233, 0.16); overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 4px; background: linear-gradient(90deg, var(--blush), var(--sakura)); }
+.voice .side { display: grid; gap: 8px; justify-items: end; }
+.pick { border: 1px solid var(--glass-edge); border-radius: 12px; background: rgba(255, 236, 241, 0.1); padding: 8px 13px; font: 600 13px/1 var(--body); color: var(--ink); }
+
+/* detail / form */
+.panel { border-radius: 24px; padding: 18px; display: grid; gap: 16px; }
+.panel h4 { margin: 0; font: 700 15px/1.3 var(--body); }
+.features { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.features li { position: relative; padding-left: 20px; }
+.features li::before { content: ""; position: absolute; left: 2px; top: 0.55em; width: 8px; height: 8px; border-radius: 50%; background: var(--blush); box-shadow: 0 0 8px rgba(255, 111, 145, 0.7); }
+.more { justify-self: start; border: 0; background: none; padding: 4px 0; color: var(--sakura); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--glass-edge); border-radius: 999px; background: rgba(255, 236, 241, 0.08); padding: 8px 12px; font-size: 13px; color: var(--ink); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(232, 25, 60, 0.22); border: 1px solid rgba(232, 25, 60, 0.45); font-size: 12.5px; font-weight: 600; }
+.note { color: var(--muted); font-size: 13.5px; margin: 0; }
+.warn { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; padding: 11px 12px; border-radius: 14px; background: rgba(255, 211, 107, 0.1); border: 1px solid rgba(255, 211, 107, 0.35); color: #ffe6ad; font-size: 13.5px; }
+.warn svg { width: 18px; height: 18px; margin-top: 1px; }
+.field { display: grid; gap: 7px; }
+.field label { font-weight: 600; font-size: 14px; }
+.field .hint { display: flex; justify-content: space-between; gap: 12px; color: var(--faint); font-size: 12.5px; }
+.input { width: 100%; padding: 13px 14px; border: 1px solid var(--glass-edge); background: rgba(0, 0, 0, 0.28); border-radius: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.input:focus { border-color: var(--sakura); box-shadow: 0 0 0 4px rgba(255, 184, 203, 0.12); }
+textarea.input { min-height: 132px; resize: vertical; }
+.err { color: #ffd0da; background: rgba(232, 25, 60, 0.22); border: 1px solid rgba(232, 25, 60, 0.5); padding: 10px 12px; border-radius: 12px; font-size: 13.5px; animation: shake 0.35s var(--ease); }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.seg button { border: 1px solid var(--glass-edge); background: rgba(0, 0, 0, 0.22); border-radius: 14px; padding: 10px 6px; display: grid; gap: 3px; text-align: center; }
+.seg button b { font: 800 15px/1.2 var(--body); }
+.seg button b.pxf { font: 400 12px/1.5 var(--pixel); }
+.seg button span { font-size: 11.5px; color: var(--faint); }
+.seg button[aria-pressed="true"] { border-color: var(--crimson); background: rgba(232, 25, 60, 0.25); }
+.seg button[aria-pressed="true"] span { color: var(--muted); }
+
+/* buy button */
+.pxf { font-family: var(--pixel); font-weight: 400; }
+.buy { width: 100%; border: 0; border-radius: 18px; padding: 17px 16px; color: #fff; font: 800 17px/1 var(--body); display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(180deg, #ff3355, var(--crimson) 55%, #c4102f); box-shadow: 0 16px 30px -14px rgba(232, 25, 60, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+.buy .pxf { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.buy svg { width: 16px; height: 16px; }
+
+/* bottom sheet for ready-made watermarks */
+.scrim { position: fixed; inset: 0; z-index: 5; background: rgba(10, 2, 5, 0.6); opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { position: fixed; z-index: 6; left: 50%; bottom: 0; width: min(520px, 100%); max-height: 92vh; overflow-y: auto; transform: translate(-50%, 104%); transition: transform 0.55s var(--spring); border-radius: 28px 28px 0 0; padding: 10px 16px calc(20px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, rgba(74, 15, 31, 0.94), rgba(26, 6, 12, 0.97)); border: 1px solid var(--glass-edge); border-bottom: 0; -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+.sheet.on { transform: translate(-50%, 0); }
+.grab { width: 44px; height: 5px; margin: 0 auto 12px; border-radius: 5px; background: rgba(255, 226, 233, 0.3); }
+.sheet .video { aspect-ratio: 1; max-height: 46vh; margin: 0 auto; border-radius: 18px; overflow: hidden; background: #2b2b2b; position: relative; }
+.sheet .video video, .sheet .video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.sheet h3 { margin: 14px 0 4px; font: 800 26px/1.1 var(--body); text-shadow: 2px 2px 0 var(--crimson-deep); }
+.sheet .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sheet .stack { display: grid; gap: 16px; margin-top: 14px; }
+.sheet .stack > * { animation: rise 0.6s var(--spring) both; }
+.sheet .stack > *:nth-child(2) { animation-delay: 60ms; } .sheet .stack > *:nth-child(3) { animation-delay: 120ms; } .sheet .stack > *:nth-child(n+4) { animation-delay: 180ms; }
+
+.legal { margin-top: auto; padding-top: 28px; color: var(--faint); font-size: 12.5px; text-align: center; }
+.toast { position: fixed; z-index: 9; left: 50%; bottom: 24px; transform: translate(-50%, calc(100% + 40px)); visibility: hidden; width: min(480px, calc(100% - 32px)); padding: 12px 14px; border-radius: 14px; background: rgba(26, 6, 12, 0.94); border: 1px solid var(--glass-edge); font-size: 13.5px; transition: transform 0.4s var(--spring); white-space: pre-wrap; word-break: break-word; }
+.toast.on { transform: translate(-50%, 0); visibility: visible; }
+.empty { padding: 28px 18px; text-align: center; color: var(--muted); border-radius: 20px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .boot .logo, .boot p, .sheet .stack > *, .err { animation: none; }
+  .sheet, .scrim, .toast, .tap, .tile .media video, .tile .media img { transition: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="petals" aria-hidden="true"></canvas>
+<div class="app">
+  <header class="top">
+    <button class="back glass tap" id="back" type="button" aria-label="Назад">
+      <svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="brand" id="brand"></div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ru">RU</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+  </header>
+  <main id="view"></main>
+  <p class="legal" id="legal"></p>
+</div>
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></section>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Запасной каталог для предпросмотра без интернета. На сайте используется catalog.json рядом с этим файлом. -->
+<script type="application/json" id="catalog-fallback">
+{ "bot": "Isy_shopbot", "items": [
+  {"code":"ICE-WM","cat":"watermark","price":250,"title":{"ru":"Ice WM","en":"Ice WM"}},
+  {"code":"CUSTOM-WM","cat":"custom","price":500,"title":{"ru":"Кастомная водянка","en":"Custom watermark"},"prompt":{"ru":"Опишите водянку.","en":"Describe the watermark."}},
+  {"code":"AVATAR","cat":"avatar","price":500,"title":{"ru":"Аватарка на заказ","en":"Custom avatar"},"prompt":{"ru":"Опишите аватарку.","en":"Describe the avatar."}}
+] }
+</script>
+<script>
+(() => {
+  "use strict";
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- text ----------
+  const T = {
+    ru: {
+      back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Оплата звёздами Telegram, готовые водянки приходят в чат сами.",
+      wm: "Водянки", wmSub: "Готовые и на заказ", priv: "Приват", privSub: "Закрытые группы, доступ навсегда", voice: "Озвучки", voiceSub: "Послушайте и выберите", ava: "Аватарки", avaSub: "Нарисую по описанию",
+      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Выберите шаблон, впишите ник, получите файл", custom: "Кастом", customSub: "Сделаю новую под вас",
+      readyHead: "Готовые водянки", readyText: "Нажмите на водянку, чтобы посмотреть и купить.",
+      privHead: "Приват", privText: "Доступ навсегда. Ссылка приходит в чат с ботом и работает только для вашего аккаунта.",
+      inside: "Что внутри", showAll: (n) => `Показать всё (${n})`, examples: "Примеры работ", example: (n) => `Пример ${n}`, groups: (n) => (n > 1 ? `${n} группы` : "1 группа"),
+      voiceHead: "Озвучки", voiceText: "Нажмите на кнопку, чтобы послушать пример.", noPreview: "Пример скоро появится",
+      choose: "Выбрать", nick: "Ваш ник", nickHint: "Так ник будет написан на водянке", format: "Формат",
+      mov: "ПК, прозрачный фон", mp4: "Телефон, зелёный фон", both: "ПК и телефон", bothLabel: "Оба",
+      details: "Описание заказа", buyFor: "Купить за", refund: "Цифровой товар. Возврат средств не предусмотрен.",
+      errNick: "Впишите ник: от 1 до 32 символов, без переносов строки.", errNickSlash: "Ник не может начинаться с символа /.",
+      errText: "Опишите заказ: от 5 до 1000 символов.", empty: "Здесь пока пусто.",
+      openChat: "Открываю чат с ботом. Он попросит данные заказа и пришлёт счёт.",
+      demo: "Предпросмотр вне Telegram. В боте сюда передастся заказ:", privacyNote: "После оплаты бот пришлёт личную ссылку на вступление.",
+      manualNote: "После оплаты я начну работу и пришлю результат в чат с ботом.", autoNote: "После оплаты водянка рендерится и приходит в чат с ботом.",
+    },
+    en: {
+      back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Pay with Telegram Stars; ready-made watermarks arrive in the chat by themselves.",
+      wm: "Watermarks", wmSub: "Ready-made and custom", priv: "Private", privSub: "Closed groups, lifetime access", voice: "Voice-overs", voiceSub: "Listen and choose", ava: "Avatars", avaSub: "Drawn from your description",
+      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Pick a template, type your nickname, get the file", custom: "Custom", customSub: "A new one made for you",
+      readyHead: "Ready-made watermarks", readyText: "Tap a watermark to preview and buy it.",
+      privHead: "Private", privText: "Lifetime access. The link comes to the bot chat and works only for your account.",
+      inside: "What's inside", showAll: (n) => `Show all (${n})`, examples: "Work examples", example: (n) => `Example ${n}`, groups: (n) => (n > 1 ? `${n} groups` : "1 group"),
+      voiceHead: "Voice-overs", voiceText: "Tap the button to hear a sample.", noPreview: "Sample coming soon",
+      choose: "Choose", nick: "Your nickname", nickHint: "Exactly as it will appear on the watermark", format: "Format",
+      mov: "PC, transparent", mp4: "Phone, green screen", both: "PC and phone", bothLabel: "Both",
+      details: "Order details", buyFor: "Buy for", refund: "Digital goods. No refunds.",
+      errNick: "Enter a nickname: 1 to 32 characters, one line.", errNickSlash: "A nickname can't start with /.",
+      errText: "Describe your order: 5 to 1000 characters.", empty: "Nothing here yet.",
+      openChat: "Opening the chat with the bot. It will ask for the order details and send an invoice.",
+      demo: "Preview outside Telegram. In the bot this order would be sent:", privacyNote: "After payment the bot sends you a personal join link.",
+      manualNote: "After payment I start working and send the result to the bot chat.", autoNote: "After payment the watermark is rendered and arrives in the bot chat.",
+    },
+  };
+  let lang = "";
+  try { lang = localStorage.getItem("isw-lang") || ""; } catch { lang = ""; }
+  if (!T[lang]) lang = ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || "ru").startsWith("ru") ? "ru" : "en";
+  const t = (k, ...a) => (typeof T[lang][k] === "function" ? T[lang][k](...a) : T[lang][k]);
+  const L = (obj) => (obj ? obj[lang] || obj.ru || "" : "");
+
+  // ---------- icons (smooth, no pixels) ----------
+  const svg = (d, cls = "i") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+  const ICON = {
+    star: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="star" d="M12 2.6l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></svg>`,
+    film: svg('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/>'),
+    key: svg('<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M15.5 12v2"/>'),
+    mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21M9 21h6"/>'),
+    face: svg('<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.3 2.1 2 3.5 2s2.5-.7 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/>'),
+    sparkle: svg('<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>'),
+    blossom: `<svg viewBox="0 0 24 24" aria-hidden="true">${[0, 72, 144, 216, 288].map((r) => `<path transform="rotate(${r} 12 12)" d="M12 12c-2.6-2.2-3-5.4-1.4-7.6.5.6 1 .9 1.4.9s.9-.3 1.4-.9c1.6 2.2 1.2 5.4-1.4 7.6z" fill="#ffb8cb"/>`).join("")}<circle cx="12" cy="12" r="1.6" fill="#ffd36b"/></svg>`,
+    play: svg('<path d="M8 5.5v13l11-6.5z"/>', "i"),
+    pause: svg('<rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/>', "i"),
+    chevron: svg('<path d="M9 6l6 6-6 6"/>'),
+    alert: svg('<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2h.01"/>'),
+  };
+  const priceTag = (n, big) => `<span class="price${big ? " big" : ""}">${ICON.star}${esc(n)}</span>`;
+  const buyLabel = (price) => `${esc(t("buyFor"))} <span class="pxf">${ICON.star}${esc(price)}</span>`;
+
+  // ---------- catalog ----------
+  let catalog = JSON.parse($("#catalog-fallback").textContent);
+  const items = (cat) => catalog.items.filter((i) => i.cat === cat);
+  const byCode = (code) => catalog.items.find((i) => i.code === code);
+  const minPrice = (cats) => { const p = catalog.items.filter((i) => cats.includes(i.cat)).map((i) => i.price); return p.length ? Math.min(...p) : 0; };
+
+  // ---------- navigation ----------
+  const stack = [{ screen: "home" }];
+  const go = (screen, params = {}) => { stack.push({ screen, params }); render(); window.scrollTo(0, 0); haptic("light"); };
+  const back = () => { if (sheetOpen) return closeSheet(); if (stack.length > 1) { stack.pop(); render(); window.scrollTo(0, 0); haptic("light"); } };
+  const haptic = (s) => { try { inTelegram && tg.HapticFeedback.impactOccurred(s); } catch {} };
+
+  const media = (item) => {
+    if (item && item.preview) return `<video src="${esc(item.preview)}" ${item.poster ? `poster="${esc(item.poster)}"` : ""} muted loop playsinline preload="metadata"></video>`;
+    if (item && item.poster) return `<img src="${esc(item.poster)}" alt="">`;
+    const initials = (L(item && item.title) || "WM").replace(/[^A-Za-zА-Яа-я0-9 ]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+    return `<div class="ph" style="position:absolute;inset:0"><span>${esc(initials)}</span></div>`;
+  };
+  let n = 0;
+  const R = (cls) => `class="${cls} rise" style="--i:${n++}"`;
+
+  // ---------- screens ----------
+  const screens = {
+    home() {
+      const reel = items("watermark").filter((i) => i.preview).slice(0, 6);
+      const privPrice = minPrice(["private"]), voicePrice = minPrice(["voice"]), avatar = items("avatar")[0];
+      return `
+      <section class="hero${booted ? "" : " boot"}">
+        <h1 class="logo">ISWEARTY<small>shop</small></h1>
+        <p>${esc(t("tagline"))}</p>
+      </section>
+      <nav class="tiles">
+        <button ${R("tile wide glass tap")} data-go="watermarks" type="button">
+          <div class="media" id="reel">${reel.map((i, k) => `<video src="${esc(i.preview)}" poster="${esc(i.poster || "")}" muted loop playsinline preload="${k ? "none" : "auto"}" class="${k ? "" : "on"}"></video>`).join("")}</div>
+          <h3>${esc(t("wm"))}</h3>
+          <span class="sub">${esc(t("wmSub"))}</span>
+          <span class="from">${esc(t("from"))} ${priceTag(minPrice(["watermark", "custom"]))}</span>
+        </button>
+        ${items("private").length ? `<button ${R("tile mid glass tap")} data-go="private" type="button">
+          <span class="badge">${ICON.key}</span>
+          <span><h3>${esc(t("priv"))}</h3><span class="sub">${esc(t("privSub"))}</span></span>
+          <span class="from" style="margin-left:auto">${priceTag(privPrice)}</span>
+        </button>` : ""}
+        ${items("voice").length ? `<button ${R("tile small glass tap")} data-go="voices" type="button">
+          <span class="badge">${ICON.mic}</span>
+          <h3>${esc(t("voice"))}</h3><span class="sub">${esc(t("voiceSub"))}</span>
+          <span class="from">${priceTag(voicePrice)}</span>
+        </button>` : ""}
+        ${avatar ? `<button ${R("tile small glass tap")} data-go="form" data-code="${esc(avatar.code)}" type="button">
+          <span class="badge">${ICON.face}</span>
+          <h3>${esc(t("ava"))}</h3><span class="sub">${esc(t("avaSub"))}</span>
+          <span class="from">${priceTag(avatar.price)}</span>
+        </button>` : ""}
+      </nav>`;
+    },
+    watermarks() {
+      const custom = items("custom")[0];
+      const thumbs = items("watermark").filter((i) => i.poster).slice(0, 3);
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("wmHead"))}</h2></div>
+      <div class="choices">
+        <button ${R("choice glass tap")} data-go="ready" type="button">
+          ${thumbs.length ? `<span class="stackthumbs">${thumbs.map((i) => `<img src="${esc(i.poster)}" alt="">`).join("")}</span>` : `<span class="badge">${ICON.film}</span>`}
+          <span><h3>${esc(t("ready"))}</h3><p>${esc(t("readySub"))}</p></span>
+          ${priceTag(minPrice(["watermark"]))}
+        </button>
+        ${custom ? `<button ${R("choice glass tap")} data-go="form" data-code="${esc(custom.code)}" type="button">
+          <span class="badge">${ICON.sparkle}</span>
+          <span><h3>${esc(t("custom"))}</h3><p>${esc(t("customSub"))}</p></span>
+          ${priceTag(custom.price)}
+        </button>` : ""}
+      </div>`;
+    },
+    ready() {
+      const list = items("watermark");
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("readyHead"))}</h2><p ${R("")}>${esc(t("readyText"))}</p></div>
+      ${list.length ? `<div class="grid">${list.map((i) => `
+        <button ${R("card glass tap")} data-sheet="${esc(i.code)}" type="button">
+          <div class="thumb">${media(i)}</div>
+          <div class="meta"><b>${esc(L(i.title))}</b>${priceTag(i.price)}</div>
+        </button>`).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
+    },
+    private() {
+      const list = items("private");
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("privHead"))}</h2><p ${R("")}>${esc(t("privText"))}</p></div>
+      <div class="choices">${list.map((i) => `
+        <button ${R("choice glass tap")} data-go="privateDetail" data-code="${esc(i.code)}" type="button">
+          <span class="badge">${ICON.key}</span>
+          <span><h3>${esc(L(i.title))}</h3><p>${esc(L(i.desc))}</p></span>
+          ${priceTag(i.price)}
+        </button>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
+      </div>`;
+    },
+    privateDetail({ code, all }) {
+      const i = byCode(code);
+      const feats = (i.features && (i.features[lang] || i.features.ru)) || [];
+      const shown = all ? feats : feats.slice(0, 8);
+      return `
+      <div class="head"><h2 ${R("")}>${esc(L(i.title))}</h2><p ${R("")}>${esc(L(i.desc))}</p></div>
+      <div ${R("panel glass")}>
+        ${feats.length ? `<h4>${esc(t("inside"))}</h4>
+          <ul class="features">${shown.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>
+          ${shown.length < feats.length ? `<button class="more" type="button" data-all="${esc(code)}">${esc(t("showAll", feats.length))}</button>` : ""}` : ""}
+        ${i.examples && i.examples.length ? `<h4>${esc(t("examples"))}</h4><div class="chips">${i.examples.map((u, k) => `<button class="chip tap" type="button" data-link="${esc(u)}">${esc(t("example", k + 1))}</button>`).join("")}</div>` : ""}
+      </div>
+      <div ${R("panel glass")} style="margin-top:12px">
+        <p class="note">${esc(t("privText"))} ${esc(t("privacyNote"))}</p>
+        <div class="err" id="err" hidden></div>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+      </div>`;
+    },
+    voices() {
+      const list = items("voice");
+      const notice = list.find((i) => i.notice);
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("voiceHead"))}</h2><p ${R("")}>${esc(t("voiceText"))}</p></div>
+      ${notice ? `<div ${R("warn")} style="margin-bottom:12px">${ICON.alert}<span>${esc(L(notice.notice))}</span></div>` : ""}
+      <div class="voices">${list.map((i) => `
+        <div ${R("voice glass")}>
+          <button class="play tap" type="button" data-play="${esc(i.code)}" ${i.audio ? "" : "disabled"} aria-label="Play">${ICON.play}</button>
+          <div><b>${esc(L(i.title))}</b>${i.audio ? `<div class="bar"><i data-bar="${esc(i.code)}"></i></div>` : `<small class="note">${esc(t("noPreview"))}</small>`}</div>
+          <div class="side">${priceTag(i.price)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
+        </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
+      </div>`;
+    },
+    form({ code }) {
+      const i = byCode(code);
+      return `
+      <div class="head"><h2 ${R("")}>${esc(L(i.title))}</h2>${i.desc ? `<p ${R("")}>${esc(L(i.desc))}</p>` : ""}</div>
+      <div ${R("panel glass")}>
+        ${i.audio ? `<div class="voice" style="padding:0;grid-template-columns:52px 1fr"><button class="play tap" type="button" data-play="${esc(i.code)}" aria-label="Play">${ICON.play}</button><div class="bar"><i data-bar="${esc(i.code)}"></i></div></div>` : ""}
+        <div class="field">
+          <label for="details">${esc(t("details"))}</label>
+          <textarea class="input" id="details" maxlength="1000" placeholder="${esc(L(i.prompt))}"></textarea>
+          <div class="hint"><span>${esc(t("manualNote"))}</span><span id="count">0/1000</span></div>
+        </div>
+        ${i.notice ? `<div class="warn">${ICON.alert}<span>${esc(L(i.notice))}</span></div>` : ""}
+        <div class="err" id="err" hidden></div>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+      </div>`;
+    },
+  };
+
+  let booted = false;
+  function render() {
+    const { screen, params } = stack[stack.length - 1];
+    n = 0;
+    document.documentElement.lang = lang;
+    $("#brand").innerHTML = stack.length > 1 ? `${ICON.blossom}ISWEARTY SHOP` : "";
+    $("#legal").textContent = t("refund");
+    $("#back").setAttribute("aria-label", t("back"));
+    document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+    stopAudio();
+    stopReel();
+    $("#view").innerHTML = screens[screen](params || {});
+    booted = true;
+    if (inTelegram) { stack.length > 1 ? tg.BackButton.show() : tg.BackButton.hide(); }
+    else $("#back").classList.toggle("on", stack.length > 1);
+    observeVideos();
+    startReel();
+    const ta = $("#details");
+    if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
+  }
+
+  // play previews only while visible
+  let io;
+  function observeVideos() {
+    io && io.disconnect();
+    io = new IntersectionObserver((entries) => entries.forEach((e) => { const v = e.target; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: 0.35 });
+    document.querySelectorAll("#view .card video").forEach((v) => io.observe(v));
+  }
+
+  // home tile: previews take turns
+  let reelTimer = 0;
+  function startReel() {
+    const vids = [...document.querySelectorAll("#reel video")];
+    if (!vids.length) return;
+    let k = 0;
+    vids[0].play().catch(() => {});
+    if (vids.length < 2 || reduceMotion) return;
+    reelTimer = setInterval(() => {
+      const cur = vids[k]; k = (k + 1) % vids.length; const next = vids[k];
+      next.preload = "auto"; next.currentTime = 0; next.play().catch(() => {});
+      next.classList.add("on"); cur.classList.remove("on");
+      setTimeout(() => cur.pause(), 900);
+    }, 3200);
+  }
+  function stopReel() { clearInterval(reelTimer); reelTimer = 0; }
+
+  // ---------- audio samples ----------
+  let audio = null, audioCode = null, raf = 0;
+  function stopAudio() {
+    if (audio) { audio.pause(); audio = null; }
+    cancelAnimationFrame(raf);
+    document.querySelectorAll("[data-play]").forEach((b) => (b.innerHTML = ICON.play));
+    document.querySelectorAll("[data-bar]").forEach((i) => (i.style.width = "0"));
+    audioCode = null;
+  }
+  function togglePlay(code) {
+    if (audioCode === code) return stopAudio();
+    stopAudio();
+    const item = byCode(code);
+    if (!item.audio) return;
+    audio = new Audio(item.audio);
+    audioCode = code;
+    document.querySelectorAll(`[data-play="${CSS.escape(code)}"]`).forEach((b) => (b.innerHTML = ICON.pause));
+    const bars = [...document.querySelectorAll(`[data-bar="${CSS.escape(code)}"]`)];
+    audio.addEventListener("ended", stopAudio);
+    audio.play().catch(() => { stopAudio(); toast(t("noPreview")); });
+    const tick = () => {
+      if (!audio) return;
+      const p = audio.duration ? audio.currentTime / audio.duration : 0;
+      bars.forEach((b) => (b.style.width = `${(p * 100).toFixed(1)}%`));
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
+    haptic("light");
+  }
+
+  // ---------- sheet for ready-made watermarks ----------
+  let sheetOpen = false, sheetMode = "BOTH";
+  function openSheet(code) {
+    const i = byCode(code);
+    sheetMode = "BOTH";
+    $("#sheet").innerHTML = `
+      <div class="grab"></div>
+      <div class="video">${media(i)}</div>
+      <div class="row"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${priceTag(i.price, true)}</div>
+      <div class="stack">
+        <div class="field">
+          <label for="nick">${esc(t("nick"))}</label>
+          <input class="input" id="nick" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ISWEARTY">
+          <div class="hint"><span>${esc(t("nickHint"))}</span><span id="nickCount">0/32</span></div>
+        </div>
+        <div class="field">
+          <label>${esc(t("format"))}</label>
+          <div class="seg" role="group">
+            ${[["MOV", "mov"], ["MP4", "mp4"], ["BOTH", "both"]].map(([m, k]) => `<button class="tap" type="button" data-mode="${m}" aria-pressed="${m === sheetMode}">${m === "BOTH" ? `<b>${esc(t("bothLabel"))}</b>` : `<b class="pxf">${m}</b>`}<span>${esc(t(k))}</span></button>`).join("")}
+          </div>
+        </div>
+        <p class="note">${esc(t("autoNote"))}</p>
+        <div class="err" id="err" hidden></div>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+      </div>`;
+    $("#sheet").classList.add("on");
+    $("#scrim").classList.add("on");
+    sheetOpen = true;
+    const v = $("#sheet video"); v && v.play().catch(() => {});
+    const nick = $("#nick");
+    nick.addEventListener("input", () => { $("#nickCount").textContent = `${[...nick.value].length}/32`; });
+    if (inTelegram) tg.BackButton.show();
+    haptic("medium");
+  }
+  function closeSheet() {
+    $("#sheet").classList.remove("on");
+    $("#scrim").classList.remove("on");
+    sheetOpen = false;
+    const v = $("#sheet video"); v && v.pause();
+    if (inTelegram && stack.length === 1) tg.BackButton.hide();
+  }
+
+  // ---------- purchase ----------
+  function showError(msg) {
+    const e = sheetOpen ? $("#sheet #err") : $("#view #err");
+    if (!e) return;
+    e.hidden = !msg;
+    if (msg) { e.textContent = msg; e.style.animation = "none"; void e.offsetWidth; e.style.animation = ""; try { inTelegram && tg.HapticFeedback.notificationOccurred("error"); } catch {} }
+  }
+  function buy(code) {
+    const item = byCode(code);
+    const order = { v: 1, code, lang };
+    if (item.cat === "watermark") {
+      const nick = $("#nick").value.trim();
+      if (!nick || [...nick].length > 32 || /[\u0000-\u001f\u007f]/.test(nick)) return showError(t("errNick"));
+      if (nick.startsWith("/")) return showError(t("errNickSlash"));
+      order.nick = nick; order.mode = sheetMode;
+    } else if (item.cat !== "private") {
+      const text = $("#details").value.trim();
+      const len = [...text].length;
+      if (len < 5 || len > 1000) return showError(t("errText"));
+      order.details = text;
+    }
+    showError("");
+    send(order);
+  }
+  function send(order) {
+    const data = JSON.stringify(order);
+    // sendData works only when the shop was opened with the keyboard button in the bot chat.
+    const fromKeyboard = inTelegram && !(tg.initDataUnsafe && tg.initDataUnsafe.query_id);
+    if (fromKeyboard) {
+      try { tg.HapticFeedback.notificationOccurred("success"); } catch {}
+      try { tg.sendData(data); return; } catch { /* fall back to the chat link */ }
+    }
+    if (inTelegram) {
+      toast(t("openChat"));
+      tg.openTelegramLink(`https://t.me/${catalog.bot}?start=buy_${order.code}`);
+      setTimeout(() => tg.close(), 400);
+      return;
+    }
+    toast(`${t("demo")}\n${data}`);
+  }
+  function openLink(url) {
+    if (!/^https:\/\/t\.me\//.test(url)) return;
+    if (inTelegram) tg.openTelegramLink(url); else window.open(url, "_blank", "noopener");
+  }
+
+  let toastTimer;
+  function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 4200); }
+
+  // ---------- events ----------
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("button, [data-go]");
+    if (!el) return;
+    if (el.dataset.lang) { if (el.dataset.lang === lang) return; lang = el.dataset.lang; try { localStorage.setItem("isw-lang", lang); } catch {} closeSheet(); render(); return; }
+    if (el.id === "back") return back();
+    if (el.dataset.go) return go(el.dataset.go, { code: el.dataset.code });
+    if (el.dataset.sheet) return openSheet(el.dataset.sheet);
+    if (el.dataset.play) return togglePlay(el.dataset.play);
+    if (el.dataset.all) { stack[stack.length - 1].params.all = true; render(); return; }
+    if (el.dataset.link) return openLink(el.dataset.link);
+    if (el.dataset.mode) { sheetMode = el.dataset.mode; document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === sheetMode))); haptic("light"); return; }
+    if (el.dataset.buy) return buy(el.dataset.buy);
+  });
+  $("#scrim").addEventListener("click", closeSheet);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") back(); });
+
+  // ---------- falling sakura, smooth, frame-rate independent ----------
+  function petals() {
+    const cv = $("#petals"), cx = cv.getContext("2d");
+    let w, h, dpr, list = [], sprites = [], last = 0;
+    const makeSprite = (size, c1, c2) => {
+      const s = document.createElement("canvas"); s.width = s.height = size; const g = s.getContext("2d");
+      g.translate(size / 2, size / 2);
+      const r = size * 0.46;
+      const grad = g.createLinearGradient(0, -r, 0, r); grad.addColorStop(0, c1); grad.addColorStop(1, c2);
+      g.fillStyle = grad;
+      g.beginPath();
+      g.moveTo(0, r);
+      g.bezierCurveTo(-r * 0.95, r * 0.25, -r * 0.7, -r * 0.85, -r * 0.16, -r * 0.92);
+      g.lineTo(0, -r * 0.62);
+      g.lineTo(r * 0.16, -r * 0.92);
+      g.bezierCurveTo(r * 0.7, -r * 0.85, r * 0.95, r * 0.25, 0, r);
+      g.fill();
+      g.globalAlpha = 0.35; g.strokeStyle = "#fff"; g.lineWidth = size * 0.02;
+      g.beginPath(); g.moveTo(0, r * 0.85); g.quadraticCurveTo(r * 0.05, 0, 0, -r * 0.55); g.stroke();
+      return s;
+    };
+    const spawn = (anywhere) => {
+      const depth = Math.random();
+      return {
+        x: Math.random() * w, y: anywhere ? Math.random() * h : -40 * dpr,
+        size: (9 + depth * 13) * dpr,
+        vy: (22 + depth * 38) * dpr,           // px per second
+        drift: (Math.random() - 0.5) * 18 * dpr,
+        sway: Math.random() * Math.PI * 2, swaySpeed: 0.6 + Math.random() * 0.9, swayAmp: (14 + Math.random() * 26) * dpr,
+        rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 1.6,
+        flip: Math.random() * Math.PI * 2, vflip: 1.2 + Math.random() * 2.2,
+        alpha: 0.35 + depth * 0.55, sprite: sprites[(Math.random() * sprites.length) | 0],
+      };
+    };
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = cv.width = Math.floor(innerWidth * dpr); h = cv.height = Math.floor(innerHeight * dpr);
+      sprites = [makeSprite(64, "#ffd6e1", "#ff8fab"), makeSprite(64, "#ffc2d1", "#ff6f91"), makeSprite(64, "#fff0f4", "#ffb8cb")];
+      const count = Math.round(Math.min(34, Math.max(16, innerWidth / 14)));
+      list = Array.from({ length: count }, () => spawn(true));
+    };
+    const draw = (p, dt) => {
+      p.y += p.vy * dt; p.sway += p.swaySpeed * dt; p.rot += p.vr * dt; p.flip += p.vflip * dt;
+      const x = p.x + Math.sin(p.sway) * p.swayAmp + p.drift * (p.y / h);
+      if (p.y > h + 40 * dpr) Object.assign(p, spawn(false));
+      cx.save();
+      cx.globalAlpha = p.alpha;
+      cx.translate(x, p.y);
+      cx.rotate(p.rot);
+      cx.scale(Math.max(0.15, Math.abs(Math.cos(p.flip))), 1);
+      cx.drawImage(p.sprite, -p.size / 2, -p.size / 2, p.size, p.size);
+      cx.restore();
+    };
+    const frame = (ts) => {
+      const dt = last ? Math.min((ts - last) / 1000, 0.05) : 0.016;
+      last = ts;
+      cx.clearRect(0, 0, w, h);
+      for (const p of list) draw(p, dt);
+      raf2 = requestAnimationFrame(frame);
+    };
+    let raf2 = 0;
+    resize();
+    addEventListener("resize", resize);
+    if (reduceMotion) { list.forEach((p) => draw(p, 0)); return; }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { cancelAnimationFrame(raf2); raf2 = 0; }
+      else if (!raf2) { last = 0; raf2 = requestAnimationFrame(frame); }
+    });
+    raf2 = requestAnimationFrame(frame);
+  }
+
+  // ---------- start ----------
+  async function start() {
+    if (inTelegram) {
+      tg.ready(); tg.expand();
+      try { tg.setHeaderColor("#1a060c"); tg.setBackgroundColor("#1a060c"); } catch {}
+      tg.BackButton.onClick(back);
+    }
+    try {
+      const res = await fetch("catalog.json", { cache: "no-cache" });
+      if (res.ok) { const data = await res.json(); if (data && Array.isArray(data.items)) catalog = data; }
+    } catch { /* local preview uses the built-in catalog */ }
+    petals();
+    render();
+  }
+  start();
+})();
+</script>
+</body>
+</html>
