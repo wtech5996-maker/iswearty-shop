@@ -1,6 +1,6 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T18:51:18.411Z",
+  "updated": "2026-10-19T18:57:24.875Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -462,6 +462,19 @@
       "price": 200,
       "preview": "media/GALAXY-OUTRO.mp4",
       "poster": "media/GALAXY-OUTRO.jpg"
+    },
+    {
+      "code": "SPRING-OUTRO",
+      "cat": "outro",
+      "auto": true,
+      "noform": false,
+      "title": {
+        "ru": "Spring outro",
+        "en": "Spring outro"
+      },
+      "price": 250,
+      "preview": "media/SPRING-OUTRO.mp4",
+      "poster": "media/SPRING-OUTRO.jpg"
     },
     {
       "code": "WATER-OUTRO",
