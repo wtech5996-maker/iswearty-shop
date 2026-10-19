@@ -1,6 +1,6 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T16:09:14.559Z",
+  "updated": "2026-10-19T16:39:09.155Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -9,9 +9,7 @@
         "ru": "Bo Super Mario",
         "en": "Bo Super Mario"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/BO-SUPER-MARIO.mp4",
       "poster": "media/BO-SUPER-MARIO.jpg"
     },
@@ -22,9 +20,7 @@
         "ru": "Chaos Old1",
         "en": "Chaos Old1"
       },
-      "price": 75,
-      "old": 150,
-      "until": "2026-10-20",
+      "price": 150,
       "preview": "media/CHAOS-OLD1.mp4",
       "poster": "media/CHAOS-OLD1.jpg"
     },
@@ -35,9 +31,7 @@
         "ru": "Ice WM",
         "en": "Ice WM"
       },
-      "price": 125,
-      "old": 250,
-      "until": "2026-10-20",
+      "price": 250,
       "preview": "media/ICE-WM.mp4",
       "poster": "media/ICE-WM.jpg"
     },
@@ -48,9 +42,7 @@
         "ru": "Imortal Logo Star",
         "en": "Imortal Logo Star"
       },
-      "price": 125,
-      "old": 250,
-      "until": "2026-10-20",
+      "price": 250,
       "preview": "media/IMORTAL-LOGO-STAR.mp4",
       "poster": "media/IMORTAL-LOGO-STAR.jpg"
     },
@@ -61,9 +53,7 @@
         "ru": "Kazumi",
         "en": "Kazumi"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/KAZUMI.mp4",
       "poster": "media/KAZUMI.jpg"
     },
@@ -74,9 +64,7 @@
         "ru": "Kirby Purple",
         "en": "Kirby Purple"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/KIRBY-PURPLE.mp4",
       "poster": "media/KIRBY-PURPLE.jpg"
     },
@@ -87,9 +75,7 @@
         "ru": "Kirby White",
         "en": "Kirby White"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/KIRBY-WHITE.mp4",
       "poster": "media/KIRBY-WHITE.jpg"
     },
@@ -100,9 +86,7 @@
         "ru": "Benyx WM",
         "en": "Benyx WM"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/BENYX-WM.mp4",
       "poster": "media/BENYX-WM.jpg"
     },
@@ -113,9 +97,7 @@
         "ru": "Mito WM Red",
         "en": "Mito WM Red"
       },
-      "price": 125,
-      "old": 250,
-      "until": "2026-10-20",
+      "price": 250,
       "preview": "media/MITO-WM-RED.mp4",
       "poster": "media/MITO-WM-RED.jpg"
     },
@@ -126,9 +108,7 @@
         "ru": "Teeth WM",
         "en": "Teeth WM"
       },
-      "price": 175,
-      "old": 350,
-      "until": "2026-10-20",
+      "price": 350,
       "preview": "media/TEETH-WM.mp4",
       "poster": "media/TEETH-WM.jpg"
     },
@@ -139,9 +119,7 @@
         "ru": "VQRXZV",
         "en": "VQRXZV"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/VQRXZV.mp4",
       "poster": "media/VQRXZV.jpg"
     },
@@ -152,9 +130,7 @@
         "ru": "VQRZXV Imortal",
         "en": "VQRZXV Imortal"
       },
-      "price": 100,
-      "old": 200,
-      "until": "2026-10-20",
+      "price": 200,
       "preview": "media/VQRZXV-IMORTAL.mp4",
       "poster": "media/VQRZXV-IMORTAL.jpg"
     },
