@@ -1,10 +1,12 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T16:39:09.155Z",
+  "updated": "2026-10-19T18:51:18.411Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Bo Super Mario",
         "en": "Bo Super Mario"
@@ -16,6 +18,8 @@
     {
       "code": "CHAOS-OLD1",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Chaos Old1",
         "en": "Chaos Old1"
@@ -27,6 +31,8 @@
     {
       "code": "ICE-WM",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Ice WM",
         "en": "Ice WM"
@@ -38,6 +44,8 @@
     {
       "code": "IMORTAL-LOGO-STAR",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Imortal Logo Star",
         "en": "Imortal Logo Star"
@@ -49,6 +57,8 @@
     {
       "code": "KAZUMI",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Kazumi",
         "en": "Kazumi"
@@ -60,6 +70,8 @@
     {
       "code": "KIRBY-PURPLE",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Kirby Purple",
         "en": "Kirby Purple"
@@ -71,6 +83,8 @@
     {
       "code": "KIRBY-WHITE",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Kirby White",
         "en": "Kirby White"
@@ -82,6 +96,8 @@
     {
       "code": "BENYX-WM",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Benyx WM",
         "en": "Benyx WM"
@@ -93,6 +109,8 @@
     {
       "code": "MITO-WM-RED",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Mito WM Red",
         "en": "Mito WM Red"
@@ -104,6 +122,8 @@
     {
       "code": "TEETH-WM",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "Teeth WM",
         "en": "Teeth WM"
@@ -115,6 +135,8 @@
     {
       "code": "VQRXZV",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "VQRXZV",
         "en": "VQRXZV"
@@ -126,6 +148,8 @@
     {
       "code": "VQRZXV-IMORTAL",
       "cat": "watermark",
+      "auto": true,
+      "noform": false,
       "title": {
         "ru": "VQRZXV Imortal",
         "en": "VQRZXV Imortal"
@@ -137,6 +161,8 @@
     {
       "code": "CUSTOM-WM",
       "cat": "custom",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Кастомная водянка",
         "en": "Custom watermark"
@@ -154,6 +180,8 @@
     {
       "code": "AVATAR",
       "cat": "avatar",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Аватарка на заказ",
         "en": "Custom avatar"
@@ -171,6 +199,8 @@
     {
       "code": "VOICE-1",
       "cat": "voice",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Пример 1",
         "en": "Sample 1"
@@ -189,6 +219,8 @@
     {
       "code": "VOICE-2",
       "cat": "voice",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Пример 2",
         "en": "Sample 2"
@@ -207,6 +239,8 @@
     {
       "code": "VOICE-3",
       "cat": "voice",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Пример 3",
         "en": "Sample 3"
@@ -225,6 +259,8 @@
     {
       "code": "VOICE-4",
       "cat": "voice",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Пример 4",
         "en": "Sample 4"
@@ -243,6 +279,8 @@
     {
       "code": "VOICE-5",
       "cat": "voice",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Пример 5",
         "en": "Sample 5"
@@ -261,6 +299,8 @@
     {
       "code": "PRIVATE-WM",
       "cat": "private",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Приват WM",
         "en": "WM private"
@@ -305,6 +345,8 @@
     {
       "code": "PRIVATE-EDITS",
       "cat": "private",
+      "auto": false,
+      "noform": false,
       "title": {
         "ru": "Приват по эдитам",
         "en": "Edits private"
@@ -394,6 +436,58 @@
           "Full editing walkthrough of my video"
         ]
       }
+    },
+    {
+      "code": "BLACK-OUTRO",
+      "cat": "outro",
+      "auto": true,
+      "noform": false,
+      "title": {
+        "ru": "Black outro",
+        "en": "Black outro"
+      },
+      "price": 150,
+      "preview": "media/BLACK-OUTRO.mp4",
+      "poster": "media/BLACK-OUTRO.jpg"
+    },
+    {
+      "code": "GALAXY-OUTRO",
+      "cat": "outro",
+      "auto": true,
+      "noform": false,
+      "title": {
+        "ru": "Galaxy outro",
+        "en": "Galaxy outro"
+      },
+      "price": 200,
+      "preview": "media/GALAXY-OUTRO.mp4",
+      "poster": "media/GALAXY-OUTRO.jpg"
+    },
+    {
+      "code": "WATER-OUTRO",
+      "cat": "outro",
+      "auto": false,
+      "noform": true,
+      "title": {
+        "ru": "Water outro",
+        "en": "Water outro"
+      },
+      "price": 450,
+      "preview": "media/WATER-OUTRO.mp4",
+      "poster": "media/WATER-OUTRO.jpg"
+    },
+    {
+      "code": "SPACE_LOGO_ANIMATION-CONVERTED",
+      "cat": "outro",
+      "auto": true,
+      "noform": false,
+      "title": {
+        "ru": "Space outro",
+        "en": "Space outro"
+      },
+      "price": 200,
+      "preview": "media/SPACE_LOGO_ANIMATION-CONVERTED.mp4",
+      "poster": "media/SPACE_LOGO_ANIMATION-CONVERTED.jpg"
     }
   ]
 }

@@ -244,7 +244,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     ru: {
       back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Оплата звёздами Telegram, готовые водянки приходят в чат сами.",
       wm: "Водянки", wmSub: "Готовые и на заказ", priv: "Приват", privSub: "Закрытые группы, доступ навсегда", voice: "Озвучки", voiceSub: "Послушайте и выберите", ava: "Аватарки", avaSub: "Нарисую по описанию",
-      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Выберите шаблон, впишите ник, получите файл", custom: "Кастом", customSub: "Сделаю новую под вас",
+      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты. Файл придёт в чат с ботом.", custom: "Кастом", customSub: "Сделаю новую под вас",
       readyHead: "Готовые водянки", readyText: "Нажмите на водянку, чтобы посмотреть и купить.",
       privHead: "Приват", privText: "Доступ навсегда. Ссылка приходит в чат с ботом и работает только для вашего аккаунта.",
       inside: "Что внутри", showAll: (n) => `Показать всё (${n})`, examples: "Примеры работ", example: (n) => `Пример ${n}`, groups: (n) => (n > 1 ? `${n} группы` : "1 группа"),
@@ -261,7 +261,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     en: {
       back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Pay with Telegram Stars; ready-made watermarks arrive in the chat by themselves.",
       wm: "Watermarks", wmSub: "Ready-made and custom", priv: "Private", privSub: "Closed groups, lifetime access", voice: "Voice-overs", voiceSub: "Listen and choose", ava: "Avatars", avaSub: "Drawn from your description",
-      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Pick a template, type your nickname, get the file", custom: "Custom", customSub: "A new one made for you",
+      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment. The file arrives in the bot chat.", custom: "Custom", customSub: "A new one made for you",
       readyHead: "Ready-made watermarks", readyText: "Tap a watermark to preview and buy it.",
       privHead: "Private", privText: "Lifetime access. The link comes to the bot chat and works only for your account.",
       inside: "What's inside", showAll: (n) => `Show all (${n})`, examples: "Work examples", example: (n) => `Example ${n}`, groups: (n) => (n > 1 ? `${n} groups` : "1 group"),
@@ -309,6 +309,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- catalog ----------
   let catalog = JSON.parse($("#catalog-fallback").textContent);
   const items = (cat) => catalog.items.filter((i) => i.cat === cat);
+  // Авто-водянка (ник и формат) или ручная без формы. Старый каталог без поля auto считаем по категории.
+  const isAuto = (i) => i.auto ?? (i.cat === "watermark");
   const byCode = (code) => catalog.items.find((i) => i.code === code);
   const minPrice = (cats) => { const p = catalog.items.filter((i) => cats.includes(i.cat)).map((i) => curPrice(i)); return p.length ? Math.min(...p) : 0; };
 
@@ -365,6 +367,11 @@ textarea.input { min-height: 132px; resize: vertical; }
       return `
       <div class="head"><h2 ${R("")}>${esc(t("wmHead"))}</h2></div>
       <div class="choices">
+        ${items("outro").length ? `<button ${R("choice glass tap")} data-go="outro" type="button">
+          <span class="badge">${ICON.film}</span>
+          <span><h3>${esc(t("outro"))}</h3><p>${esc(t("outroSub"))}</p></span>
+          ${priceTag(minPrice(["outro"]))}
+        </button>` : ""}
         <button ${R("choice glass tap")} data-go="ready" type="button">
           ${thumbs.length ? `<span class="stackthumbs">${thumbs.map((i) => `<img src="${esc(i.poster)}" alt="">`).join("")}</span>` : `<span class="badge">${ICON.film}</span>`}
           <span><h3>${esc(t("ready"))}</h3><p>${esc(t("readySub"))}</p></span>
@@ -376,6 +383,16 @@ textarea.input { min-height: 132px; resize: vertical; }
           ${priceTag(custom.price)}
         </button>` : ""}
       </div>`;
+    },
+    outro() {
+      const list = items("outro");
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("outroHead"))}</h2><p ${R("")}>${esc(t("outroText"))}</p></div>
+      ${list.length ? `<div class="grid">${list.map((i) => `
+        <button ${R("card glass tap")} data-sheet="${esc(i.code)}" type="button">
+          <div class="thumb">${media(i)}</div>
+          <div class="meta"><b>${esc(L(i.title))}</b>${itemTag(i)}</div>
+        </button>`).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
     },
     ready() {
       const list = items("watermark");
@@ -534,7 +551,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       <div class="grab"></div>
       <div class="video">${media(i)}</div>
       <div class="row"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${itemTag(i, true)}</div>
-      <div class="stack">
+      <div class="stack">${isAuto(i) ? `
         <div class="field">
           <label for="nick">${esc(t("nick"))}</label>
           <input class="input" id="nick" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ISWEARTY">
@@ -546,16 +563,17 @@ textarea.input { min-height: 132px; resize: vertical; }
             ${[["MOV", "mov"], ["MP4", "mp4"], ["BOTH", "both"]].map(([m, k]) => `<button class="tap" type="button" data-mode="${m}" aria-pressed="${m === sheetMode}">${m === "BOTH" ? `<b>${esc(t("bothLabel"))}</b>` : `<b class="pxf">${m}</b>`}<span>${esc(t(k))}</span></button>`).join("")}
           </div>
         </div>
-        <p class="note">${esc(t("autoNote"))}</p>
+        <p class="note">${esc(t("autoNote"))}</p>` : `<p class="note">${esc(t("noformNote"))}</p>`}
         <div class="err" id="err" hidden></div>
         <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
       </div>`;
+    if (i.cat === "outro") $("#sheet .seg")?.closest(".field")?.remove(); // outro всегда MP4, выбор формата не нужен
     $("#sheet").classList.add("on");
     $("#scrim").classList.add("on");
     sheetOpen = true;
     const v = $("#sheet video"); v && v.play().catch(() => {});
     const nick = $("#nick");
-    nick.addEventListener("input", () => { $("#nickCount").textContent = `${[...nick.value].length}/32`; });
+    if (nick) nick.addEventListener("input", () => { $("#nickCount").textContent = `${[...nick.value].length}/32`; });
     if (inTelegram) tg.BackButton.show();
     haptic("medium");
   }
@@ -577,12 +595,12 @@ textarea.input { min-height: 132px; resize: vertical; }
   function buy(code) {
     const item = byCode(code);
     const order = { v: 1, code, lang };
-    if (item.cat === "watermark") {
+    if (isAuto(item)) {
       const nick = $("#nick").value.trim();
       if (!nick || [...nick].length > 32 || /[\u0000-\u001f\u007f]/.test(nick)) return showError(t("errNick"));
       if (nick.startsWith("/")) return showError(t("errNickSlash"));
-      order.nick = nick; order.mode = sheetMode;
-    } else if (item.cat !== "private") {
+      order.nick = nick; order.mode = item.cat === "outro" ? "MP4" : sheetMode;
+    } else if (item.cat !== "private" && !item.noform) {
       const text = $("#details").value.trim();
       const len = [...text].length;
       if (len < 5 || len > 1000) return showError(t("errText"));
