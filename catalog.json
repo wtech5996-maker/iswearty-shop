@@ -1,6 +1,6 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T09:54:21.116Z",
+  "updated": "2026-10-19T10:46:46.403Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -78,6 +78,17 @@
       },
       "preview": "media/KIRBY-WHITE.mp4",
       "poster": "media/KIRBY-WHITE.jpg"
+    },
+    {
+      "code": "BENYX-WM",
+      "cat": "watermark",
+      "price": 200,
+      "title": {
+        "ru": "Benyx WM",
+        "en": "Benyx WM"
+      },
+      "preview": "media/BENYX-WM.mp4",
+      "poster": "media/BENYX-WM.jpg"
     },
     {
       "code": "MITO-WM-RED",
