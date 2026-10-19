@@ -1,147 +1,171 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T14:06:58.712Z",
+  "updated": "2026-10-19T16:09:14.559Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "Bo Super Mario",
         "en": "Bo Super Mario"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/BO-SUPER-MARIO.mp4",
       "poster": "media/BO-SUPER-MARIO.jpg"
     },
     {
       "code": "CHAOS-OLD1",
       "cat": "watermark",
-      "price": 150,
       "title": {
         "ru": "Chaos Old1",
         "en": "Chaos Old1"
       },
+      "price": 75,
+      "old": 150,
+      "until": "2026-10-20",
       "preview": "media/CHAOS-OLD1.mp4",
       "poster": "media/CHAOS-OLD1.jpg"
     },
     {
       "code": "ICE-WM",
       "cat": "watermark",
-      "price": 250,
       "title": {
         "ru": "Ice WM",
         "en": "Ice WM"
       },
+      "price": 125,
+      "old": 250,
+      "until": "2026-10-20",
       "preview": "media/ICE-WM.mp4",
       "poster": "media/ICE-WM.jpg"
     },
     {
       "code": "IMORTAL-LOGO-STAR",
       "cat": "watermark",
-      "price": 250,
       "title": {
         "ru": "Imortal Logo Star",
         "en": "Imortal Logo Star"
       },
+      "price": 125,
+      "old": 250,
+      "until": "2026-10-20",
       "preview": "media/IMORTAL-LOGO-STAR.mp4",
       "poster": "media/IMORTAL-LOGO-STAR.jpg"
     },
     {
       "code": "KAZUMI",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "Kazumi",
         "en": "Kazumi"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/KAZUMI.mp4",
       "poster": "media/KAZUMI.jpg"
     },
     {
       "code": "KIRBY-PURPLE",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "Kirby Purple",
         "en": "Kirby Purple"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/KIRBY-PURPLE.mp4",
       "poster": "media/KIRBY-PURPLE.jpg"
     },
     {
       "code": "KIRBY-WHITE",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "Kirby White",
         "en": "Kirby White"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/KIRBY-WHITE.mp4",
       "poster": "media/KIRBY-WHITE.jpg"
     },
     {
       "code": "BENYX-WM",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "Benyx WM",
         "en": "Benyx WM"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/BENYX-WM.mp4",
       "poster": "media/BENYX-WM.jpg"
     },
     {
       "code": "MITO-WM-RED",
       "cat": "watermark",
-      "price": 250,
       "title": {
         "ru": "Mito WM Red",
         "en": "Mito WM Red"
       },
+      "price": 125,
+      "old": 250,
+      "until": "2026-10-20",
       "preview": "media/MITO-WM-RED.mp4",
       "poster": "media/MITO-WM-RED.jpg"
     },
     {
       "code": "TEETH-WM",
       "cat": "watermark",
-      "price": 350,
       "title": {
         "ru": "Teeth WM",
         "en": "Teeth WM"
       },
+      "price": 175,
+      "old": 350,
+      "until": "2026-10-20",
       "preview": "media/TEETH-WM.mp4",
       "poster": "media/TEETH-WM.jpg"
     },
     {
       "code": "VQRXZV",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "VQRXZV",
         "en": "VQRXZV"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/VQRXZV.mp4",
       "poster": "media/VQRXZV.jpg"
     },
     {
       "code": "VQRZXV-IMORTAL",
       "cat": "watermark",
-      "price": 200,
       "title": {
         "ru": "VQRZXV Imortal",
         "en": "VQRZXV Imortal"
       },
+      "price": 100,
+      "old": 200,
+      "until": "2026-10-20",
       "preview": "media/VQRZXV-IMORTAL.mp4",
       "poster": "media/VQRZXV-IMORTAL.jpg"
     },
     {
       "code": "CUSTOM-WM",
       "cat": "custom",
-      "price": 500,
       "title": {
         "ru": "Кастомная водянка",
         "en": "Custom watermark"
       },
+      "price": 500,
       "desc": {
         "ru": "Сделаю водянку под вас с нуля: стиль, цвета, анимация.",
         "en": "A watermark made for you from scratch: style, colours, animation."
@@ -154,11 +178,11 @@
     {
       "code": "AVATAR",
       "cat": "avatar",
-      "price": 500,
       "title": {
         "ru": "Аватарка на заказ",
         "en": "Custom avatar"
       },
+      "price": 500,
       "desc": {
         "ru": "Нарисую аватарку по вашему описанию.",
         "en": "An avatar drawn from your description."
@@ -171,11 +195,11 @@
     {
       "code": "VOICE-1",
       "cat": "voice",
-      "price": 250,
       "title": {
         "ru": "Пример 1",
         "en": "Sample 1"
       },
+      "price": 250,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -189,11 +213,11 @@
     {
       "code": "VOICE-2",
       "cat": "voice",
-      "price": 250,
       "title": {
         "ru": "Пример 2",
         "en": "Sample 2"
       },
+      "price": 250,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -207,11 +231,11 @@
     {
       "code": "VOICE-3",
       "cat": "voice",
-      "price": 250,
       "title": {
         "ru": "Пример 3",
         "en": "Sample 3"
       },
+      "price": 250,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -225,11 +249,11 @@
     {
       "code": "VOICE-4",
       "cat": "voice",
-      "price": 250,
       "title": {
         "ru": "Пример 4",
         "en": "Sample 4"
       },
+      "price": 250,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -243,11 +267,11 @@
     {
       "code": "VOICE-5",
       "cat": "voice",
-      "price": 250,
       "title": {
         "ru": "Пример 5",
         "en": "Sample 5"
       },
+      "price": 250,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -261,11 +285,11 @@
     {
       "code": "PRIVATE-WM",
       "cat": "private",
-      "price": 1000,
       "title": {
         "ru": "Приват WM",
         "en": "WM private"
       },
+      "price": 1000,
       "desc": {
         "ru": "Всё для водяных знаков: ресурсы, уроки, мои работы и чат со мной.",
         "en": "Everything for watermarks: resources, tutorials, my work and a chat with me."
@@ -305,11 +329,11 @@
     {
       "code": "PRIVATE-EDITS",
       "cat": "private",
-      "price": 500,
       "title": {
         "ru": "Приват по эдитам",
         "en": "Edits private"
       },
+      "price": 500,
       "desc": {
         "ru": "Две группы с материалами для эдитов. После оплаты вы получите доступ в обе.",
         "en": "Two groups with editing materials. After payment you get access to both."

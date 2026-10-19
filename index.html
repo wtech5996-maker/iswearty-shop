@@ -116,6 +116,8 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .price svg { width: 15px; height: 15px; }
 .price.big { font-size: 18px; }
 .price.big svg { width: 20px; height: 20px; }
+.price.sale { color: #ffd6e0; }
+.price.sale .old { opacity: .55; margin-right: 2px; }
 .star { fill: var(--gold); filter: drop-shadow(0 0 4px rgba(255, 211, 107, 0.45)); }
 
 /* watermark grid */
@@ -296,13 +298,19 @@ textarea.input { min-height: 132px; resize: vertical; }
     alert: svg('<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2h.01"/>'),
   };
   const priceTag = (n, big) => `<span class="price${big ? " big" : ""}">${ICON.star}${esc(n)}</span>`;
+  // Скидка: до даты окончания старая цена зачёркнута, рядом новая. После даты — обычная цена.
+  const saleActive = (i) => i.old != null && (!i.until || new Date() <= new Date(i.until + "T23:59:59"));
+  const curPrice = (i) => (saleActive(i) ? i.price : (i.old ?? i.price));
+  const itemTag = (i, big) => (saleActive(i)
+    ? `<span class="price${big ? " big" : ""} sale"><s class="old">${ICON.star}${esc(i.old)}</s>${ICON.star}${esc(i.price)}</span>`
+    : priceTag(curPrice(i), big));
   const buyLabel = (price) => `${esc(t("buyFor"))} <span class="pxf">${ICON.star}${esc(price)}</span>`;
 
   // ---------- catalog ----------
   let catalog = JSON.parse($("#catalog-fallback").textContent);
   const items = (cat) => catalog.items.filter((i) => i.cat === cat);
   const byCode = (code) => catalog.items.find((i) => i.code === code);
-  const minPrice = (cats) => { const p = catalog.items.filter((i) => cats.includes(i.cat)).map((i) => i.price); return p.length ? Math.min(...p) : 0; };
+  const minPrice = (cats) => { const p = catalog.items.filter((i) => cats.includes(i.cat)).map((i) => curPrice(i)); return p.length ? Math.min(...p) : 0; };
 
   // ---------- navigation ----------
   const stack = [{ screen: "home" }];
@@ -376,7 +384,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       ${list.length ? `<div class="grid">${list.map((i) => `
         <button ${R("card glass tap")} data-sheet="${esc(i.code)}" type="button">
           <div class="thumb">${media(i)}</div>
-          <div class="meta"><b>${esc(L(i.title))}</b>${priceTag(i.price)}</div>
+          <div class="meta"><b>${esc(L(i.title))}</b>${itemTag(i)}</div>
         </button>`).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
     },
     private() {
@@ -387,7 +395,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <button ${R("choice glass tap")} data-go="privateDetail" data-code="${esc(i.code)}" type="button">
           <span class="badge">${ICON.key}</span>
           <span><h3>${esc(L(i.title))}</h3><p>${esc(L(i.desc))}</p></span>
-          ${priceTag(i.price)}
+          ${itemTag(i)}
         </button>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
     },
@@ -406,7 +414,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       <div ${R("panel glass")} style="margin-top:12px">
         <p class="note">${esc(t("privText"))} ${esc(t("privacyNote"))}</p>
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
       </div>`;
     },
     voices() {
@@ -419,7 +427,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <div ${R("voice glass")}>
           <button class="play tap" type="button" data-play="${esc(i.code)}" ${i.audio ? "" : "disabled"} aria-label="Play">${ICON.play}</button>
           <div><b>${esc(L(i.title))}</b>${i.audio ? `<div class="bar"><i data-bar="${esc(i.code)}"></i></div>` : `<small class="note">${esc(t("noPreview"))}</small>`}</div>
-          <div class="side">${priceTag(i.price)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
+          <div class="side">${itemTag(i)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
         </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
     },
@@ -436,7 +444,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>
         ${i.notice ? `<div class="warn">${ICON.alert}<span>${esc(L(i.notice))}</span></div>` : ""}
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
       </div>`;
     },
   };
@@ -525,7 +533,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     $("#sheet").innerHTML = `
       <div class="grab"></div>
       <div class="video">${media(i)}</div>
-      <div class="row"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${priceTag(i.price, true)}</div>
+      <div class="row"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${itemTag(i, true)}</div>
       <div class="stack">
         <div class="field">
           <label for="nick">${esc(t("nick"))}</label>
@@ -540,7 +548,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>
         <p class="note">${esc(t("autoNote"))}</p>
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i.price)}</button>
+        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
       </div>`;
     $("#sheet").classList.add("on");
     $("#scrim").classList.add("on");
