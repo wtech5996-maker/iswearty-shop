@@ -322,7 +322,6 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- screens ----------
   const screens = {
     home() {
-      const reel = items("watermark").filter((i) => i.preview).slice(0, 6);
       const privPrice = minPrice(["private"]), voicePrice = minPrice(["voice"]), avatar = items("avatar")[0];
       return `
       <section class="hero${booted ? "" : " boot"}">
@@ -331,7 +330,6 @@ textarea.input { min-height: 132px; resize: vertical; }
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap")} data-go="watermarks" type="button">
-          <div class="media" id="reel">${reel.map((i, k) => `<video src="${esc(i.preview)}" poster="${esc(i.poster || "")}" muted loop playsinline preload="${k ? "none" : "auto"}" class="${k ? "" : "on"}"></video>`).join("")}</div>
           <h3>${esc(t("wm"))}</h3>
           <span class="sub">${esc(t("wmSub"))}</span>
           <span class="from">${esc(t("from"))} ${priceTag(minPrice(["watermark", "custom"]))}</span>
