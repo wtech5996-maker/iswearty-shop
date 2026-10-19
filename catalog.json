@@ -1,6 +1,6 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T18:57:24.875Z",
+  "updated": "2026-10-19T19:11:23.922Z",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -501,6 +501,19 @@
       "price": 200,
       "preview": "media/SPACE_LOGO_ANIMATION-CONVERTED.mp4",
       "poster": "media/SPACE_LOGO_ANIMATION-CONVERTED.jpg"
+    },
+    {
+      "code": "BLACK-OUTRO-CONVERTED",
+      "cat": "outro",
+      "auto": true,
+      "noform": false,
+      "title": {
+        "ru": "Black outro",
+        "en": "Black outro"
+      },
+      "price": 150,
+      "preview": "media/BLACK-OUTRO-CONVERTED.mp4",
+      "poster": "media/BLACK-OUTRO-CONVERTED.jpg"
     }
   ]
 }
