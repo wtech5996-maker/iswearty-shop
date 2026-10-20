@@ -90,25 +90,88 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .badge { width: 46px; height: 46px; flex: none; border-radius: 15px; display: grid; place-items: center; color: var(--sakura); background: linear-gradient(160deg, rgba(232, 25, 60, 0.45), rgba(143, 15, 38, 0.35)); border: 1px solid rgba(255, 184, 203, 0.3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 .tile.small .badge { margin-bottom: auto; }
 .from { font: 500 13.5px/1 var(--body); color: var(--sakura); display: inline-flex; align-items: center; gap: 6px; }
-/* большая плитка: графика без видео */
-.tile.wide { background: linear-gradient(160deg, #3a0a16, #1a060c); }
-/* два цветных пятна плавают по плитке — фон всё время переливается */
-.tile.wide .blob { position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; }
-.tile.wide .blob.b1 { width: 340px; height: 340px; left: -120px; top: -150px; background: radial-gradient(circle, rgba(232, 25, 60, 0.75), rgba(232, 25, 60, 0) 65%); animation: drift1 9s ease-in-out infinite alternate; }
-.tile.wide .blob.b2 { width: 300px; height: 300px; right: -110px; bottom: -150px; background: radial-gradient(circle, rgba(255, 111, 145, 0.55), rgba(255, 111, 145, 0) 65%); animation: drift2 11s ease-in-out infinite alternate; }
+/* ---------- моушен-плашки: общая основа .fx ---------- */
+/* тёмно-малиновый фон и два мягких пятна, которые плавают (размеры и путь — в процентах, подходит любой плашке) */
+.fx { isolation: isolate; overflow: hidden; background: linear-gradient(160deg, #3a0a16, #1a060c); }
+.fx .blob { position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; width: 70%; aspect-ratio: 1; }
+.fx .blob.b1 { left: -25%; top: -60%; background: radial-gradient(circle, rgba(232, 25, 60, 0.7), rgba(232, 25, 60, 0) 65%); animation: drift1 9s ease-in-out infinite alternate; }
+.fx .blob.b2 { right: -25%; bottom: -60%; background: radial-gradient(circle, rgba(255, 111, 145, 0.5), rgba(255, 111, 145, 0) 65%); animation: drift2 11s ease-in-out infinite alternate; }
+.choice.fx .blob, .tile.small.fx .blob { opacity: 0.75; }
+.tile.small.fx .blob { width: 110%; }
+.fx .badge { position: relative; }
+@keyframes drift1 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(45%, 15%) scale(1.15); } 100% { transform: translate(80%, 5%) scale(0.95); } }
+@keyframes drift2 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-40%, -15%) scale(1.2); } 100% { transform: translate(-70%, -3%) scale(1); } }
+
+/* 1. Водянки: свечение, полоса света, лепестки, волна букв */
 .tile.wide .glow { position: absolute; width: 230px; height: 230px; right: -60px; top: -90px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 184, 203, 0.35), rgba(232, 25, 60, 0) 65%); z-index: -1; pointer-events: none; animation: breathe 4.8s ease-in-out infinite; }
 .tile.wide .sweep { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(105deg, rgba(255, 236, 241, 0) 42%, rgba(255, 236, 241, 0.16) 50%, rgba(255, 236, 241, 0) 58%); transform: translateX(-100%); animation: sweep 4.5s var(--ease) infinite; }
-/* лепестки сакуры поднимаются внутри плитки */
-.tile.wide .fl { position: absolute; z-index: -1; pointer-events: none; bottom: -24px; left: var(--x); width: var(--s); height: calc(var(--s) * 0.65); border-radius: 50% 0 50% 0; background: linear-gradient(135deg, #ffb8cb, #ff6f91); opacity: 0; animation: petal-up var(--d) linear infinite; animation-delay: var(--w); }
+.fx .fl { position: absolute; z-index: -1; pointer-events: none; bottom: -24px; left: var(--x); width: var(--s); height: calc(var(--s) * 0.65); border-radius: 50% 0 50% 0; background: linear-gradient(135deg, #ffb8cb, #ff6f91); opacity: 0; animation: petal-up var(--d) linear infinite; animation-delay: var(--w); }
 .tile.wide .letters span { display: inline-block; animation: letter 2.6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 110ms); }
-.tile.wide.calm .glow, .tile.wide.calm .sweep, .tile.wide.calm .letters span, .tile.wide.calm .blob, .tile.wide.calm .fl { animation: none; }
-.tile.wide.calm .fl { display: none; }
-@keyframes drift1 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(150px, 60px) scale(1.15); } 100% { transform: translate(260px, 20px) scale(0.95); } }
-@keyframes drift2 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-140px, -50px) scale(1.2); } 100% { transform: translate(-230px, -10px) scale(1); } }
 @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.25); opacity: 1; } }
 @keyframes sweep { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(100%); } }
 @keyframes petal-up { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg); } 15% { opacity: 0.7; } 80% { opacity: 0.5; } 100% { opacity: 0; transform: translate(var(--dx), -250px) rotate(240deg); } }
 @keyframes letter { 0%, 100% { transform: translateY(0) rotate(0deg); } 30% { transform: translateY(-10px) rotate(-3deg); } 60% { transform: translateY(2px) rotate(1deg); } }
+
+/* 2 и 8. Приват: кольца «доступ открыт» расходятся от ключа, ключ поворачивается */
+.tile.mid.priv { min-height: 150px; }
+.tile.mid.priv h3 { font-size: 27px; }
+.fx .ring { position: absolute; inset: 0; z-index: -1; border-radius: 50%; border: 2px solid rgba(255, 184, 203, 0.55); opacity: 0; pointer-events: none; animation: ring-out 2.4s ease-out infinite; animation-delay: var(--w); }
+.fx.keyfx .badge svg { animation: keyturn 5s ease-in-out infinite; }
+@keyframes ring-out { 0% { transform: scale(1); opacity: 0.75; } 100% { transform: scale(3.4); opacity: 0; } }
+@keyframes keyturn { 0%, 70%, 100% { transform: rotate(0deg); } 78%, 90% { transform: rotate(-90deg); } }
+/* 8. Приват WM: надпись «WM» проступает, как водяной знак */
+.fx .wmark { position: absolute; z-index: -1; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 400 46px/1 var(--pixel); color: #ffb8cb; opacity: 0; pointer-events: none; animation: wm-fade 4s ease-in-out infinite alternate; }
+@keyframes wm-fade { 0% { opacity: 0; } 100% { opacity: 0.08; } }
+
+/* 3. Озвучки: столбики эквалайзера, микрофон пульсирует */
+.fx .eq { position: absolute; z-index: -1; top: 18px; right: 14px; width: 74px; height: 40px; display: flex; align-items: flex-end; gap: 4px; opacity: 0.7; pointer-events: none; }
+.fx .eq i { flex: 1; height: 100%; border-radius: 3px; background: linear-gradient(0deg, #e8193c, #ffb8cb); transform-origin: bottom; transform: scaleY(0.2); animation: eq var(--d) ease-in-out infinite alternate; animation-delay: var(--w); }
+.fx.voicefx .badge { animation: pulse 1.3s ease-out infinite; }
+@keyframes eq { 0% { transform: scaleY(0.15); } 100% { transform: scaleY(1); } }
+@keyframes pulse { 0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 0 rgba(255, 111, 145, 0.55); } 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 12px rgba(255, 111, 145, 0); } }
+
+/* 4. Аватарки: всплывают кружки-аватарки, смайлик подмигивает */
+.fx .bub { position: absolute; z-index: -1; bottom: -24px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; border: 1.5px solid rgba(255, 184, 203, 0.7); background: radial-gradient(circle at 35% 35%, rgba(255, 184, 203, 0.45), rgba(232, 25, 60, 0.15)); opacity: 0; pointer-events: none; animation: bub-up var(--d) ease-in infinite; animation-delay: var(--w); }
+.fx.avafx .badge svg { animation: wink 4.5s ease-in-out infinite; }
+@keyframes bub-up { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 0.75; } 85% { opacity: 0.5; } 100% { opacity: 0; transform: translateY(-190px) scale(1.1); } }
+@keyframes wink { 0%, 84%, 100% { transform: none; } 88% { transform: scale(1.12, 0.7) rotate(-10deg); } 92% { transform: scale(1.05) rotate(4deg); } }
+
+/* 5. Готовые: превью покачиваются веером */
+.fx.readyfx .stackthumbs img:nth-child(1) { animation: fan1 4s ease-in-out infinite; }
+.fx.readyfx .stackthumbs img:nth-child(2) { animation: fan2 4s ease-in-out infinite; }
+.fx.readyfx .stackthumbs img:nth-child(3) { animation: fan3 4s ease-in-out infinite; }
+@keyframes fan1 { 0%, 100% { transform: rotate(-8deg); } 50% { transform: translateX(-4px) rotate(-15deg); } }
+@keyframes fan2 { 0%, 100% { transform: none; } 50% { transform: translateY(-4px); } }
+@keyframes fan3 { 0%, 100% { transform: rotate(8deg); } 50% { transform: translateX(4px) rotate(15deg); } }
+
+/* 6. Outro: полоса прогресса «конец ролика», play вспыхивает в конце */
+.choice.outrofx { padding-bottom: 22px; }
+.fx .prog { position: absolute; z-index: -1; left: 16px; right: 16px; bottom: 10px; height: 3px; border-radius: 3px; background: rgba(255, 236, 241, 0.12); overflow: hidden; pointer-events: none; }
+.fx .prog i { position: absolute; inset: 0; background: linear-gradient(90deg, #e8193c, #ffb8cb); transform-origin: left; transform: scaleX(0); animation: progress 3.6s linear infinite; }
+.fx.outrofx .badge { animation: flash 3.6s linear infinite; }
+@keyframes progress { 0% { transform: scaleX(0); } 92%, 100% { transform: scaleX(1); } }
+@keyframes flash { 0%, 88% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); filter: none; } 94% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 22px rgba(255, 111, 145, 0.9); filter: brightness(1.35); } 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); filter: none; } }
+
+/* 7. Кастом: искры разлетаются от звёздочки, звёздочка вращается */
+.fx .spark { position: absolute; z-index: -1; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #ffd6e0; box-shadow: 0 0 6px #ff6f91; opacity: 0; pointer-events: none; animation: spark 1.8s ease-out infinite; animation-delay: var(--w); }
+.fx.customfx .badge svg { animation: spin 9s linear infinite; }
+@keyframes spark { 0% { opacity: 0; transform: translate(0, 0) scale(1); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.3); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 9. Приват по эдитам: таймлайн — клипы едут, бегает линия воспроизведения */
+.choice.editfx { padding-bottom: 34px; }
+.fx .tl { position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: 24px; overflow: hidden; pointer-events: none; background: rgba(0, 0, 0, 0.25); border-top: 1px solid rgba(255, 236, 241, 0.08); }
+.fx .clips { position: absolute; left: 0; top: 6px; height: 12px; display: flex; gap: 4px; width: max-content; animation: clips 12s linear infinite; }
+.fx .clips i { height: 100%; border-radius: 3px; background: linear-gradient(180deg, rgba(232, 25, 60, 0.75), rgba(143, 15, 38, 0.75)); border: 1px solid rgba(255, 184, 203, 0.35); }
+.fx .clips i:nth-child(3n) { background: linear-gradient(180deg, rgba(255, 111, 145, 0.7), rgba(232, 25, 60, 0.6)); }
+.fx .ph { position: absolute; inset: 0; animation: playhead 3.2s linear infinite; }
+.fx .ph::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #fff; box-shadow: 0 0 6px #ff6f91; }
+@keyframes clips { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes playhead { from { transform: translateX(4%); } to { transform: translateX(96%); } }
+
+/* экономия трафика (класс calm у <html>) — плашки спокойные */
+.calm .fx *, .calm .fx .badge svg { animation: none !important; }
+.calm .fx .fl, .calm .fx .bub, .calm .fx .spark, .calm .fx .ring, .calm .fx .ph { display: none; }
 /* наклон за курсором на всех плашках: JS задаёт --px и --py (от −0.5 до 0.5), блик — --mx и --my.
    --tilt — сила наклона: широким плашкам меньше, чтобы не было резко. */
 .tile, .choice, .card, .line, .buy { --tilt: 10deg; position: relative; transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))); transition: transform 0.4s var(--ease), filter 0.2s, border-color 0.25s, box-shadow 0.3s, background 0.2s; }
@@ -262,7 +325,9 @@ textarea.input { min-height: 132px; resize: vertical; }
 .empty { padding: 28px 18px; text-align: center; color: var(--muted); border-radius: 20px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise, .boot .logo, .boot p, .sheet .stack > *, .err, .tile .glow, .tile .sweep, .tile .letters span, .tile .blob, .tile .fl { animation: none; }
+  .rise, .boot .logo, .boot p, .sheet .stack > *, .err { animation: none; }
+  .fx *, .fx .badge svg { animation: none !important; }
+  .fx .fl, .fx .bub, .fx .spark, .fx .ring, .fx .ph { display: none; }
   .sheet, .scrim, .toast, .tap, .tile, .choice, .card, .line, .buy, .tile .badge, .choice .badge, .paylist .m { transition: none; }
   .tile, .choice, .card, .line, .buy, .tap:is(.tile, .choice, .card, .buy):active { transform: none; }
 }
@@ -453,6 +518,29 @@ textarea.input { min-height: 132px; resize: vertical; }
   let n = 0;
   const R = (cls) => `class="${cls} rise" style="--i:${n++}"`;
 
+  // ---------- моушен-плашки: заготовки (стили — блок .fx в <style>) ----------
+  const fx = {
+    blobs: `<span class="blob b1" aria-hidden="true"></span><span class="blob b2" aria-hidden="true"></span>`,
+    // лепестки: [x %, размер px, длительность s, задержка s, снос px]
+    petals: [[8, 12, 7, 0, 30], [26, 9, 9, 2.5, -20], [47, 14, 8, 5, 40], [66, 10, 10, 1.2, -35], [84, 12, 7.5, 3.8, 25], [92, 8, 9.5, 6.2, -15]]
+      .map(([x, s, d, w, dx]) => `<span class="fl" aria-hidden="true" style="--x:${x}%;--s:${s}px;--d:${d}s;--w:${w}s;--dx:${dx}px"></span>`).join(""),
+    rings: [0, 0.8, 1.6].map((w) => `<span class="ring" aria-hidden="true" style="--w:${w}s"></span>`).join(""),
+    eq: `<span class="eq" aria-hidden="true">${[0.9, 1.3, 0.7, 1.1, 0.8, 1.4, 1].map((d, k) => `<i style="--d:${d}s;--w:${(k * 0.13).toFixed(2)}s"></i>`).join("")}</span>`,
+    // кружки-аватарки: [x %, размер px, длительность s, задержка s]
+    bubbles: [[46, 16, 6, 0], [60, 10, 5, 1.4], [74, 20, 7, 2.6], [88, 12, 5.5, 0.7], [54, 8, 6.5, 3.6]]
+      .map(([x, s, d, w]) => `<span class="bub" aria-hidden="true" style="--x:${x}%;--s:${s}px;--d:${d}s;--w:${w}s"></span>`).join(""),
+    sparks: [[-30, -22], [26, -28], [34, 8], [-26, 20], [6, 32], [-38, -2]]
+      .map(([x, y], k) => `<span class="spark" aria-hidden="true" style="--sx:${x}px;--sy:${y}px;--w:${(k * 0.3).toFixed(1)}s"></span>`).join(""),
+    prog: `<span class="prog" aria-hidden="true"><i></i></span>`,
+    wmark: `<span class="wmark" aria-hidden="true">WM</span>`,
+    timeline: (() => {
+      const clips = [38, 22, 54, 30, 44, 26, 36, 48, 20, 40].map((w) => `<i style="width:${w}px"></i>`).join("");
+      return `<span class="tl" aria-hidden="true"><span class="clips">${clips}${clips}</span><span class="ph"></span></span>`;
+    })(),
+  };
+  const isEditsPrivate = (i) => /edit|эдит/i.test(`${i.code} ${i.title && (i.title.ru || i.title)}`);
+  if (lite) document.documentElement.classList.add("calm");
+
   // ---------- screens ----------
   const screens = {
     home() {
@@ -466,27 +554,24 @@ textarea.input { min-height: 132px; resize: vertical; }
         <div style="margin-top:14px">${payList()}</div>
       </section>
       <nav class="tiles">
-        <button ${R(`tile wide glass tap${lite ? " calm" : ""}`)} data-go="watermarks" type="button">
-          <span class="blob b1" aria-hidden="true"></span><span class="blob b2" aria-hidden="true"></span>
-          <span class="glow" aria-hidden="true"></span><span class="sweep" aria-hidden="true"></span>
-          ${[[8, 12, 7, 0, 30], [26, 9, 9, 2.5, -20], [47, 14, 8, 5, 40], [66, 10, 10, 1.2, -35], [84, 12, 7.5, 3.8, 25], [92, 8, 9.5, 6.2, -15]]
-            .map(([x, s, d, w, dx]) => `<span class="fl" aria-hidden="true" style="--x:${x}%;--s:${s}px;--d:${d}s;--w:${w}s;--dx:${dx}px"></span>`).join("")}
+        <button ${R("tile wide glass tap fx")} data-go="watermarks" type="button">
+          ${fx.blobs}<span class="glow" aria-hidden="true"></span><span class="sweep" aria-hidden="true"></span>${fx.petals}
           <h3 class="letters">${letters}</h3>
           <span class="sub">${esc(t("wmSub"))}</span>
           <span class="from">${esc(t("from"))} ${fromTag(["watermark", "custom"])}</span>
         </button>
-        ${items("private").length ? `<button ${R("tile mid glass tap")} data-go="private" type="button">
-          <span class="badge">${ICON.key}</span>
+        ${items("private").length ? `<button ${R("tile mid priv glass tap fx keyfx")} data-go="private" type="button">
+          ${fx.blobs}<span class="badge">${ICON.key}${fx.rings}</span>
           <span><h3>${esc(t("priv"))}</h3><span class="sub">${esc(t("privSub"))}</span></span>
           <span class="from" style="margin-left:auto">${fromTag(["private"])}</span>
         </button>` : ""}
-        ${items("voice").length ? `<button ${R("tile small glass tap")} data-go="voices" type="button">
-          <span class="badge">${ICON.mic}</span>
+        ${items("voice").length ? `<button ${R("tile small glass tap fx voicefx")} data-go="voices" type="button">
+          ${fx.blobs}${fx.eq}<span class="badge">${ICON.mic}</span>
           <h3>${esc(t("voice"))}</h3><span class="sub">${esc(t("voiceSub"))}</span>
           <span class="from">${fromTag(["voice"])}</span>
         </button>` : ""}
-        ${avatar ? `<button ${R("tile small glass tap")} data-go="form" data-code="${esc(avatar.code)}" type="button">
-          <span class="badge">${ICON.face}</span>
+        ${avatar ? `<button ${R("tile small glass tap fx avafx")} data-go="form" data-code="${esc(avatar.code)}" type="button">
+          ${fx.blobs}${fx.bubbles}<span class="badge">${ICON.face}</span>
           <h3>${esc(t("ava"))}</h3><span class="sub">${esc(t("avaSub"))}</span>
           <span class="from">${itemTag(avatar)}</span>
         </button>` : ""}
@@ -498,18 +583,18 @@ textarea.input { min-height: 132px; resize: vertical; }
       return `
       <div class="head"><h2 ${R("")}>${esc(t("wmHead"))}</h2></div>
       <div class="choices">
-        ${items("outro").length ? `<button ${R("choice glass tap")} data-go="outro" type="button">
-          <span class="badge">${ICON.film}</span>
+        ${items("outro").length ? `<button ${R("choice glass tap fx outrofx")} data-go="outro" type="button">
+          ${fx.blobs}${fx.prog}<span class="badge">${ICON.film}</span>
           <span><h3>${esc(t("outro"))}</h3><p>${esc(t("outroSub"))}</p></span>
           ${fromTag(["outro"])}
         </button>` : ""}
-        <button ${R("choice glass tap")} data-go="ready" type="button">
-          ${thumbs.length ? `<span class="stackthumbs">${thumbs.map((i) => `<img src="${esc(i.poster)}" alt="">`).join("")}</span>` : `<span class="badge">${ICON.film}</span>`}
+        <button ${R("choice glass tap fx readyfx")} data-go="ready" type="button">
+          ${fx.blobs}${thumbs.length ? `<span class="stackthumbs">${thumbs.map((i) => `<img src="${esc(i.poster)}" alt="">`).join("")}</span>` : `<span class="badge">${ICON.film}</span>`}
           <span><h3>${esc(t("ready"))}</h3><p>${esc(t("readySub"))}</p></span>
           ${fromTag(["watermark"])}
         </button>
-        ${custom ? `<button ${R("choice glass tap")} data-go="form" data-code="${esc(custom.code)}" type="button">
-          <span class="badge">${ICON.sparkle}</span>
+        ${custom ? `<button ${R("choice glass tap fx customfx")} data-go="form" data-code="${esc(custom.code)}" type="button">
+          ${fx.blobs}<span class="badge">${ICON.sparkle}${fx.sparks}</span>
           <span><h3>${esc(t("custom"))}</h3><p>${esc(t("customSub"))}</p></span>
           ${itemTag(custom)}
         </button>` : ""}
@@ -540,8 +625,11 @@ textarea.input { min-height: 132px; resize: vertical; }
       return `
       <div class="head"><h2 ${R("")}>${esc(t("privHead"))}</h2><p ${R("")}>${esc(t("privText"))}</p></div>
       <div class="choices">${list.map((i) => `
-        <button ${R("choice glass tap")} data-go="privateDetail" data-code="${esc(i.code)}" type="button">
-          <span class="badge">${ICON.key}</span>
+        ${isEditsPrivate(i)
+          ? `<button ${R("choice glass tap fx editfx")} data-go="privateDetail" data-code="${esc(i.code)}" type="button">
+          ${fx.blobs}${fx.timeline}<span class="badge">${ICON.film}</span>`
+          : `<button ${R("choice glass tap fx keyfx")} data-go="privateDetail" data-code="${esc(i.code)}" type="button">
+          ${fx.blobs}${fx.wmark}<span class="badge">${ICON.key}${fx.rings}</span>`}
           <span><h3>${esc(L(i.title))}</h3><p>${esc(L(i.desc))}</p></span>
           ${itemTag(i)}
         </button>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
