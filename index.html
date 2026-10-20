@@ -18,8 +18,8 @@
   --sakura: #ffb8cb;
   --gold: #ffd36b;
   --ink: #fff2f5;
-  --muted: rgba(255, 226, 233, 0.68);
-  --faint: rgba(255, 226, 233, 0.44);
+  --muted: rgba(255, 226, 233, 0.78);
+  --faint: rgba(255, 226, 233, 0.52);
   --glass: linear-gradient(160deg, rgba(255, 236, 241, 0.14), rgba(255, 236, 241, 0.04));
   --glass-edge: rgba(255, 200, 215, 0.22);
   --pixel: "Press Start 2P", ui-monospace, monospace;
@@ -92,12 +92,15 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .from { font: 500 13.5px/1 var(--body); color: var(--sakura); display: inline-flex; align-items: center; gap: 6px; }
 /* ---------- моушен-плашки: общая основа .fx ---------- */
 /* тёмно-малиновый фон и два мягких пятна, которые плавают (размеры и путь — в процентах, подходит любой плашке) */
-.fx { isolation: isolate; overflow: hidden; background: linear-gradient(160deg, #3a0a16, #1a060c); }
+.fx { isolation: isolate; overflow: hidden; background: linear-gradient(160deg, #2a0811, #13040a); }
 .fx .blob { position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; width: 70%; aspect-ratio: 1; }
-.fx .blob.b1 { left: -25%; top: -60%; background: radial-gradient(circle, rgba(232, 25, 60, 0.7), rgba(232, 25, 60, 0) 65%); animation: drift1 9s ease-in-out infinite alternate; }
-.fx .blob.b2 { right: -25%; bottom: -60%; background: radial-gradient(circle, rgba(255, 111, 145, 0.5), rgba(255, 111, 145, 0) 65%); animation: drift2 11s ease-in-out infinite alternate; }
+.fx .blob.b1 { left: -25%; top: -60%; background: radial-gradient(circle, rgba(232, 25, 60, 0.5), rgba(232, 25, 60, 0) 65%); animation: drift1 9s ease-in-out infinite alternate; }
+.fx .blob.b2 { right: -25%; bottom: -60%; background: radial-gradient(circle, rgba(255, 111, 145, 0.34), rgba(255, 111, 145, 0) 65%); animation: drift2 11s ease-in-out infinite alternate; }
 .choice.fx .blob, .tile.small.fx .blob { opacity: 0.75; }
 .tile.small.fx .blob { width: 110%; }
+.tile.small.fx .blob.b1 { animation-duration: 15s; } .tile.small.fx .blob.b2 { animation-duration: 18s; }
+/* красная тень — только у крупных заголовков; на маленьких плитках она размывает буквы */
+.tile.small h3 { text-shadow: none; }
 .fx .badge { position: relative; }
 @keyframes drift1 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(45%, 15%) scale(1.15); } 100% { transform: translate(80%, 5%) scale(0.95); } }
 @keyframes drift2 { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-40%, -15%) scale(1.2); } 100% { transform: translate(-70%, -3%) scale(1); } }
@@ -115,11 +118,14 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 /* 2 и 8. Приват: «шифр» — падают столбики пиксельных символов, ключ поворачивается, значок вспыхивает */
 .tile.mid.priv { min-height: 150px; }
 .tile.mid.priv h3 { font-size: 27px; }
-.fx .cipher { position: absolute; z-index: -1; inset: 0 0 0 38%; overflow: hidden; pointer-events: none; }
-.fx .cipher .col { position: absolute; top: 0; left: var(--x); font: 400 9px/1.35 var(--pixel); color: #ffb8cb; text-shadow: 0 0 6px rgba(255, 111, 145, 0.8); opacity: 0.55; transform: translateY(-110%); -webkit-mask-image: linear-gradient(180deg, transparent, #000 75%); mask-image: linear-gradient(180deg, transparent, #000 75%); animation: cipher var(--d) linear infinite; animation-delay: var(--w); }
+.fx .cipher { position: absolute; z-index: -1; inset: 0 0 0 auto; width: 30%; overflow: hidden; pointer-events: none; }
+.fx .cipher .col { position: absolute; top: 0; left: var(--x); font: 400 9px/1.35 var(--pixel); color: #ffb8cb; text-shadow: 0 0 6px rgba(255, 111, 145, 0.8); opacity: 0.38; transform: translateY(-110%); -webkit-mask-image: linear-gradient(180deg, transparent, #000 75%); mask-image: linear-gradient(180deg, transparent, #000 75%); animation: cipher var(--d) linear infinite; animation-delay: var(--w); }
 .fx .cipher .col b { display: block; font-weight: 400; }
 .fx .cipher .col b:last-child { color: #fff; }
-.choice.fx .cipher .col { opacity: 0.35; }
+.choice.fx .cipher .col { opacity: 0.25; }
+/* в строках списка шифр только сверху справа — над ценой, не под ней */
+.choice.fx .cipher { bottom: 58%; }
+.tile.priv .from { position: relative; z-index: 1; padding: 6px 9px; border-radius: 12px; background: rgba(20, 5, 10, 0.6); }
 .fx.keyfx .badge svg { animation: keyturn 5s ease-in-out infinite; }
 .fx.keyfx .badge { animation: unlock 5s ease-in-out infinite; }
 @keyframes cipher { from { transform: translateY(-110%); } to { transform: translateY(260px); } }
@@ -176,7 +182,7 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 @keyframes playhead { from { transform: translateX(4%); } to { transform: translateX(96%); } }
 
 /* экономия трафика (класс calm у <html>) — плашки спокойные */
-.calm .fx *, .calm .fx .badge svg { animation: none !important; }
+.calm .fx *, .calm .fx .badge svg, .calm .wave.playing .wv i { animation: none !important; }
 .calm .fx .fl, .calm .fx .bub, .calm .fx .spark, .calm .fx .ph { display: none; }
 /* наклон за курсором на всех плашках: JS задаёт --px и --py (от −0.5 до 0.5), блик — --mx и --my.
    --tilt — сила наклона: широким плашкам меньше, чтобы не было резко. */
@@ -194,6 +200,39 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
   :is(.tile, .choice):hover .badge { scale: 1.08; }
   .paylist .m:hover { border-color: rgba(255, 184, 203, 0.45); background: rgba(232, 25, 60, 0.2); }
 }
+
+/* строка доверия под логотипом */
+.trust { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 12px; font: 600 13.5px/1.2 var(--body); color: var(--muted); }
+.trust .t { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; padding: 0; color: inherit; font: inherit; }
+.trust button.t { color: var(--sakura); }
+.trust svg { width: 16px; height: 16px; color: var(--sakura); }
+/* метки «Новинка» и «Топ» на карточках */
+.card .thumb .tag { position: absolute; z-index: 1; left: 8px; top: 8px; padding: 4px 8px; border-radius: 999px; font: 700 11px/1 var(--body); background: rgba(20, 5, 10, 0.74); border: 1px solid var(--glass-edge); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.card .thumb .tag.new { color: var(--sakura); }
+.card .thumb .tag.hot { color: var(--gold); }
+.card .thumb .tag + .tag { top: 33px; }
+/* поиск по водянкам */
+.search { margin: 0 0 12px; }
+.search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.card[hidden] { display: none; }
+.nothing { padding: 22px 12px; text-align: center; color: var(--muted); }
+/* «Как это работает» */
+.how { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; counter-reset: how; }
+.how li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; color: var(--muted); font-size: 13.5px; }
+.how li::before { counter-increment: how; content: counter(how); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 400 10px/1 var(--pixel); color: var(--sakura); border: 1px solid var(--glass-edge); background: rgba(232, 25, 60, 0.14); }
+/* одна цена для всех озвучек */
+.voiceprice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 4px 2px 12px; color: var(--muted); font-size: 14px; }
+/* волна озвучки: светлая часть — уже прослушано */
+.wave { position: relative; height: 24px; margin-top: 7px; }
+.wave .wv { position: absolute; inset: 0; display: flex; align-items: center; gap: 2px; }
+.wave .wv i { flex: 1; height: var(--h); border-radius: 2px; background: rgba(255, 226, 233, 0.2); transform-origin: center; }
+.wave .wv.fill { clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); }
+.wave .wv.fill i { background: linear-gradient(0deg, var(--blush), var(--sakura)); }
+.wave.playing .wv i { animation: wv 0.8s ease-in-out infinite alternate; animation-delay: calc(var(--k) * -60ms); }
+@keyframes wv { from { transform: scaleY(0.55); } to { transform: scaleY(1); } }
+/* заставка загрузки */
+.skel { border-radius: 22px; background: linear-gradient(90deg, rgba(255, 236, 241, 0.05) 25%, rgba(255, 236, 241, 0.11) 50%, rgba(255, 236, 241, 0.05) 75%) 0 0 / 200% 100%; animation: skel 1.3s linear infinite; }
+@keyframes skel { to { background-position: -200% 0; } }
 
 /* section heads */
 .head { padding: 18px 2px 14px; }
@@ -225,7 +264,8 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .price .pct { font: 800 11.5px/1 var(--body); padding: 4px 6px; border-radius: 8px; background: var(--crimson); color: #fff; }
 .star { fill: var(--gold); filter: drop-shadow(0 0 4px rgba(255, 211, 107, 0.45)); }
 .paylist { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; color: var(--faint); font-size: 12px; }
-.paylist .m { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: rgba(255, 236, 241, 0.08); border: 1px solid var(--glass-edge); color: var(--ink); font-weight: 600; font-size: 12px; white-space: nowrap; }
+.paylist .m svg { width: 14px; height: 14px; color: var(--sakura); }
+.paylist .m { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 999px; background: rgba(255, 236, 241, 0.08); border: 1px solid var(--glass-edge); color: var(--ink); font-weight: 600; font-size: 12px; white-space: nowrap; }
 
 /* cart */
 .cartbtn { position: relative; border: 0; width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; color: var(--ink); margin-left: auto; }
@@ -300,7 +340,7 @@ textarea.input { min-height: 132px; resize: vertical; }
 .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .seg button { border: 1px solid var(--glass-edge); background: rgba(0, 0, 0, 0.22); border-radius: 14px; padding: 10px 6px; display: grid; gap: 3px; text-align: center; }
 .seg button b { font: 800 15px/1.2 var(--body); }
-.seg button b.pxf { font: 400 12px/1.5 var(--pixel); }
+.seg button svg { width: 22px; height: 22px; margin: 0 auto 1px; color: var(--sakura); }
 .seg button span { font-size: 11.5px; color: var(--faint); }
 .seg button[aria-pressed="true"] { border-color: var(--crimson); background: rgba(232, 25, 60, 0.25); }
 .seg button[aria-pressed="true"] span { color: var(--muted); }
@@ -332,7 +372,7 @@ textarea.input { min-height: 132px; resize: vertical; }
 
 @media (prefers-reduced-motion: reduce) {
   .rise, .boot .logo, .boot p, .sheet .stack > *, .err { animation: none; }
-  .fx *, .fx .badge svg { animation: none !important; }
+  .fx *, .fx .badge svg, .wave.playing .wv i, .skel { animation: none !important; }
   .fx .fl, .fx .bub, .fx .spark, .fx .ph { display: none; }
   .sheet, .scrim, .toast, .tap, .tile, .choice, .card, .line, .buy, .tile .badge, .choice .badge, .paylist .m { transition: none; }
   .tile, .choice, .card, .line, .buy, .tap:is(.tile, .choice, .card, .buy):active { transform: none; }
@@ -387,7 +427,9 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- text ----------
   const T = {
     ru: {
-      back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат сами.",
+      back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат с ботом.",
+      sold: (n) => `${n}+ покупок`, newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
+      how: "Как это работает", howSteps: ["Опишите, что нужно", "Оплатите в чате с ботом", "Готовый результат придёт в этот чат"], voicePrice: "Любая озвучка —",
       pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
       cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
       cartEmpty: "Корзина пустая. Добавьте водянки, озвучки или приваты кнопкой «В корзину».", toShop: "В магазин", restore: "Вернуть прошлую корзину",
@@ -398,22 +440,24 @@ textarea.input { min-height: 132px; resize: vertical; }
       noCatalog: "Не удалось загрузить каталог — проверьте интернет и откройте магазин заново.",
       cartSent: "Корзина отправлена в чат — там кнопки оплаты.", noFiat: "Не у всех товаров есть цена в рублях — итог показан в звёздах.",
       wm: "Водянки", wmSub: "Готовые и на заказ", priv: "Приват", privSub: "Закрытые группы, доступ навсегда", voice: "Озвучки", voiceSub: "Послушайте и выберите", ava: "Аватарки", avaSub: "Нарисую по описанию",
-      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты. Файл придёт в чат с ботом.", custom: "Кастом", customSub: "Сделаю новую под вас",
+      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты — файл придёт в чат с ботом. Способ оплаты выберете там же.", custom: "Кастом", customSub: "Сделаю новую под вас",
       readyHead: "Готовые водянки", readyText: "Нажмите на водянку, чтобы посмотреть и купить.",
       privHead: "Приват", privText: "Доступ навсегда. Ссылка приходит в чат с ботом и работает только для вашего аккаунта.",
       inside: "Что внутри", showAll: (n) => `Показать всё (${n})`, examples: "Примеры работ", example: (n) => `Пример ${n}`, groups: (n) => (n > 1 ? `${n} группы` : "1 группа"),
       voiceHead: "Озвучки", voiceText: "Нажмите на кнопку, чтобы послушать пример.", noPreview: "Пример скоро появится",
-      choose: "Выбрать", nick: "Ваш ник", nickHint: "Так ник будет написан на водянке", format: "Формат",
+      choose: "Заказать", nick: "Ваш ник", nickHint: "Так ник будет написан на водянке", format: "Формат",
       mov: "ПК, прозрачный фон", mp4: "Телефон, зелёный фон", both: "ПК и телефон", bothLabel: "Оба",
       details: "Описание заказа", buyFor: "Купить за", refund: "Цифровой товар. Условия и возврат — команда /terms в чате с ботом.",
       errNick: "Впишите ник: от 1 до 32 символов, без переносов строки.", errNickSlash: "Ник не может начинаться с символа /.",
       errText: "Опишите заказ: от 5 до 1000 символов.", empty: "Здесь пока пусто.",
       openChat: "Открываю чат с ботом. Он попросит данные заказа и пришлёт счёт.",
       demo: "Предпросмотр вне Telegram. В боте сюда передастся заказ:", privacyNote: "После оплаты бот пришлёт личную ссылку на вступление.",
-      manualNote: "После оплаты я начну работу и пришлю результат в чат с ботом.", autoNote: "После оплаты водянка рендерится и приходит в чат с ботом.",
+      manualNote: "После оплаты я начну работу и пришлю результат в чат с ботом.", autoNote: "После оплаты водянка придёт в чат с ботом. Способ оплаты выберете там же.",
     },
     en: {
-      back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the chat by themselves.",
+      back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the bot chat.",
+      sold: (n) => `${n}+ orders`, newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
+      how: "How it works", howSteps: ["Describe what you need", "Pay in the bot chat", "The result arrives in this chat"], voicePrice: "Any voice-over —",
       pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
       cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
       cartEmpty: "Your cart is empty. Add watermarks, voice-overs or private groups with “Add to cart”.", toShop: "Back to shop", restore: "Restore previous cart",
@@ -424,19 +468,19 @@ textarea.input { min-height: 132px; resize: vertical; }
       noCatalog: "Could not load the catalog — check your connection and reopen the shop.",
       cartSent: "Cart sent to the chat — the payment buttons are there.", noFiat: "Some items have no price in dollars — the total is shown in Stars.",
       wm: "Watermarks", wmSub: "Ready-made and custom", priv: "Private", privSub: "Closed groups, lifetime access", voice: "Voice-overs", voiceSub: "Listen and choose", ava: "Avatars", avaSub: "Drawn from your description",
-      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment. The file arrives in the bot chat.", custom: "Custom", customSub: "A new one made for you",
+      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment — the file arrives in the bot chat. You choose how to pay there.", custom: "Custom", customSub: "A new one made for you",
       readyHead: "Ready-made watermarks", readyText: "Tap a watermark to preview and buy it.",
       privHead: "Private", privText: "Lifetime access. The link comes to the bot chat and works only for your account.",
       inside: "What's inside", showAll: (n) => `Show all (${n})`, examples: "Work examples", example: (n) => `Example ${n}`, groups: (n) => (n > 1 ? `${n} groups` : "1 group"),
       voiceHead: "Voice-overs", voiceText: "Tap the button to hear a sample.", noPreview: "Sample coming soon",
-      choose: "Choose", nick: "Your nickname", nickHint: "Exactly as it will appear on the watermark", format: "Format",
+      choose: "Order", nick: "Your nickname", nickHint: "Exactly as it will appear on the watermark", format: "Format",
       mov: "PC, transparent", mp4: "Phone, green screen", both: "PC and phone", bothLabel: "Both",
       details: "Order details", buyFor: "Buy for", refund: "Digital goods. Terms and refunds — the /terms command in the bot chat.",
       errNick: "Enter a nickname: 1 to 32 characters, one line.", errNickSlash: "A nickname can't start with /.",
       errText: "Describe your order: 5 to 1000 characters.", empty: "Nothing here yet.",
       openChat: "Opening the chat with the bot. It will ask for the order details and send an invoice.",
       demo: "Preview outside Telegram. In the bot this order would be sent:", privacyNote: "After payment the bot sends you a personal join link.",
-      manualNote: "After payment I start working and send the result to the bot chat.", autoNote: "After payment the watermark is rendered and arrives in the bot chat.",
+      manualNote: "After payment I start working and send the result to the bot chat.", autoNote: "After payment the watermark arrives in the bot chat. You choose how to pay there.",
     },
   };
   let lang = "";
@@ -459,6 +503,14 @@ textarea.input { min-height: 132px; resize: vertical; }
     pause: svg('<rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/>', "i"),
     chevron: svg('<path d="M9 6l6 6-6 6"/>'),
     alert: svg('<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2h.01"/>'),
+    flame: svg('<path d="M12 21c-4 0-6.5-2.7-6.5-6.2 0-3.6 2.6-5.6 3.9-8.8.6 2 1.7 3.1 3 3.6.3-1.9 1-3.8 2.6-5.1.4 2.9 3.5 5.4 3.5 10.1C18.5 18.3 16 21 12 21z"/>'),
+    megaphone: svg('<path d="M3 10v4h3l7 4V6l-7 4z"/><path d="M16.5 9a4 4 0 010 6M19 6.5a7.5 7.5 0 010 11"/>'),
+    starLine: svg('<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4 1 5.9L12 16.8 6.8 19.6l1-5.9-4.3-4 5.9-.8z"/>'),
+    gem: svg('<path d="M6.5 4h11l3.5 5-9 11L3 9z"/><path d="M3 9h18M9.5 4L12 20l2.5-16"/>'),
+    card: svg('<rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18M7 14.5h4"/>'),
+    monitor: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
+    phone: svg('<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>'),
+    both: svg('<rect x="2" y="5" width="14" height="10" rx="1.6"/><path d="M6 19h6M9 15v4"/><rect x="16.5" y="9" width="5.5" height="11" rx="1.4"/>'),
   };
   // ---------- prices: RU — рубли и звёзды, EN — доллары и звёзды ----------
   // Скидка: до даты окончания цена со скидкой, после — обычная (даже если витрина ещё не пересобрана).
@@ -484,16 +536,16 @@ textarea.input { min-height: 132px; resize: vertical; }
   };
   const buyLabel = (i) => `${esc(t("buyNow"))} · ${curFiat(i) != null ? esc(fmtFiat(curFiat(i))) + " / " : ""}<span class="pxf">${ICON.star}${esc(curPrice(i))}</span>`;
   /** Кнопки под товаром: купить сразу или положить в корзину. */
-  const buyRow = (i) => `${payList(false)}
+  const buyRow = (i) => `
         <div class="btnrow">
           <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i)}</button>
           <button class="buy ghost tap" data-add="${esc(i.code)}" type="button">${esc(t("toCart"))}</button>
-        </div>
-        <p class="note">${esc(t("payNote"))}</p>`;
+        </div>`;
   const payList = (withLabel = true) => {
     const pay = Array.isArray(catalog.pay) && catalog.pay.length ? catalog.pay : ["stars"];
-    const label = { stars: `⭐ ${t("payStars")}`, crypto: `💎 ${t("payCrypto")}`, transfer: `💳 ${t("payTransfer")}` };
-    return `<div class="paylist">${withLabel ? `<span>${esc(t("pay"))}:</span>` : ""}${pay.filter((m) => label[m]).map((m) => `<span class="m">${esc(label[m])}</span>`).join("")}</div>`;
+    // Одноцветные значки в цвет сакуры вместо цветных эмодзи — не спорят с палитрой магазина.
+    const label = { stars: [ICON.starLine, t("payStars")], crypto: [ICON.gem, t("payCrypto")], transfer: [ICON.card, t("payTransfer")] };
+    return `<div class="paylist">${withLabel ? `<span>${esc(t("pay"))}:</span>` : ""}${pay.filter((m) => label[m]).map((m) => `<span class="m">${label[m][0]}${esc(label[m][1])}</span>`).join("")}</div>`;
   };
 
   // ---------- catalog ----------
@@ -523,6 +575,26 @@ textarea.input { min-height: 132px; resize: vertical; }
     const initials = (L(item && item.title) || "WM").replace(/[^A-Za-zА-Яа-я0-9 ]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
     return `<div class="ph" style="position:absolute;inset:0"><span>${esc(initials)}</span></div>`;
   };
+  /** Метки «Новинка» / «Топ» на обложке карточки. */
+  const tags = (i) => `${i.new ? `<span class="tag new">${esc(t("newBadge"))}</span>` : ""}${i.top ? `<span class="tag hot">${esc(t("topBadge"))}</span>` : ""}`;
+  /** Волна озвучки: столбики постоянной высоты для каждого товара; светлая часть — прослушано. */
+  const wave = (code) => {
+    let h = 7;
+    for (const c of String(code)) h = (Math.imul(h, 31) + c.charCodeAt(0)) >>> 0;
+    const bars = Array.from({ length: 32 }, (_, k) => {
+      h = (Math.imul(h, 1103515245) + 12345) >>> 0;
+      const v = 0.28 + (((h >>> 8) % 1000) / 1000) * 0.72;
+      return `<i style="--h:${Math.round(v * 100)}%;--k:${k}"></i>`;
+    }).join("");
+    return `<div class="wave" data-wave="${esc(code)}"><div class="wv">${bars}</div><div class="wv fill" data-bar="${esc(code)}">${bars}</div></div>`;
+  };
+  const SEARCH_FROM = 20; // поиск появляется, когда готовых водянок больше двадцати
+  const channelOk = () => typeof catalog.channel === "string" && /^https:\/\/t\.me\/[A-Za-z0-9_]{3,64}\/?$/.test(catalog.channel);
+  const card = (i) => `
+        <button ${R("card glass tap")} data-sheet="${esc(i.code)}" data-name="${esc(L(i.title).toLowerCase())}" type="button">
+          <div class="thumb">${media(i)}${tags(i)}</div>
+          <div class="meta"><b>${esc(L(i.title))}</b>${itemTag(i)}</div>
+        </button>`;
   let n = 0;
   const R = (cls) => `class="${cls} rise" style="--i:${n++}"`;
 
@@ -565,6 +637,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       <section class="hero${booted ? "" : " boot"}">
         <h1 class="logo">ISWEARTY<small>shop</small></h1>
         <p>${esc(t("tagline"))}</p>
+        ${catalog.sold > 0 || channelOk() ? `<div class="trust">${catalog.sold > 0 ? `<span class="t">${ICON.flame}${esc(t("sold", catalog.sold))}</span>` : ""}${channelOk() ? `<button class="t tap" type="button" data-link="${esc(catalog.channel)}">${ICON.megaphone}@${esc(catalog.channel.replace(/^https:\/\/t\.me\//, "").replace(/\/$/, ""))}</button>` : ""}</div>` : ""}
         <div style="margin-top:14px">${payList()}</div>
       </section>
       <nav class="tiles">
@@ -618,21 +691,14 @@ textarea.input { min-height: 132px; resize: vertical; }
       const list = items("outro");
       return `
       <div class="head"><h2 ${R("")}>${esc(t("outroHead"))}</h2><p ${R("")}>${esc(t("outroText"))}</p></div>
-      ${list.length ? `<div class="grid">${list.map((i) => `
-        <button ${R("card glass tap")} data-sheet="${esc(i.code)}" type="button">
-          <div class="thumb">${media(i)}</div>
-          <div class="meta"><b>${esc(L(i.title))}</b>${itemTag(i)}</div>
-        </button>`).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
+      ${list.length ? `<div class="grid">${list.map(card).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
     },
     ready() {
       const list = items("watermark");
       return `
       <div class="head"><h2 ${R("")}>${esc(t("readyHead"))}</h2><p ${R("")}>${esc(t("readyText"))}</p></div>
-      ${list.length ? `<div class="grid">${list.map((i) => `
-        <button ${R("card glass tap")} data-sheet="${esc(i.code)}" type="button">
-          <div class="thumb">${media(i)}</div>
-          <div class="meta"><b>${esc(L(i.title))}</b>${itemTag(i)}</div>
-        </button>`).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
+      ${list.length > SEARCH_FROM ? `<input class="input search" id="search" type="search" autocomplete="off" placeholder="${esc(t("search"))}">` : ""}
+      ${list.length ? `<div class="grid" id="grid">${list.map(card).join("")}</div><p class="nothing" id="nothing" hidden>${esc(t("nothing"))}</p>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
     },
     private() {
       const list = items("private");
@@ -670,14 +736,18 @@ textarea.input { min-height: 132px; resize: vertical; }
     voices() {
       const list = items("voice");
       const notice = list.find((i) => i.notice);
+      // Одна цена на всех — пишем её один раз над списком; разные цены — у каждой озвучки.
+      const sig = (i) => JSON.stringify([curPrice(i), curFiat(i), saleActive(i)]);
+      const samePrice = list.length > 1 && list.every((i) => sig(i) === sig(list[0]));
       return `
       <div class="head"><h2 ${R("")}>${esc(t("voiceHead"))}</h2><p ${R("")}>${esc(t("voiceText"))}</p></div>
       ${notice ? `<div ${R("warn")} style="margin-bottom:12px">${ICON.alert}<span>${esc(L(notice.notice))}</span></div>` : ""}
+      ${samePrice ? `<div ${R("voiceprice")}>${esc(t("voicePrice"))} ${itemTag(list[0])}</div>` : ""}
       <div class="voices">${list.map((i) => `
         <div ${R("voice glass")}>
           <button class="play tap" type="button" data-play="${esc(i.code)}" ${i.audio ? "" : "disabled"} aria-label="Play">${ICON.play}</button>
-          <div><b>${esc(L(i.title))}</b>${i.audio ? `<div class="bar"><i data-bar="${esc(i.code)}"></i></div>` : `<small class="note">${esc(t("noPreview"))}</small>`}</div>
-          <div class="side">${itemTag(i)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
+          <div><b>${esc(L(i.title))}</b>${i.audio ? wave(i.code) : `<small class="note">${esc(t("noPreview"))}</small>`}</div>
+          <div class="side">${samePrice ? "" : itemTag(i)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
         </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
     },
@@ -721,11 +791,13 @@ textarea.input { min-height: 132px; resize: vertical; }
       return `
       <div class="head"><h2 ${R("")}>${esc(L(i.title))}</h2>${i.desc ? `<p ${R("")}>${esc(L(i.desc))}</p>` : ""}</div>
       <div ${R("panel glass")}>
-        ${i.audio ? `<div class="voice" style="padding:0;grid-template-columns:52px 1fr"><button class="play tap" type="button" data-play="${esc(i.code)}" aria-label="Play">${ICON.play}</button><div class="bar"><i data-bar="${esc(i.code)}"></i></div></div>` : ""}
+        ${i.audio ? `<div class="voice" style="padding:0;grid-template-columns:52px 1fr"><button class="play tap" type="button" data-play="${esc(i.code)}" aria-label="Play">${ICON.play}</button>${wave(i.code)}</div>` : ""}
+        <h4>${esc(t("how"))}</h4>
+        <ol class="how">${t("howSteps").map((x) => `<li>${esc(x)}</li>`).join("")}</ol>
         <div class="field">
           <label for="details">${esc(t("details"))}</label>
           <textarea class="input" id="details" maxlength="1000" placeholder="${esc(L(i.prompt))}"></textarea>
-          <div class="hint"><span>${esc(t("manualNote"))}</span><span id="count">0/1000</span></div>
+          <div class="hint"><span></span><span id="count">0/1000</span></div>
         </div>
         ${i.notice ? `<div class="warn">${ICON.alert}<span>${esc(L(i.notice))}</span></div>` : ""}
         <div class="err" id="err" hidden></div>
@@ -752,6 +824,13 @@ textarea.input { min-height: 132px; resize: vertical; }
     updateCart();
     const ta = $("#details");
     if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
+    const search = $("#search");
+    if (search) search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      document.querySelectorAll("#grid .card").forEach((c) => { const ok = !q || (c.dataset.name || "").includes(q); c.hidden = !ok; if (ok) shown++; });
+      $("#nothing").hidden = shown > 0;
+    });
   }
 
   // наклон плашек за курсором (только на устройствах с мышью и без «уменьшить движение»)
@@ -793,7 +872,8 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (audio) { audio.pause(); audio = null; }
     cancelAnimationFrame(raf);
     document.querySelectorAll("[data-play]").forEach((b) => (b.innerHTML = ICON.play));
-    document.querySelectorAll("[data-bar]").forEach((i) => (i.style.width = "0"));
+    document.querySelectorAll("[data-bar]").forEach((i) => i.style.setProperty("--p", "0%"));
+    document.querySelectorAll(".wave.playing").forEach((w) => w.classList.remove("playing"));
     audioCode = null;
   }
   function togglePlay(code) {
@@ -805,12 +885,13 @@ textarea.input { min-height: 132px; resize: vertical; }
     audioCode = code;
     document.querySelectorAll(`[data-play="${CSS.escape(code)}"]`).forEach((b) => (b.innerHTML = ICON.pause));
     const bars = [...document.querySelectorAll(`[data-bar="${CSS.escape(code)}"]`)];
+    document.querySelectorAll(`[data-wave="${CSS.escape(code)}"]`).forEach((w) => w.classList.add("playing"));
     audio.addEventListener("ended", stopAudio);
     audio.play().catch(() => { stopAudio(); toast(t("noPreview")); });
     const tick = () => {
       if (!audio) return;
       const p = audio.duration ? audio.currentTime / audio.duration : 0;
-      bars.forEach((b) => (b.style.width = `${(p * 100).toFixed(1)}%`));
+      bars.forEach((b) => b.style.setProperty("--p", `${(p * 100).toFixed(1)}%`));
       raf = requestAnimationFrame(tick);
     };
     tick();
@@ -835,7 +916,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <div class="field">
           <label>${esc(t("format"))}</label>
           <div class="seg" role="group">
-            ${[["MOV", "mov"], ["MP4", "mp4"], ["BOTH", "both"]].map(([m, k]) => `<button class="tap" type="button" data-mode="${m}" aria-pressed="${m === sheetMode}">${m === "BOTH" ? `<b>${esc(t("bothLabel"))}</b>` : `<b class="pxf">${m}</b>`}<span>${esc(t(k))}</span></button>`).join("")}
+            ${[["MOV", "mov", ICON.monitor], ["MP4", "mp4", ICON.phone], ["BOTH", "both", ICON.both]].map(([m, k, ic]) => `<button class="tap" type="button" data-mode="${m}" aria-pressed="${m === sheetMode}">${ic}<b>${m === "BOTH" ? esc(t("bothLabel")) : m}</b><span>${esc(t(k))}</span></button>`).join("")}
           </div>
         </div>
         <p class="note">${esc(t("autoNote"))}</p>` : `<p class="note">${esc(t("noformNote"))}</p>`}
@@ -1055,7 +1136,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       return {
         x: Math.random() * w, y: anywhere ? Math.random() * h : -40 * dpr,
         size: (9 + depth * 13) * dpr,
-        vy: (22 + depth * 38) * dpr,           // px per second
+        vy: (16 + depth * 28) * dpr,           // px per second
         drift: (Math.random() - 0.5) * 18 * dpr,
         sway: Math.random() * Math.PI * 2, swaySpeed: 0.6 + Math.random() * 0.9, swayAmp: (14 + Math.random() * 26) * dpr,
         rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 1.6,
@@ -1067,7 +1148,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = cv.width = Math.floor(innerWidth * dpr); h = cv.height = Math.floor(innerHeight * dpr);
       sprites = [makeSprite(64, "#ffd6e1", "#ff8fab"), makeSprite(64, "#ffc2d1", "#ff6f91"), makeSprite(64, "#fff0f4", "#ffb8cb")];
-      const count = Math.round(Math.min(22, Math.max(12, innerWidth / 20)));
+      const count = Math.round(Math.min(14, Math.max(8, innerWidth / 30)));
       list = Array.from({ length: count }, () => spawn(true));
     };
     const draw = (p, dt) => {
@@ -1108,6 +1189,11 @@ textarea.input { min-height: 132px; resize: vertical; }
       tg.BackButton.onClick(back);
       if (tg.MainButton) tg.MainButton.onClick(() => { if (stack[stack.length - 1].screen === "cart") checkout(); });
     }
+    // Пока каталог грузится — спокойная заставка вместо пустого экрана.
+    $("#view").innerHTML = `<div aria-busy="true" aria-label="${esc(t("loading"))}" style="display:grid;gap:12px;padding-top:26px">
+      <div class="skel" style="height:58px;width:72%"></div><div class="skel" style="height:16px;width:88%;border-radius:8px"></div>
+      <div class="skel" style="height:220px;margin-top:14px;border-radius:26px"></div><div class="skel" style="height:150px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="skel" style="height:132px"></div><div class="skel" style="height:132px"></div></div></div>`;
     // Каталог: две попытки. Не загрузился — честно говорим покупателю, а не показываем молча запасной.
     let loaded = false;
     for (let attempt = 0; attempt < 2 && !loaded; attempt++) {

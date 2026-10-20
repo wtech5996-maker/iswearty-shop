@@ -1,11 +1,13 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-20T13:33:08.293Z",
+  "updated": "2026-10-20T19:59:41.045Z",
   "pay": [
     "stars",
     "crypto",
     "transfer"
   ],
+  "sold": 520,
+  "channel": "https://t.me/isweart",
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -79,6 +81,7 @@
       "price": 200,
       "rub": 200,
       "usd": 2.5,
+      "top": true,
       "preview": "media/KAZUMI.mp4",
       "poster": "media/KAZUMI.jpg"
     },
