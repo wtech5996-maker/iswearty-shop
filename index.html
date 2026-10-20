@@ -124,8 +124,8 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .price .old { opacity: .55; font: 600 13px/1 var(--body); }
 .price .pct { font: 800 11.5px/1 var(--body); padding: 4px 6px; border-radius: 8px; background: var(--crimson); color: #fff; }
 .star { fill: var(--gold); filter: drop-shadow(0 0 4px rgba(255, 211, 107, 0.45)); }
-.paylist { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
-.paylist .m { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 999px; background: rgba(255, 236, 241, 0.08); border: 1px solid var(--glass-edge); color: var(--ink); font-weight: 600; font-size: 12.5px; }
+.paylist { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; color: var(--faint); font-size: 12px; }
+.paylist .m { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: rgba(255, 236, 241, 0.08); border: 1px solid var(--glass-edge); color: var(--ink); font-weight: 600; font-size: 12px; white-space: nowrap; }
 
 /* cart */
 .cartbtn { position: relative; border: 0; width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; color: var(--ink); margin-left: auto; }
@@ -277,6 +277,9 @@ textarea.input { min-height: 132px; resize: vertical; }
   const $ = (s, r = document) => r.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Экономия трафика или медленная сеть: вместо видео — обложки, без автозапуска.
+  const conn = navigator.connection || {};
+  const lite = Boolean(conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""));
 
   // ---------- text ----------
   const T = {
@@ -298,7 +301,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       voiceHead: "Озвучки", voiceText: "Нажмите на кнопку, чтобы послушать пример.", noPreview: "Пример скоро появится",
       choose: "Выбрать", nick: "Ваш ник", nickHint: "Так ник будет написан на водянке", format: "Формат",
       mov: "ПК, прозрачный фон", mp4: "Телефон, зелёный фон", both: "ПК и телефон", bothLabel: "Оба",
-      details: "Описание заказа", buyFor: "Купить за", refund: "Цифровой товар. Возврат средств не предусмотрен.",
+      details: "Описание заказа", buyFor: "Купить за", refund: "Цифровой товар. Условия и возврат — команда /terms в чате с ботом.",
       errNick: "Впишите ник: от 1 до 32 символов, без переносов строки.", errNickSlash: "Ник не может начинаться с символа /.",
       errText: "Опишите заказ: от 5 до 1000 символов.", empty: "Здесь пока пусто.",
       openChat: "Открываю чат с ботом. Он попросит данные заказа и пришлёт счёт.",
@@ -323,7 +326,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       voiceHead: "Voice-overs", voiceText: "Tap the button to hear a sample.", noPreview: "Sample coming soon",
       choose: "Choose", nick: "Your nickname", nickHint: "Exactly as it will appear on the watermark", format: "Format",
       mov: "PC, transparent", mp4: "Phone, green screen", both: "PC and phone", bothLabel: "Both",
-      details: "Order details", buyFor: "Buy for", refund: "Digital goods. No refunds.",
+      details: "Order details", buyFor: "Buy for", refund: "Digital goods. Terms and refunds — the /terms command in the bot chat.",
       errNick: "Enter a nickname: 1 to 32 characters, one line.", errNickSlash: "A nickname can't start with /.",
       errText: "Describe your order: 5 to 1000 characters.", empty: "Nothing here yet.",
       openChat: "Opening the chat with the bot. It will ask for the order details and send an invoice.",
@@ -376,16 +379,16 @@ textarea.input { min-height: 132px; resize: vertical; }
   };
   const buyLabel = (i) => `${esc(t("buyNow"))} · ${curFiat(i) != null ? esc(fmtFiat(curFiat(i))) + " / " : ""}<span class="pxf">${ICON.star}${esc(curPrice(i))}</span>`;
   /** Кнопки под товаром: купить сразу или положить в корзину. */
-  const buyRow = (i) => `${payList()}
+  const buyRow = (i) => `${payList(false)}
         <div class="btnrow">
           <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i)}</button>
           <button class="buy ghost tap" data-add="${esc(i.code)}" type="button">${esc(t("toCart"))}</button>
         </div>
         <p class="note">${esc(t("payNote"))}</p>`;
-  const payList = () => {
+  const payList = (withLabel = true) => {
     const pay = Array.isArray(catalog.pay) && catalog.pay.length ? catalog.pay : ["stars"];
     const label = { stars: `⭐ ${t("payStars")}`, crypto: `💎 ${t("payCrypto")}`, transfer: `💳 ${t("payTransfer")}` };
-    return `<div class="paylist"><span>${esc(t("pay"))}:</span>${pay.filter((m) => label[m]).map((m) => `<span class="m">${esc(label[m])}</span>`).join("")}</div>`;
+    return `<div class="paylist">${withLabel ? `<span>${esc(t("pay"))}:</span>` : ""}${pay.filter((m) => label[m]).map((m) => `<span class="m">${esc(label[m])}</span>`).join("")}</div>`;
   };
 
   // ---------- catalog ----------
@@ -409,6 +412,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   const haptic = (s) => { try { inTelegram && tg.HapticFeedback.impactOccurred(s); } catch {} };
 
   const media = (item) => {
+    if (lite && item && item.poster) return `<img src="${esc(item.poster)}" alt="">`;
     if (item && item.preview) return `<video src="${esc(item.preview)}" ${item.poster ? `poster="${esc(item.poster)}"` : ""} muted loop playsinline preload="metadata"></video>`;
     if (item && item.poster) return `<img src="${esc(item.poster)}" alt="">`;
     const initials = (L(item && item.title) || "WM").replace(/[^A-Za-zА-Яа-я0-9 ]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
@@ -421,6 +425,11 @@ textarea.input { min-height: 132px; resize: vertical; }
   const screens = {
     home() {
       const avatar = items("avatar")[0];
+      // Превью готовых водянок сменяют друг друга на большой плитке.
+      const reel = items("watermark").filter((i) => i.preview || i.poster).slice(0, 4);
+      const reelHtml = reel.map((i, k) => (lite || !i.preview
+        ? `<img class="${k === 0 ? "on" : ""}" src="${esc(i.poster || "")}" alt="">`
+        : `<video class="${k === 0 ? "on" : ""}" src="${esc(i.preview)}" ${i.poster ? `poster="${esc(i.poster)}"` : ""} muted loop playsinline preload="${k === 0 ? "auto" : "none"}"></video>`)).join("");
       return `
       <section class="hero${booted ? "" : " boot"}">
         <h1 class="logo">ISWEARTY<small>shop</small></h1>
@@ -429,6 +438,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap")} data-go="watermarks" type="button">
+          ${reel.length ? `<span class="media" id="reel" aria-hidden="true">${reelHtml}</span>` : ""}
           <h3>${esc(t("wm"))}</h3>
           <span class="sub">${esc(t("wmSub"))}</span>
           <span class="from">${esc(t("from"))} ${fromTag(["watermark", "custom"])}</span>
@@ -567,8 +577,8 @@ textarea.input { min-height: 132px; resize: vertical; }
       <div ${R("panel glass")} style="margin-top:12px">
         <div class="total"><h4>${esc(t("total"))}</h4>${priceTag(sum.stars, sum.fiat, true)}</div>
         ${sum.fiat == null ? `<p class="note">${esc(t("noFiat"))}</p>` : ""}
-        ${payList()}
-        <button class="buy tap" data-checkout="1" type="button" ${gone ? "disabled" : ""}>${esc(t("checkout"))} · ${esc(t("items", cart.length))}</button>
+        ${payList(false)}
+        ${inTelegram && tg.MainButton ? "" : `<button class="buy tap" data-checkout="1" type="button" ${gone ? "disabled" : ""}>${esc(t("checkout"))} · ${esc(t("items", cart.length))}</button>`}
         <p class="note">${esc(t("payNote"))}</p>
       </div>`;
     },
@@ -616,6 +626,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   let io;
   function observeVideos() {
     io && io.disconnect();
+    if (lite) return;
     io = new IntersectionObserver((entries) => entries.forEach((e) => { const v = e.target; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: 0.35 });
     document.querySelectorAll("#view .card video").forEach((v) => io.observe(v));
   }
@@ -623,16 +634,18 @@ textarea.input { min-height: 132px; resize: vertical; }
   // home tile: previews take turns
   let reelTimer = 0;
   function startReel() {
-    const vids = [...document.querySelectorAll("#reel video")];
+    const vids = [...document.querySelectorAll("#reel video, #reel img")];
     if (!vids.length) return;
     let k = 0;
-    vids[0].play().catch(() => {});
+    const play = (v) => { if (v.tagName === "VIDEO") { v.preload = "auto"; v.currentTime = 0; v.play().catch(() => {}); } };
+    const pause = (v) => { if (v.tagName === "VIDEO") v.pause(); };
+    play(vids[0]);
     if (vids.length < 2 || reduceMotion) return;
     reelTimer = setInterval(() => {
       const cur = vids[k]; k = (k + 1) % vids.length; const next = vids[k];
-      next.preload = "auto"; next.currentTime = 0; next.play().catch(() => {});
+      play(next);
       next.classList.add("on"); cur.classList.remove("on");
-      setTimeout(() => cur.pause(), 900);
+      setTimeout(() => pause(cur), 900);
     }, 3200);
   }
   function stopReel() { clearInterval(reelTimer); reelTimer = 0; }
@@ -700,6 +713,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     const nick = $("#nick");
     if (nick) nick.addEventListener("input", () => { $("#nickCount").textContent = `${[...nick.value].length}/32`; });
     if (inTelegram) tg.BackButton.show();
+    syncMainButton();
     haptic("medium");
   }
   function closeSheet() {
@@ -709,6 +723,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     sheetOpen = false;
     const v = $("#sheet video"); v && v.pause();
     if (inTelegram && stack.length === 1) tg.BackButton.hide();
+    syncMainButton();
   }
 
   // ---------- purchase ----------
@@ -823,6 +838,17 @@ textarea.input { min-height: 132px; resize: vertical; }
     saveCart();
     render();
   }
+  /** Нижняя кнопка Telegram «Оформить заказ» — только на экране корзины. */
+  function syncMainButton() {
+    if (!inTelegram || !tg.MainButton) return;
+    const onCart = stack[stack.length - 1].screen === "cart";
+    const ok = onCart && cart.length > 0 && !sheetOpen && !cart.some((x) => !byCode(x.c));
+    if (!ok) { tg.MainButton.hide(); return; }
+    const sum = cartTotal();
+    const money = `${sum.fiat != null ? fmtFiat(sum.fiat) + " / " : ""}⭐${sum.stars}`;
+    try { tg.MainButton.setParams({ text: `${t("checkout")} · ${money}`, color: "#e8193c", text_color: "#ffffff", is_active: true, is_visible: true }); } catch { tg.MainButton.setText(`${t("checkout")} · ${money}`); tg.MainButton.show(); }
+  }
+
   /** Счётчик в шапке и плашка «Корзина» внизу экрана. */
   function updateCart() {
     $("#cartCount").textContent = cart.length ? String(cart.length) : "";
@@ -837,6 +863,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     bar.classList.toggle("on", show);
     bar.tabIndex = show ? 0 : -1;
     document.body.classList.toggle("withbar", show);
+    syncMainButton();
   }
 
   let toastTimer;
@@ -896,14 +923,14 @@ textarea.input { min-height: 132px; resize: vertical; }
         sway: Math.random() * Math.PI * 2, swaySpeed: 0.6 + Math.random() * 0.9, swayAmp: (14 + Math.random() * 26) * dpr,
         rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 1.6,
         flip: Math.random() * Math.PI * 2, vflip: 1.2 + Math.random() * 2.2,
-        alpha: 0.35 + depth * 0.55, sprite: sprites[(Math.random() * sprites.length) | 0],
+        alpha: 0.22 + depth * 0.4, sprite: sprites[(Math.random() * sprites.length) | 0],
       };
     };
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = cv.width = Math.floor(innerWidth * dpr); h = cv.height = Math.floor(innerHeight * dpr);
       sprites = [makeSprite(64, "#ffd6e1", "#ff8fab"), makeSprite(64, "#ffc2d1", "#ff6f91"), makeSprite(64, "#fff0f4", "#ffb8cb")];
-      const count = Math.round(Math.min(34, Math.max(16, innerWidth / 14)));
+      const count = Math.round(Math.min(22, Math.max(12, innerWidth / 20)));
       list = Array.from({ length: count }, () => spawn(true));
     };
     const draw = (p, dt) => {
@@ -942,6 +969,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       tg.ready(); tg.expand();
       try { tg.setHeaderColor("#1a060c"); tg.setBackgroundColor("#1a060c"); } catch {}
       tg.BackButton.onClick(back);
+      if (tg.MainButton) tg.MainButton.onClick(() => { if (stack[stack.length - 1].screen === "cart") checkout(); });
     }
     try {
       const res = await fetch("catalog.json", { cache: "no-cache" });
