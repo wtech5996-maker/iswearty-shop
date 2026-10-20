@@ -93,21 +93,26 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 /* большая плитка: графика без видео */
 .tile.wide { background: radial-gradient(120% 95% at 88% 0%, rgba(232, 25, 60, 0.5), rgba(26, 6, 12, 0) 60%), linear-gradient(160deg, #3a0a16, #1a060c); }
 .tile.wide .glow { position: absolute; width: 230px; height: 230px; right: -60px; top: -90px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 184, 203, 0.28), rgba(232, 25, 60, 0) 65%); z-index: -1; pointer-events: none; animation: breathe 4.8s ease-in-out infinite; }
-.tile.wide .sweep { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(105deg, rgba(255, 236, 241, 0) 40%, rgba(255, 236, 241, 0.2) 50%, rgba(255, 236, 241, 0) 60%); transform: translateX(-100%); animation: sweep 5.5s var(--ease) infinite; }
+.tile.wide .sweep { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(105deg, rgba(255, 236, 241, 0) 40%, rgba(255, 236, 241, 0.1) 50%, rgba(255, 236, 241, 0) 60%); transform: translateX(-100%); animation: sweep 5.5s var(--ease) infinite; }
 .tile.wide .letters span { display: inline-block; animation: letter 3.2s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 90ms); }
 .tile.wide.calm .glow, .tile.wide.calm .sweep, .tile.wide.calm .letters span { animation: none; }
 @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
 @keyframes sweep { 0% { transform: translateX(-100%); } 55%, 100% { transform: translateX(100%); } }
 @keyframes letter { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-/* наклон за курсором: JS задаёт --rx и --ry, блик — --mx и --my */
-.tile { transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.4s var(--ease), filter 0.2s, border-color 0.25s, box-shadow 0.3s; will-change: transform; }
-.tile:active { transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(0.965); transition-duration: 0.12s; }
-.tile::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.3s; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 241, 0.2), rgba(255, 236, 241, 0) 55%); }
-.tile .badge, .paylist .m { transition: scale 0.3s var(--spring), background 0.2s, border-color 0.2s; }
+/* наклон за курсором на всех плашках: JS задаёт --px и --py (от −0.5 до 0.5), блик — --mx и --my.
+   --tilt — сила наклона: широким плашкам меньше, чтобы не было резко. */
+.tile, .choice, .card, .line, .buy { --tilt: 10deg; position: relative; transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))); transition: transform 0.4s var(--ease), filter 0.2s, border-color 0.25s, box-shadow 0.3s, background 0.2s; }
+.choice { --tilt: 7deg; }
+.card { --tilt: 12deg; }
+.line { --tilt: 4deg; }
+.buy, .cartbar { --tilt: 5deg; }
+.tap:is(.tile, .choice, .card, .buy):active { transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))) scale(0.965); transition-duration: 0.12s; }
+.tile::after, .choice::after, .card::after, .line::after, .buy::after, .cartbar::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2; opacity: 0; transition: opacity 0.3s; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 241, 0.09), rgba(255, 236, 241, 0) 55%); }
+.tile .badge, .choice .badge, .paylist .m { transition: scale 0.3s var(--spring), background 0.2s, border-color 0.2s; }
 @media (hover: hover) {
-  .tile:hover::before { opacity: 1; }
-  .tile:hover { border-color: rgba(255, 184, 203, 0.35); box-shadow: 0 22px 44px -20px rgba(232, 25, 60, 0.65); }
-  .tile:hover .badge { scale: 1.08; }
+  :is(.tile, .choice, .card, .line, .buy, .cartbar):hover::after { opacity: 1; }
+  :is(.tile, .choice, .card, .line):hover { border-color: rgba(255, 184, 203, 0.35); box-shadow: 0 22px 44px -20px rgba(232, 25, 60, 0.6); }
+  :is(.tile, .choice):hover .badge { scale: 1.08; }
   .paylist .m:hover { border-color: rgba(255, 184, 203, 0.45); background: rgba(232, 25, 60, 0.2); }
 }
 
@@ -149,7 +154,7 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .cartbtn .count { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; background: var(--crimson); color: #fff; font: 800 11px/19px var(--body); text-align: center; box-shadow: 0 0 0 2px var(--night); }
 .cartbtn .count:empty { display: none; }
 .cartbar { position: fixed; z-index: 4; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translate(-50%, 160%); width: min(488px, calc(100% - 32px)); border: 0; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; color: #fff; background: linear-gradient(180deg, #ff3355, var(--crimson) 55%, #c4102f); box-shadow: 0 18px 36px -14px rgba(232, 25, 60, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: transform 0.5s var(--spring); font: 800 15px/1.1 var(--body); }
-.cartbar.on { transform: translate(-50%, 0); }
+.cartbar.on { transform: translate(-50%, 0) perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))); }
 .cartbar .sum { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
 .cartbar .price { color: #fff; }
 .cartbar .price .sep { color: rgba(255, 255, 255, 0.7); }
@@ -248,8 +253,8 @@ textarea.input { min-height: 132px; resize: vertical; }
 
 @media (prefers-reduced-motion: reduce) {
   .rise, .boot .logo, .boot p, .sheet .stack > *, .err, .tile .glow, .tile .sweep, .tile .letters span { animation: none; }
-  .sheet, .scrim, .toast, .tap, .tile, .tile .badge, .paylist .m { transition: none; }
-  .tile, .tile:active { transform: none; }
+  .sheet, .scrim, .toast, .tap, .tile, .choice, .card, .line, .buy, .tile .badge, .choice .badge, .paylist .m { transition: none; }
+  .tile, .choice, .card, .line, .buy, .tap:is(.tile, .choice, .card, .buy):active { transform: none; }
 }
 </style>
 </head>
@@ -634,24 +639,26 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
   }
 
-  // наклон плиток за курсором (только на устройствах с мышью и без «уменьшить движение»)
+  // наклон плашек за курсором (только на устройствах с мышью и без «уменьшить движение»)
+  const TILT = ".tile, .choice, .card, .line, .buy, .cartbar";
   if (matchMedia("(hover: hover)").matches && !reduceMotion) {
     document.addEventListener("pointermove", (e) => {
-      const tile = e.target.closest ? e.target.closest(".tile") : null;
-      if (!tile) return;
-      const r = tile.getBoundingClientRect();
+      const el = e.target.closest ? e.target.closest(TILT) : null;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      if (!r.width || !r.height) return;
       const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
       const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
-      tile.style.setProperty("--rx", `${((0.5 - y) * 12).toFixed(2)}deg`);
-      tile.style.setProperty("--ry", `${((x - 0.5) * 12).toFixed(2)}deg`);
-      tile.style.setProperty("--mx", `${(x * 100).toFixed(1)}%`);
-      tile.style.setProperty("--my", `${(y * 100).toFixed(1)}%`);
+      el.style.setProperty("--px", (x - 0.5).toFixed(3));
+      el.style.setProperty("--py", (y - 0.5).toFixed(3));
+      el.style.setProperty("--mx", `${(x * 100).toFixed(1)}%`);
+      el.style.setProperty("--my", `${(y * 100).toFixed(1)}%`);
     });
     document.addEventListener("pointerout", (e) => {
-      const tile = e.target.closest ? e.target.closest(".tile") : null;
-      if (tile && !tile.contains(e.relatedTarget)) {
-        tile.style.removeProperty("--rx");
-        tile.style.removeProperty("--ry");
+      const el = e.target.closest ? e.target.closest(TILT) : null;
+      if (el && !el.contains(e.relatedTarget)) {
+        el.style.removeProperty("--px");
+        el.style.removeProperty("--py");
       }
     });
   }
