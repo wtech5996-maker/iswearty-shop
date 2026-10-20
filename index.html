@@ -90,10 +90,22 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .badge { width: 46px; height: 46px; flex: none; border-radius: 15px; display: grid; place-items: center; color: var(--sakura); background: linear-gradient(160deg, rgba(232, 25, 60, 0.45), rgba(143, 15, 38, 0.35)); border: 1px solid rgba(255, 184, 203, 0.3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); }
 .tile.small .badge { margin-bottom: auto; }
 .from { font: 500 13.5px/1 var(--body); color: var(--sakura); display: inline-flex; align-items: center; gap: 6px; }
-.tile .media { position: absolute; inset: 0; z-index: -1; background: #2b2b2b; }
-.tile .media video, .tile .media img { position: absolute; top: 0; right: -8%; width: 78%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.9s var(--ease); }
-.tile .media .on { opacity: 1; }
-.tile.wide::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(26, 6, 12, 0.92) 18%, rgba(26, 6, 12, 0.35) 60%, rgba(26, 6, 12, 0) 100%), linear-gradient(0deg, rgba(26, 6, 12, 0.6), rgba(26, 6, 12, 0) 50%); }
+/* большая плитка: графика без видео */
+.tile.wide { background: radial-gradient(120% 95% at 88% 0%, rgba(232, 25, 60, 0.5), rgba(26, 6, 12, 0) 60%), linear-gradient(160deg, #3a0a16, #1a060c); }
+.tile.wide .glow { position: absolute; width: 230px; height: 230px; right: -60px; top: -90px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 184, 203, 0.28), rgba(232, 25, 60, 0) 65%); z-index: -1; pointer-events: none; animation: breathe 4.8s ease-in-out infinite; }
+.tile.wide .sweep { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(105deg, rgba(255, 236, 241, 0) 40%, rgba(255, 236, 241, 0.2) 50%, rgba(255, 236, 241, 0) 60%); transform: translateX(-100%); animation: sweep 5.5s var(--ease) infinite; }
+.tile.wide .letters span { display: inline-block; animation: letter 3.2s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 90ms); }
+.tile.wide.calm .glow, .tile.wide.calm .sweep, .tile.wide.calm .letters span { animation: none; }
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+@keyframes sweep { 0% { transform: translateX(-100%); } 55%, 100% { transform: translateX(100%); } }
+@keyframes letter { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+/* наведение: свойства translate и scale, чтобы не спорить с анимацией появления */
+.tile .badge, .paylist .m { transition: scale 0.3s var(--spring), background 0.2s, border-color 0.2s, translate 0.3s var(--spring); }
+@media (hover: hover) {
+  .tile:hover:not(:active) { translate: 0 -3px; border-color: rgba(255, 184, 203, 0.35); box-shadow: 0 18px 40px -18px rgba(232, 25, 60, 0.6); }
+  .tile:hover:not(:active) .badge { scale: 1.08; }
+  .paylist .m:hover { translate: 0 -2px; border-color: rgba(255, 184, 203, 0.45); background: rgba(232, 25, 60, 0.2); }
+}
 
 /* section heads */
 .head { padding: 18px 2px 14px; }
@@ -231,8 +243,8 @@ textarea.input { min-height: 132px; resize: vertical; }
 .empty { padding: 28px 18px; text-align: center; color: var(--muted); border-radius: 20px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise, .boot .logo, .boot p, .sheet .stack > *, .err { animation: none; }
-  .sheet, .scrim, .toast, .tap, .tile .media video, .tile .media img { transition: none; }
+  .rise, .boot .logo, .boot p, .sheet .stack > *, .err, .tile .glow, .tile .sweep, .tile .letters span { animation: none; }
+  .sheet, .scrim, .toast, .tap, .tile .badge, .paylist .m { transition: none; }
 }
 </style>
 </head>
@@ -425,11 +437,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   const screens = {
     home() {
       const avatar = items("avatar")[0];
-      // Превью готовых водянок сменяют друг друга на большой плитке.
-      const reel = items("watermark").filter((i) => i.preview || i.poster).slice(0, 4);
-      const reelHtml = reel.map((i, k) => (lite || !i.preview
-        ? `<img class="${k === 0 ? "on" : ""}" src="${esc(i.poster || "")}" alt="">`
-        : `<video class="${k === 0 ? "on" : ""}" src="${esc(i.preview)}" ${i.poster ? `poster="${esc(i.poster)}"` : ""} muted loop playsinline preload="${k === 0 ? "auto" : "none"}"></video>`)).join("");
+      // Буквы названия плитки покачиваются по очереди (без видео и картинок).
+      const letters = [...t("wm")].map((ch, i) => `<span style="--i:${i}">${ch === " " ? "&nbsp;" : esc(ch)}</span>`).join("");
       return `
       <section class="hero${booted ? "" : " boot"}">
         <h1 class="logo">ISWEARTY<small>shop</small></h1>
@@ -437,9 +446,9 @@ textarea.input { min-height: 132px; resize: vertical; }
         <div style="margin-top:14px">${payList()}</div>
       </section>
       <nav class="tiles">
-        <button ${R("tile wide glass tap")} data-go="watermarks" type="button">
-          ${reel.length ? `<span class="media" id="reel" aria-hidden="true">${reelHtml}</span>` : ""}
-          <h3>${esc(t("wm"))}</h3>
+        <button ${R(`tile wide glass tap${lite ? " calm" : ""}`)} data-go="watermarks" type="button">
+          <span class="glow" aria-hidden="true"></span><span class="sweep" aria-hidden="true"></span>
+          <h3 class="letters">${letters}</h3>
           <span class="sub">${esc(t("wmSub"))}</span>
           <span class="from">${esc(t("from"))} ${fromTag(["watermark", "custom"])}</span>
         </button>
@@ -610,13 +619,11 @@ textarea.input { min-height: 132px; resize: vertical; }
     $("#back").setAttribute("aria-label", t("back"));
     document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     stopAudio();
-    stopReel();
     $("#view").innerHTML = screens[screen](params || {});
     booted = true;
     if (inTelegram) { stack.length > 1 ? tg.BackButton.show() : tg.BackButton.hide(); }
     else $("#back").classList.toggle("on", stack.length > 1);
     observeVideos();
-    startReel();
     updateCart();
     const ta = $("#details");
     if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
@@ -630,25 +637,6 @@ textarea.input { min-height: 132px; resize: vertical; }
     io = new IntersectionObserver((entries) => entries.forEach((e) => { const v = e.target; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: 0.35 });
     document.querySelectorAll("#view .card video").forEach((v) => io.observe(v));
   }
-
-  // home tile: previews take turns
-  let reelTimer = 0;
-  function startReel() {
-    const vids = [...document.querySelectorAll("#reel video, #reel img")];
-    if (!vids.length) return;
-    let k = 0;
-    const play = (v) => { if (v.tagName === "VIDEO") { v.preload = "auto"; v.currentTime = 0; v.play().catch(() => {}); } };
-    const pause = (v) => { if (v.tagName === "VIDEO") v.pause(); };
-    play(vids[0]);
-    if (vids.length < 2 || reduceMotion) return;
-    reelTimer = setInterval(() => {
-      const cur = vids[k]; k = (k + 1) % vids.length; const next = vids[k];
-      play(next);
-      next.classList.add("on"); cur.classList.remove("on");
-      setTimeout(() => pause(cur), 900);
-    }, 3200);
-  }
-  function stopReel() { clearInterval(reelTimer); reelTimer = 0; }
 
   // ---------- audio samples ----------
   let audio = null, audioCode = null, raf = 0;
