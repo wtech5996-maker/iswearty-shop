@@ -112,13 +112,47 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .stackthumbs img:nth-child(3) { left: 24px; transform: rotate(8deg); }
 
 /* price */
-.price { display: inline-flex; align-items: center; gap: 6px; font: 400 13px/1 var(--pixel); color: #fff; white-space: nowrap; }
+.price { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font: 400 13px/1 var(--pixel); color: #fff; }
+.price .st { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.price .fiat { font: 800 15px/1 var(--body); white-space: nowrap; letter-spacing: -0.01em; }
+.price .sep { font: 400 13px/1 var(--body); color: var(--faint); }
 .price svg { width: 15px; height: 15px; }
 .price.big { font-size: 18px; }
+.price.big .fiat { font-size: 21px; }
 .price.big svg { width: 20px; height: 20px; }
 .price.sale { color: #ffd6e0; }
-.price.sale .old { opacity: .55; margin-right: 2px; }
+.price .old { opacity: .55; font: 600 13px/1 var(--body); }
+.price .pct { font: 800 11.5px/1 var(--body); padding: 4px 6px; border-radius: 8px; background: var(--crimson); color: #fff; }
 .star { fill: var(--gold); filter: drop-shadow(0 0 4px rgba(255, 211, 107, 0.45)); }
+.paylist { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
+.paylist .m { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 999px; background: rgba(255, 236, 241, 0.08); border: 1px solid var(--glass-edge); color: var(--ink); font-weight: 600; font-size: 12.5px; }
+
+/* cart */
+.cartbtn { position: relative; border: 0; width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; color: var(--ink); margin-left: auto; }
+.cartbtn + .lang { margin-left: 0; }
+.cartbtn .count { position: absolute; top: -5px; right: -5px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; background: var(--crimson); color: #fff; font: 800 11px/19px var(--body); text-align: center; box-shadow: 0 0 0 2px var(--night); }
+.cartbtn .count:empty { display: none; }
+.cartbar { position: fixed; z-index: 4; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translate(-50%, 160%); width: min(488px, calc(100% - 32px)); border: 0; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; color: #fff; background: linear-gradient(180deg, #ff3355, var(--crimson) 55%, #c4102f); box-shadow: 0 18px 36px -14px rgba(232, 25, 60, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: transform 0.5s var(--spring); font: 800 15px/1.1 var(--body); }
+.cartbar.on { transform: translate(-50%, 0); }
+.cartbar .sum { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.cartbar .price { color: #fff; }
+.cartbar .price .sep { color: rgba(255, 255, 255, 0.7); }
+body.withbar .app { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+body.withbar .toast { bottom: calc(92px + env(safe-area-inset-bottom)); }
+.lines { display: grid; gap: 10px; }
+.line { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 10px; border-radius: 18px; }
+.line .pic { position: relative; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: #2b2b2b; }
+.line .pic img, .line .pic .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.line b { display: block; font: 700 15px/1.25 var(--body); }
+.line small { display: block; color: var(--muted); font-size: 12.5px; margin: 2px 0 6px; word-break: break-word; }
+.line .acts { display: grid; gap: 6px; justify-items: end; }
+.iconbtn { border: 1px solid var(--glass-edge); background: rgba(255, 236, 241, 0.08); border-radius: 11px; padding: 7px 10px; font: 600 12.5px/1 var(--body); color: var(--ink); white-space: nowrap; }
+.iconbtn.x { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; }
+.total { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.total h4 { font: 800 19px/1.1 var(--body); }
+.btnrow { display: grid; gap: 10px; }
+.buy.ghost { background: rgba(255, 236, 241, 0.1); border: 1px solid var(--glass-edge); box-shadow: none; font-size: 15.5px; }
+.buy:disabled { opacity: .55; cursor: not-allowed; }
 
 /* watermark grid */
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -186,7 +220,7 @@ textarea.input { min-height: 132px; resize: vertical; }
 .sheet .video { aspect-ratio: 1; max-height: 46vh; margin: 0 auto; border-radius: 18px; overflow: hidden; background: #2b2b2b; position: relative; }
 .sheet .video video, .sheet .video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .sheet h3 { margin: 14px 0 4px; font: 800 26px/1.1 var(--body); text-shadow: 2px 2px 0 var(--crimson-deep); }
-.sheet .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sheet .row { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .sheet .stack { display: grid; gap: 16px; margin-top: 14px; }
 .sheet .stack > * { animation: rise 0.6s var(--spring) both; }
 .sheet .stack > *:nth-child(2) { animation-delay: 60ms; } .sheet .stack > *:nth-child(3) { animation-delay: 120ms; } .sheet .stack > *:nth-child(n+4) { animation-delay: 180ms; }
@@ -210,6 +244,10 @@ textarea.input { min-height: 132px; resize: vertical; }
       <svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
     <div class="brand" id="brand"></div>
+    <button class="cartbtn glass tap" id="cartBtn" type="button" data-go="cart" aria-label="Корзина">
+      <svg class="i" viewBox="0 0 24 24"><path d="M6 7h12l-1.2 11.2a2 2 0 01-2 1.8H9.2a2 2 0 01-2-1.8z"/><path d="M9 9.5V6.5a3 3 0 016 0v3"/></svg>
+      <span class="count" id="cartCount"></span>
+    </button>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" data-lang="ru">RU</button>
       <button type="button" data-lang="en">EN</button>
@@ -218,6 +256,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   <main id="view"></main>
   <p class="legal" id="legal"></p>
 </div>
+<button class="cartbar" id="cartBar" type="button" data-go="cart" tabindex="-1"></button>
 <div class="scrim" id="scrim"></div>
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -242,7 +281,15 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- text ----------
   const T = {
     ru: {
-      back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Оплата звёздами Telegram, готовые водянки приходят в чат сами.",
+      back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат сами.",
+      pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
+      cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
+      cartEmpty: "Корзина пустая. Добавьте водянки, озвучки или приваты кнопкой «В корзину».", toShop: "В магазин", restore: "Вернуть прошлую корзину",
+      total: "Итого", checkout: "Оформить заказ", remove: "Убрать", moreNick: "+ другой ник", items: (n) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? "товар" : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? "товара" : "товаров"}`,
+      cartHint: "Одна оплата за всё. Каждый товар придёт в чат как обычно.", gone: "Этого товара больше нет в продаже — уберите его.",
+      tooBig: "Описания в корзине слишком длинные для одного заказа. Оформите часть товаров отдельно.",
+      cartKeyboard: "Корзину можно оформить, только если магазин открыт кнопкой «🛍 Открыть магазин» внизу чата с ботом. Корзина сохранится.",
+      cartSent: "Корзина отправлена в чат — там кнопки оплаты.", noFiat: "Не у всех товаров есть цена в рублях — итог показан в звёздах.",
       wm: "Водянки", wmSub: "Готовые и на заказ", priv: "Приват", privSub: "Закрытые группы, доступ навсегда", voice: "Озвучки", voiceSub: "Послушайте и выберите", ava: "Аватарки", avaSub: "Нарисую по описанию",
       from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты. Файл придёт в чат с ботом.", custom: "Кастом", customSub: "Сделаю новую под вас",
       readyHead: "Готовые водянки", readyText: "Нажмите на водянку, чтобы посмотреть и купить.",
@@ -259,7 +306,15 @@ textarea.input { min-height: 132px; resize: vertical; }
       manualNote: "После оплаты я начну работу и пришлю результат в чат с ботом.", autoNote: "После оплаты водянка рендерится и приходит в чат с ботом.",
     },
     en: {
-      back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Pay with Telegram Stars; ready-made watermarks arrive in the chat by themselves.",
+      back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the chat by themselves.",
+      pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
+      cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
+      cartEmpty: "Your cart is empty. Add watermarks, voice-overs or private groups with “Add to cart”.", toShop: "Back to shop", restore: "Restore previous cart",
+      total: "Total", checkout: "Check out", remove: "Remove", moreNick: "+ another nickname", items: (n) => `${n} item${n === 1 ? "" : "s"}`,
+      cartHint: "One payment for everything. Each item arrives in the chat as usual.", gone: "This item is no longer on sale — please remove it.",
+      tooBig: "The descriptions in your cart are too long for one order. Check out some items separately.",
+      cartKeyboard: "The cart can only be checked out when the shop is opened with the “🛍 Открыть магазин” button at the bottom of the bot chat. Your cart is saved.",
+      cartSent: "Cart sent to the chat — the payment buttons are there.", noFiat: "Some items have no price in dollars — the total is shown in Stars.",
       wm: "Watermarks", wmSub: "Ready-made and custom", priv: "Private", privSub: "Closed groups, lifetime access", voice: "Voice-overs", voiceSub: "Listen and choose", ava: "Avatars", avaSub: "Drawn from your description",
       from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment. The file arrives in the bot chat.", custom: "Custom", customSub: "A new one made for you",
       readyHead: "Ready-made watermarks", readyText: "Tap a watermark to preview and buy it.",
@@ -297,14 +352,41 @@ textarea.input { min-height: 132px; resize: vertical; }
     chevron: svg('<path d="M9 6l6 6-6 6"/>'),
     alert: svg('<path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2h.01"/>'),
   };
-  const priceTag = (n, big) => `<span class="price${big ? " big" : ""}">${ICON.star}${esc(n)}</span>`;
-  // Скидка: до даты окончания старая цена зачёркнута, рядом новая. После даты — обычная цена.
+  // ---------- prices: RU — рубли и звёзды, EN — доллары и звёзды ----------
+  // Скидка: до даты окончания цена со скидкой, после — обычная (даже если витрина ещё не пересобрана).
   const saleActive = (i) => i.old != null && (!i.until || new Date() <= new Date(i.until + "T23:59:59"));
   const curPrice = (i) => (saleActive(i) ? i.price : (i.old ?? i.price));
-  const itemTag = (i, big) => (saleActive(i)
-    ? `<span class="price${big ? " big" : ""} sale"><s class="old">${ICON.star}${esc(i.old)}</s>${ICON.star}${esc(i.price)}</span>`
-    : priceTag(curPrice(i), big));
-  const buyLabel = (price) => `${esc(t("buyFor"))} <span class="pxf">${ICON.star}${esc(price)}</span>`;
+  /** Цена в валюте языка: число или null, если у товара её нет. */
+  const curFiat = (i) => {
+    const now = lang === "ru" ? i.rub : i.usd;
+    const old = lang === "ru" ? i.rub_old : i.usd_old;
+    const v = saleActive(i) ? now : (old ?? now);
+    return typeof v === "number" ? v : null;
+  };
+  const oldFiat = (i) => (lang === "ru" ? i.rub_old : i.usd_old);
+  const fmtFiat = (n) => (lang === "ru" ? `${n} ₽` : `$${Number.isInteger(n) ? n : n.toFixed(2)}`);
+  const addFiat = (a, b) => (lang === "ru" ? a + b : Math.round((a + b) * 100) / 100);
+  /** «500 ₽ / ⭐150» или «$5 / ⭐150»; без цены в валюте — только звёзды. */
+  const priceTag = (stars, fiat, big, extra = "") => `<span class="price${big ? " big" : ""}">${extra}${fiat != null ? `<span class="fiat">${esc(fmtFiat(fiat))}</span><span class="sep">/</span>` : ""}<span class="st">${ICON.star}${esc(stars)}</span></span>`;
+  const itemTag = (i, big) => {
+    if (!saleActive(i)) return priceTag(curPrice(i), curFiat(i), big);
+    const pct = Math.round((1 - i.price / i.old) * 100);
+    const old = big ? `<s class="old">${esc(oldFiat(i) != null ? fmtFiat(oldFiat(i)) : i.old)}</s>` : "";
+    return priceTag(i.price, curFiat(i), big, `<span class="pct">−${pct}%</span>${old}`).replace('class="price', 'class="price sale');
+  };
+  const buyLabel = (i) => `${esc(t("buyNow"))} · ${curFiat(i) != null ? esc(fmtFiat(curFiat(i))) + " / " : ""}<span class="pxf">${ICON.star}${esc(curPrice(i))}</span>`;
+  /** Кнопки под товаром: купить сразу или положить в корзину. */
+  const buyRow = (i) => `${payList()}
+        <div class="btnrow">
+          <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(i)}</button>
+          <button class="buy ghost tap" data-add="${esc(i.code)}" type="button">${esc(t("toCart"))}</button>
+        </div>
+        <p class="note">${esc(t("payNote"))}</p>`;
+  const payList = () => {
+    const pay = Array.isArray(catalog.pay) && catalog.pay.length ? catalog.pay : ["stars"];
+    const label = { stars: `⭐ ${t("payStars")}`, crypto: `💎 ${t("payCrypto")}`, transfer: `💳 ${t("payTransfer")}` };
+    return `<div class="paylist"><span>${esc(t("pay"))}:</span>${pay.filter((m) => label[m]).map((m) => `<span class="m">${esc(label[m])}</span>`).join("")}</div>`;
+  };
 
   // ---------- catalog ----------
   let catalog = JSON.parse($("#catalog-fallback").textContent);
@@ -312,7 +394,13 @@ textarea.input { min-height: 132px; resize: vertical; }
   // Авто-водянка (ник и формат) или ручная без формы. Старый каталог без поля auto считаем по категории.
   const isAuto = (i) => i.auto ?? (i.cat === "watermark");
   const byCode = (code) => catalog.items.find((i) => i.code === code);
-  const minPrice = (cats) => { const p = catalog.items.filter((i) => cats.includes(i.cat)).map((i) => curPrice(i)); return p.length ? Math.min(...p) : 0; };
+  /** Цена «от» — самый дешёвый товар категорий. */
+  const fromTag = (cats) => {
+    const list = catalog.items.filter((i) => cats.includes(i.cat));
+    if (!list.length) return "";
+    const cheap = list.reduce((a, b) => (curPrice(b) < curPrice(a) ? b : a));
+    return priceTag(curPrice(cheap), curFiat(cheap));
+  };
 
   // ---------- navigation ----------
   const stack = [{ screen: "home" }];
@@ -332,32 +420,33 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- screens ----------
   const screens = {
     home() {
-      const privPrice = minPrice(["private"]), voicePrice = minPrice(["voice"]), avatar = items("avatar")[0];
+      const avatar = items("avatar")[0];
       return `
       <section class="hero${booted ? "" : " boot"}">
         <h1 class="logo">ISWEARTY<small>shop</small></h1>
         <p>${esc(t("tagline"))}</p>
+        <div style="margin-top:14px">${payList()}</div>
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap")} data-go="watermarks" type="button">
           <h3>${esc(t("wm"))}</h3>
           <span class="sub">${esc(t("wmSub"))}</span>
-          <span class="from">${esc(t("from"))} ${priceTag(minPrice(["watermark", "custom"]))}</span>
+          <span class="from">${esc(t("from"))} ${fromTag(["watermark", "custom"])}</span>
         </button>
         ${items("private").length ? `<button ${R("tile mid glass tap")} data-go="private" type="button">
           <span class="badge">${ICON.key}</span>
           <span><h3>${esc(t("priv"))}</h3><span class="sub">${esc(t("privSub"))}</span></span>
-          <span class="from" style="margin-left:auto">${priceTag(privPrice)}</span>
+          <span class="from" style="margin-left:auto">${fromTag(["private"])}</span>
         </button>` : ""}
         ${items("voice").length ? `<button ${R("tile small glass tap")} data-go="voices" type="button">
           <span class="badge">${ICON.mic}</span>
           <h3>${esc(t("voice"))}</h3><span class="sub">${esc(t("voiceSub"))}</span>
-          <span class="from">${priceTag(voicePrice)}</span>
+          <span class="from">${fromTag(["voice"])}</span>
         </button>` : ""}
         ${avatar ? `<button ${R("tile small glass tap")} data-go="form" data-code="${esc(avatar.code)}" type="button">
           <span class="badge">${ICON.face}</span>
           <h3>${esc(t("ava"))}</h3><span class="sub">${esc(t("avaSub"))}</span>
-          <span class="from">${priceTag(avatar.price)}</span>
+          <span class="from">${itemTag(avatar)}</span>
         </button>` : ""}
       </nav>`;
     },
@@ -370,17 +459,17 @@ textarea.input { min-height: 132px; resize: vertical; }
         ${items("outro").length ? `<button ${R("choice glass tap")} data-go="outro" type="button">
           <span class="badge">${ICON.film}</span>
           <span><h3>${esc(t("outro"))}</h3><p>${esc(t("outroSub"))}</p></span>
-          ${priceTag(minPrice(["outro"]))}
+          ${fromTag(["outro"])}
         </button>` : ""}
         <button ${R("choice glass tap")} data-go="ready" type="button">
           ${thumbs.length ? `<span class="stackthumbs">${thumbs.map((i) => `<img src="${esc(i.poster)}" alt="">`).join("")}</span>` : `<span class="badge">${ICON.film}</span>`}
           <span><h3>${esc(t("ready"))}</h3><p>${esc(t("readySub"))}</p></span>
-          ${priceTag(minPrice(["watermark"]))}
+          ${fromTag(["watermark"])}
         </button>
         ${custom ? `<button ${R("choice glass tap")} data-go="form" data-code="${esc(custom.code)}" type="button">
           <span class="badge">${ICON.sparkle}</span>
           <span><h3>${esc(t("custom"))}</h3><p>${esc(t("customSub"))}</p></span>
-          ${priceTag(custom.price)}
+          ${itemTag(custom)}
         </button>` : ""}
       </div>`;
     },
@@ -431,7 +520,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       <div ${R("panel glass")} style="margin-top:12px">
         <p class="note">${esc(t("privText"))} ${esc(t("privacyNote"))}</p>
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
+        ${buyRow(i)}
       </div>`;
     },
     voices() {
@@ -448,6 +537,41 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
     },
+    cart() {
+      const last = loadList(LAST_KEY);
+      if (!cart.length) return `
+      <div class="head"><h2 ${R("")}>${esc(t("cart"))}</h2></div>
+      <div ${R("empty glass")}>
+        <p style="margin:0 0 16px">${esc(t("cartEmpty"))}</p>
+        <div class="btnrow">
+          <button class="buy tap" data-home="1" type="button">${esc(t("toShop"))}</button>
+          ${last.length ? `<button class="buy ghost tap" data-restore="1" type="button">${esc(t("restore"))} · ${esc(t("items", last.length))}</button>` : ""}
+        </div>
+      </div>`;
+      const sum = cartTotal();
+      const gone = cart.some((x) => !byCode(x.c));
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("cart"))}</h2><p ${R("")}>${esc(t("cartHint"))}</p></div>
+      <div class="lines">${cart.map((x) => {
+        const i = byCode(x.c);
+        if (!i) return `<div ${R("line glass")}><div class="pic"><div class="ph"><span>?</span></div></div><div><b>${esc(x.c)}</b><small>${esc(t("gone"))}</small></div><div class="acts"><button class="iconbtn x tap" type="button" data-rm="${esc(x.k)}" aria-label="${esc(t("remove"))}">✕</button></div></div>`;
+        return `<div ${R("line glass")}>
+          <div class="pic">${i.poster ? `<img src="${esc(i.poster)}" alt="">` : `<div class="ph"><span>${esc((L(i.title) || "?").slice(0, 1).toUpperCase())}</span></div>`}</div>
+          <div><b>${esc(L(i.title))}</b>${lineInfo(x, i) ? `<small>${esc(lineInfo(x, i))}</small>` : "<small></small>"}${itemTag(i)}</div>
+          <div class="acts">
+            <button class="iconbtn x tap" type="button" data-rm="${esc(x.k)}" aria-label="${esc(t("remove"))}">✕</button>
+            ${isAuto(i) && cart.length < CART_MAX ? `<button class="iconbtn tap" type="button" data-sheet="${esc(i.code)}">${esc(t("moreNick"))}</button>` : ""}
+          </div>
+        </div>`;
+      }).join("")}</div>
+      <div ${R("panel glass")} style="margin-top:12px">
+        <div class="total"><h4>${esc(t("total"))}</h4>${priceTag(sum.stars, sum.fiat, true)}</div>
+        ${sum.fiat == null ? `<p class="note">${esc(t("noFiat"))}</p>` : ""}
+        ${payList()}
+        <button class="buy tap" data-checkout="1" type="button" ${gone ? "disabled" : ""}>${esc(t("checkout"))} · ${esc(t("items", cart.length))}</button>
+        <p class="note">${esc(t("payNote"))}</p>
+      </div>`;
+    },
     form({ code }) {
       const i = byCode(code);
       return `
@@ -461,7 +585,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>
         ${i.notice ? `<div class="warn">${ICON.alert}<span>${esc(L(i.notice))}</span></div>` : ""}
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
+        ${buyRow(i)}
       </div>`;
     },
   };
@@ -483,6 +607,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     else $("#back").classList.toggle("on", stack.length > 1);
     observeVideos();
     startReel();
+    updateCart();
     const ta = $("#details");
     if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
   }
@@ -565,7 +690,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>
         <p class="note">${esc(t("autoNote"))}</p>` : `<p class="note">${esc(t("noformNote"))}</p>`}
         <div class="err" id="err" hidden></div>
-        <button class="buy tap" data-buy="${esc(i.code)}" type="button">${buyLabel(curPrice(i))}</button>
+        ${buyRow(i)}
       </div>`;
     if (i.cat === "outro") $("#sheet .seg")?.closest(".field")?.remove(); // outro всегда MP4, выбор формата не нужен
     $("#sheet").classList.add("on");
@@ -578,6 +703,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     haptic("medium");
   }
   function closeSheet() {
+    if (!sheetOpen && !$("#sheet").classList.contains("on")) return;
     $("#sheet").classList.remove("on");
     $("#scrim").classList.remove("on");
     sheetOpen = false;
@@ -592,28 +718,32 @@ textarea.input { min-height: 132px; resize: vertical; }
     e.hidden = !msg;
     if (msg) { e.textContent = msg; e.style.animation = "none"; void e.offsetWidth; e.style.animation = ""; try { inTelegram && tg.HapticFeedback.notificationOccurred("error"); } catch {} }
   }
-  function buy(code) {
-    const item = byCode(code);
-    const order = { v: 1, code, lang };
+  /** Данные заказа из формы (ник и формат или описание). null — в форме ошибка, она уже показана. */
+  function collect(item) {
+    const fields = {};
     if (isAuto(item)) {
       const nick = $("#nick").value.trim();
-      if (!nick || [...nick].length > 32 || /[\u0000-\u001f\u007f]/.test(nick)) return showError(t("errNick"));
-      if (nick.startsWith("/")) return showError(t("errNickSlash"));
-      order.nick = nick; order.mode = item.cat === "outro" ? "MP4" : sheetMode;
+      if (!nick || [...nick].length > 32 || /[\u0000-\u001f\u007f]/.test(nick)) { showError(t("errNick")); return null; }
+      if (nick.startsWith("/")) { showError(t("errNickSlash")); return null; }
+      fields.nick = nick; fields.mode = item.cat === "outro" ? "MP4" : sheetMode;
     } else if (item.cat !== "private" && !item.noform) {
       const text = $("#details").value.trim();
       const len = [...text].length;
-      if (len < 5 || len > 1000) return showError(t("errText"));
-      order.details = text;
+      if (len < 5 || len > 1000) { showError(t("errText")); return null; }
+      fields.details = text;
     }
     showError("");
-    send(order);
+    return fields;
   }
+  function buy(code) {
+    const fields = collect(byCode(code));
+    if (fields) send({ v: 1, code, lang, ...fields });
+  }
+  // sendData работает, только если магазин открыт кнопкой клавиатуры в чате с ботом.
+  const fromKeyboard = () => inTelegram && !(tg.initDataUnsafe && tg.initDataUnsafe.query_id);
   function send(order) {
     const data = JSON.stringify(order);
-    // sendData works only when the shop was opened with the keyboard button in the bot chat.
-    const fromKeyboard = inTelegram && !(tg.initDataUnsafe && tg.initDataUnsafe.query_id);
-    if (fromKeyboard) {
+    if (fromKeyboard()) {
       try { tg.HapticFeedback.notificationOccurred("success"); } catch {}
       try { tg.sendData(data); return; } catch { /* fall back to the chat link */ }
     }
@@ -630,6 +760,85 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (inTelegram) tg.openTelegramLink(url); else window.open(url, "_blank", "noopener");
   }
 
+  // ---------- cart ----------
+  // Корзина хранится в этом браузере (localStorage). Каждая строка — товар с ником/форматом или описанием.
+  const CART_MAX = 10, CART_KEY = "isw-cart", LAST_KEY = "isw-cart-last";
+  const loadList = (k) => { try { const v = JSON.parse(localStorage.getItem(k) || "[]"); return Array.isArray(v) ? v.filter((x) => x && typeof x.c === "string") : []; } catch { return []; } };
+  const saveList = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* приватный режим — корзина живёт до закрытия */ } };
+  let cart = loadList(CART_KEY).slice(0, CART_MAX);
+  const saveCart = () => saveList(CART_KEY, cart);
+  const modeName = (m) => (m === "BOTH" ? t("bothLabel") : m);
+  const lineInfo = (x, i) => (x.n ? `${x.n}${i && i.cat === "outro" ? "" : ` · ${modeName(x.m)}`}` : x.d ? (x.d.length > 70 ? x.d.slice(0, 69) + "…" : x.d) : "");
+  /** Итог корзины: звёзды и сумма в валюте языка (null, если не у всех товаров есть такая цена). */
+  function cartTotal() {
+    let stars = 0, fiat = 0, fiatOk = true;
+    for (const x of cart) {
+      const i = byCode(x.c);
+      if (!i) continue;
+      stars += curPrice(i);
+      const f = curFiat(i);
+      if (f == null) fiatOk = false; else fiat = addFiat(fiat, f);
+    }
+    return { stars, fiat: fiatOk ? fiat : null };
+  }
+  function addToCart(code) {
+    const item = byCode(code);
+    if (!item) return;
+    if (item.cat === "private" && cart.some((x) => x.c === code)) { showError(t("inCart")); return; }
+    if (cart.length >= CART_MAX) { showError(t("cartFull", CART_MAX)); return; }
+    const fields = collect(item);
+    if (!fields) return;
+    cart.push({ k: `${Date.now()}${Math.random().toString(36).slice(2, 6)}`, c: code, n: fields.nick, m: fields.mode, d: fields.details });
+    saveCart();
+    if (sheetOpen) closeSheet();
+    const ta = $("#details"); if (ta) { ta.value = ""; $("#count").textContent = "0/1000"; }
+    try { inTelegram && tg.HapticFeedback.notificationOccurred("success"); } catch {}
+    toast(`${t("added")} · ${t("items", cart.length)}`);
+    if (stack[stack.length - 1].screen === "cart") render(); else updateCart();
+  }
+  function removeFromCart(k) {
+    cart = cart.filter((x) => x.k !== k);
+    saveCart();
+    haptic("light");
+    render();
+  }
+  function checkout() {
+    if (!cart.length) return;
+    if (cart.some((x) => !byCode(x.c))) return toast(t("gone"));
+    const data = JSON.stringify({ v: 2, lang, items: cart.map((x) => ({ c: x.c, n: x.n, m: x.m, d: x.d })) });
+    if (new TextEncoder().encode(data).length > 4096) return toast(t("tooBig"));
+    if (fromKeyboard()) {
+      // Прошлая корзина остаётся на случай, если что-то нужно поправить и оформить заново.
+      saveList(LAST_KEY, cart);
+      cart = [];
+      saveCart();
+      try { tg.HapticFeedback.notificationOccurred("success"); } catch {}
+      try { tg.sendData(data); return; } catch { cart = loadList(LAST_KEY); saveCart(); }
+    }
+    if (inTelegram) return toast(t("cartKeyboard"));
+    toast(`${t("demo")}\n${data}`);
+  }
+  function restoreCart() {
+    cart = loadList(LAST_KEY).slice(0, CART_MAX);
+    saveCart();
+    render();
+  }
+  /** Счётчик в шапке и плашка «Корзина» внизу экрана. */
+  function updateCart() {
+    $("#cartCount").textContent = cart.length ? String(cart.length) : "";
+    $("#cartBtn").setAttribute("aria-label", `${t("cart")}${cart.length ? ` · ${t("items", cart.length)}` : ""}`);
+    const onCart = stack[stack.length - 1].screen === "cart";
+    const show = cart.length > 0 && !onCart;
+    const bar = $("#cartBar");
+    if (show) {
+      const sum = cartTotal();
+      bar.innerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 11.2a2 2 0 01-2 1.8H9.2a2 2 0 01-2-1.8z"/><path d="M9 9.5V6.5a3 3 0 016 0v3"/></svg><span>${esc(t("cart"))} · ${esc(t("items", cart.length))}</span><span class="sum">${priceTag(sum.stars, sum.fiat)}</span>`;
+    }
+    bar.classList.toggle("on", show);
+    bar.tabIndex = show ? 0 : -1;
+    document.body.classList.toggle("withbar", show);
+  }
+
   let toastTimer;
   function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 4200); }
 
@@ -639,13 +848,19 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (!el) return;
     if (el.dataset.lang) { if (el.dataset.lang === lang) return; lang = el.dataset.lang; try { localStorage.setItem("isw-lang", lang); } catch {} closeSheet(); render(); return; }
     if (el.id === "back") return back();
-    if (el.dataset.go) return go(el.dataset.go, { code: el.dataset.code });
+    if (el.dataset.go === "cart" && stack[stack.length - 1].screen === "cart") return;
+    if (el.dataset.go) { closeSheet(); return go(el.dataset.go, { code: el.dataset.code }); }
     if (el.dataset.sheet) return openSheet(el.dataset.sheet);
     if (el.dataset.play) return togglePlay(el.dataset.play);
     if (el.dataset.all) { stack[stack.length - 1].params.all = true; render(); return; }
     if (el.dataset.link) return openLink(el.dataset.link);
     if (el.dataset.mode) { sheetMode = el.dataset.mode; document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === sheetMode))); haptic("light"); return; }
     if (el.dataset.buy) return buy(el.dataset.buy);
+    if (el.dataset.add) return addToCart(el.dataset.add);
+    if (el.dataset.rm) return removeFromCart(el.dataset.rm);
+    if (el.dataset.checkout) return checkout();
+    if (el.dataset.restore) return restoreCart();
+    if (el.dataset.home) { closeSheet(); stack.length = 1; render(); window.scrollTo(0, 0); return; }
   });
   $("#scrim").addEventListener("click", closeSheet);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") back(); });

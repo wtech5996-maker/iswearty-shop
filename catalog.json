@@ -1,6 +1,11 @@
 {
   "bot": "Isy_shopbot",
-  "updated": "2026-10-19T19:35:53.214Z",
+  "updated": "2026-10-20T11:09:17.652Z",
+  "pay": [
+    "stars",
+    "crypto",
+    "transfer"
+  ],
   "items": [
     {
       "code": "BO-SUPER-MARIO",
@@ -12,6 +17,8 @@
         "en": "Bo Super Mario"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/BO-SUPER-MARIO.mp4",
       "poster": "media/BO-SUPER-MARIO.jpg"
     },
@@ -25,6 +32,8 @@
         "en": "Chaos Old1"
       },
       "price": 150,
+      "rub": 150,
+      "usd": 2,
       "preview": "media/CHAOS-OLD1.mp4",
       "poster": "media/CHAOS-OLD1.jpg"
     },
@@ -38,6 +47,8 @@
         "en": "Ice WM"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 3,
       "preview": "media/ICE-WM.mp4",
       "poster": "media/ICE-WM.jpg"
     },
@@ -51,6 +62,8 @@
         "en": "Imortal Logo Star"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 3,
       "preview": "media/IMORTAL-LOGO-STAR.mp4",
       "poster": "media/IMORTAL-LOGO-STAR.jpg"
     },
@@ -64,6 +77,8 @@
         "en": "Kazumi"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/KAZUMI.mp4",
       "poster": "media/KAZUMI.jpg"
     },
@@ -77,6 +92,8 @@
         "en": "Kirby Purple"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/KIRBY-PURPLE.mp4",
       "poster": "media/KIRBY-PURPLE.jpg"
     },
@@ -90,6 +107,8 @@
         "en": "Kirby White"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/KIRBY-WHITE.mp4",
       "poster": "media/KIRBY-WHITE.jpg"
     },
@@ -103,6 +122,8 @@
         "en": "Benyx WM"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 3,
       "preview": "media/BENYX-WM.mp4",
       "poster": "media/BENYX-WM.jpg"
     },
@@ -116,6 +137,8 @@
         "en": "Mito WM Red"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 3,
       "preview": "media/MITO-WM-RED.mp4",
       "poster": "media/MITO-WM-RED.jpg"
     },
@@ -129,6 +152,8 @@
         "en": "Teeth WM"
       },
       "price": 350,
+      "rub": 500,
+      "usd": 7,
       "preview": "media/TEETH-WM.mp4",
       "poster": "media/TEETH-WM.jpg"
     },
@@ -142,6 +167,8 @@
         "en": "VQRXZV"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/VQRXZV.mp4",
       "poster": "media/VQRXZV.jpg"
     },
@@ -155,6 +182,8 @@
         "en": "VQRZXV Imortal"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 2.5,
       "preview": "media/VQRZXV-IMORTAL.mp4",
       "poster": "media/VQRZXV-IMORTAL.jpg"
     },
@@ -168,6 +197,8 @@
         "en": "Custom watermark"
       },
       "price": 500,
+      "rub": 500,
+      "usd": 10,
       "desc": {
         "ru": "Сделаю водянку под вас с нуля: стиль, цвета, анимация.",
         "en": "A watermark made for you from scratch: style, colours, animation."
@@ -187,6 +218,8 @@
         "en": "Custom avatar"
       },
       "price": 500,
+      "rub": 500,
+      "usd": 10,
       "desc": {
         "ru": "Нарисую аватарку по вашему описанию.",
         "en": "An avatar drawn from your description."
@@ -206,6 +239,8 @@
         "en": "Sample 1"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 5,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -226,6 +261,8 @@
         "en": "Sample 2"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 5,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -246,6 +283,8 @@
         "en": "Sample 3"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 5,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -266,6 +305,8 @@
         "en": "Sample 4"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 5,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -286,6 +327,8 @@
         "en": "Sample 5"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 5,
       "prompt": {
         "ru": "Напишите ник для озвучки и пожелания.",
         "en": "Write the nickname for the voice-over and any wishes."
@@ -306,6 +349,8 @@
         "en": "WM private"
       },
       "price": 1000,
+      "rub": 1250,
+      "usd": 15,
       "desc": {
         "ru": "Всё для водяных знаков: ресурсы, уроки, мои работы и чат со мной.",
         "en": "Everything for watermarks: resources, tutorials, my work and a chat with me."
@@ -352,6 +397,8 @@
         "en": "Edits private"
       },
       "price": 500,
+      "rub": 699,
+      "usd": 10,
       "desc": {
         "ru": "Две группы с материалами для эдитов. После оплаты вы получите доступ в обе.",
         "en": "Two groups with editing materials. After payment you get access to both."
@@ -447,6 +494,8 @@
         "en": "Spring outro"
       },
       "price": 250,
+      "rub": 250,
+      "usd": 3.5,
       "preview": "media/SPRING-OUTRO.mp4",
       "poster": "media/SPRING-OUTRO.jpg"
     },
@@ -460,6 +509,8 @@
         "en": "Water outro"
       },
       "price": 450,
+      "rub": 450,
+      "usd": 7.5,
       "preview": "media/WATER-OUTRO.mp4",
       "poster": "media/WATER-OUTRO.jpg"
     },
@@ -473,6 +524,8 @@
         "en": "Space outro"
       },
       "price": 200,
+      "rub": 200,
+      "usd": 3,
       "preview": "media/SPACE_LOGO_ANIMATION-CONVERTED.mp4",
       "poster": "media/SPACE_LOGO_ANIMATION-CONVERTED.jpg"
     },
@@ -486,6 +539,8 @@
         "en": "Black outro"
       },
       "price": 150,
+      "rub": 150,
+      "usd": 3,
       "preview": "media/BLACK-OUTRO-CONVERTED.mp4",
       "poster": "media/BLACK-OUTRO-CONVERTED.jpg"
     }
