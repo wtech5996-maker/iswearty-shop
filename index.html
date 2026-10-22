@@ -186,12 +186,12 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .calm .fx .fl, .calm .fx .bub, .calm .fx .spark, .calm .fx .ph { display: none; }
 /* наклон за курсором на всех плашках: JS задаёт --px и --py (от −0.5 до 0.5), блик — --mx и --my.
    --tilt — сила наклона: широким плашкам меньше, чтобы не было резко. */
-.tile, .choice, .card, .line, .buy { --tilt: 10deg; position: relative; transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))); transition: transform 0.4s var(--ease), filter 0.2s, border-color 0.25s, box-shadow 0.3s, background 0.2s; }
+.tile, .choice, .card, .line, .buy, .bonus { --tilt: 10deg; position: relative; transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))); transition: transform 0.4s var(--ease), filter 0.2s, border-color 0.25s, box-shadow 0.3s, background 0.2s; }
 .choice { --tilt: 7deg; }
 .card { --tilt: 12deg; }
 .line { --tilt: 4deg; }
 .buy, .cartbar { --tilt: 5deg; }
-.tap:is(.tile, .choice, .card, .buy):active { transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))) scale(0.965); transition-duration: 0.12s; }
+.tap:is(.tile, .choice, .card, .buy, .bonus):active { transform: perspective(700px) rotateX(calc(var(--py, 0) * -1 * var(--tilt))) rotateY(calc(var(--px, 0) * var(--tilt))) scale(0.965); transition-duration: 0.12s; }
 .tile::after, .choice::after, .card::after, .line::after, .buy::after, .cartbar::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2; opacity: 0; transition: opacity 0.3s; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 241, 0.09), rgba(255, 236, 241, 0) 55%); }
 .tile .badge, .choice .badge, .paylist .m { transition: scale 0.3s var(--spring), background 0.2s, border-color 0.2s; }
 @media (hover: hover) {
@@ -375,7 +375,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   .fx *, .fx .badge svg, .wave.playing .wv i, .skel { animation: none !important; }
   .fx .fl, .fx .bub, .fx .spark, .fx .ph { display: none; }
   .sheet, .scrim, .toast, .tap, .tile, .choice, .card, .line, .buy, .tile .badge, .choice .badge, .paylist .m { transition: none; }
-  .tile, .choice, .card, .line, .buy, .tap:is(.tile, .choice, .card, .buy):active { transform: none; }
+  .tile, .choice, .card, .line, .buy, .bonus, .tap:is(.tile, .choice, .card, .buy, .bonus):active { transform: none; }
 }
   /* «Мои водянки» и нижняя панель */
   #view { padding-bottom: 110px; }
@@ -401,12 +401,39 @@ textarea.input { min-height: 132px; resize: vertical; }
   .card .thumb .favmark { position: absolute; z-index: 1; right: 8px; top: 8px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; background: rgba(20, 5, 10, 0.74); color: #ff4d6d; }
   .card .thumb .favmark svg { width: 14px; height: 14px; fill: currentColor; }
   .favgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .bonus { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; margin-top: 12px; padding: 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: inherit; font: inherit; cursor: pointer; }
-  .bonus b { font-size: 16px; }
-  .bonus span { font-size: 12.5px; opacity: .75; }
-  .bonus .bub { position: absolute; left: 50%; top: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .85), rgba(255, 120, 150, .45) 60%, rgba(255, 77, 109, .15)); opacity: 0; pointer-events: none; }
+  .bonus { --tilt: 8deg; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; margin-top: 14px; padding: 18px 16px; border-radius: 24px; border: 1.5px solid rgba(255, 214, 140, .55); background: linear-gradient(135deg, rgba(255, 214, 140, .22), rgba(255, 77, 109, .26) 55%, rgba(120, 20, 60, .35)); color: inherit; font: inherit; cursor: pointer; box-shadow: 0 0 0 1px rgba(255, 214, 140, .18), 0 12px 34px -8px rgba(255, 120, 150, .55); animation: bonusGlow 3.2s ease-in-out infinite; }
+  .bonus b { font-size: 18px; letter-spacing: -0.01em; text-shadow: 0 1px 0 rgba(0, 0, 0, .25); }
+  .bonus span { font-size: 12.5px; opacity: .85; }
+  .bonus .gift { display: inline-block; transform-origin: 50% 85%; animation: giftWob 2.6s ease-in-out infinite; }
+  .bonus.spinning .gift { animation: giftShake .32s ease-in-out infinite; }
+  .bonus .bub { position: absolute; left: 50%; top: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .85), rgba(255, 214, 140, .45) 60%, rgba(255, 77, 109, .15)); opacity: 0; pointer-events: none; }
   .bonus.pop .bub { animation: bpop .6s ease-out; }
+  .bonus .cf { position: absolute; left: 50%; top: 40%; width: 8px; height: 8px; border-radius: 2px; background: var(--c); opacity: 0; pointer-events: none; animation: cfBurst .9s ease-out forwards; }
+  .bonus.gone { animation: bonusOut .45s ease forwards; pointer-events: none; }
+  /* 3D-водянка на экране загрузки */
+  @keyframes floaty { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
+  .splash { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 48px; text-align: center; }
+  .splash3d { width: min(320px, 84vw); height: auto; animation: floaty 4.2s ease-in-out infinite; }
+  .splash-bar { width: 180px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+  .splash-bar span { display: block; width: 40%; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #ffb8cb, #ff4d6d); animation: splashBar 1.2s ease-in-out infinite; }
+  @keyframes splashBar { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+  .splash-text { margin: 0; font-size: 14px; opacity: .8; }
+  @media (prefers-reduced-motion: reduce) { .splash3d, .splash-bar span { animation: none; } }
+  .bonus .drum { display: none; font: 800 40px/1 var(--body); font-variant-numeric: tabular-nums; background: linear-gradient(180deg, #fff6d8, #ffb8cb 55%, #ff4d6d); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 4px 0; }
+  .bonus.rolling .drum { display: block; }
+  .bonus.rolling .sub { display: none; }
+  @keyframes bonusGlow { 0%, 100% { box-shadow: 0 0 0 1px rgba(255, 214, 140, .18), 0 12px 34px -8px rgba(255, 120, 150, .45); } 50% { box-shadow: 0 0 0 1px rgba(255, 214, 140, .45), 0 14px 40px -6px rgba(255, 184, 100, .7); } }
+  @keyframes giftWob { 0%, 62%, 100% { transform: rotate(0) translateY(0); } 68% { transform: rotate(-14deg) translateY(-2px); } 74% { transform: rotate(12deg) translateY(-3px); } 80% { transform: rotate(-8deg); } 86% { transform: rotate(5deg); } }
+  @keyframes giftShake { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
+  @keyframes cfBurst { 0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(.6); } }
+  @keyframes bonusOut { to { opacity: 0; transform: scale(.92); } }
   @keyframes bpop { 0% { opacity: .9; transform: scale(.4); } 60% { opacity: .55; transform: scale(2.4); } 100% { opacity: 0; transform: scale(3); } }
+  /* Сообщение о скидке: не пропадает само, закрывает покупатель */
+  .bonus-note { position: fixed; z-index: 10; left: 50%; bottom: 24px; transform: translate(-50%, calc(100% + 40px)); visibility: hidden; width: min(480px, calc(100% - 32px)); padding: 14px 14px 14px 18px; border-radius: 18px; background: rgba(26, 6, 12, 0.96); border: 1.5px solid rgba(255, 214, 140, .55); box-shadow: 0 14px 40px -8px rgba(255, 120, 150, .5); display: flex; align-items: center; gap: 12px; transition: transform .45s var(--spring), visibility 0s .45s; }
+  .bonus-note.on { transform: translate(-50%, 0); visibility: visible; transition: transform .45s var(--spring), visibility 0s; }
+  body.withbar .bonus-note { bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .bonus-note .txt { flex: 1; font-size: 14.5px; line-height: 1.4; }
+  .bonus-note .x { flex: none; width: 36px; height: 36px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .08); color: inherit; font-size: 20px; line-height: 1; cursor: pointer; }
   .mine-item { display: block; padding: 14px; margin: 0 0 10px; border-radius: 18px; }
   .mine-head { font-size: 15px; margin-bottom: 10px; }
   .mine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
@@ -447,6 +474,7 @@ textarea.input { min-height: 132px; resize: vertical; }
 <div class="scrim" id="scrim"></div>
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="bonus-note" id="bonusNote" role="status" aria-live="polite"><span class="txt"></span><button class="x tap" id="bonusNoteX" type="button" aria-label="Закрыть">×</button></div>
 
 <!-- Запасной каталог для предпросмотра без интернета. На сайте используется catalog.json рядом с этим файлом. -->
 <script type="application/json" id="catalog-fallback">
@@ -478,7 +506,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   const T = {
     ru: {
       back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат с ботом.",
-      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", navFav: "Избранное", bonusTitle: "🎁 Крутить бонус", bonusSub: "Скидка на следующий заказ — раз в неделю", bonusWon: "Ваша скидка −{p}% на следующий заказ, действует до {d}", bonusWait: "Крутить можно снова с {d}", bonusErr: "Не получилось крутить. Попробуйте ещё раз.", favAdd: "В избранное", favEmpty: "Нажмите ♥ в карточке водянки — она сохранится здесь.", favErr: "Не получилось сохранить. Попробуйте ещё раз.", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
+      starsTile: "Звёзды", starsSub: "Telegram Stars за рубли", starsHead: "Звёзды", starsText: "Укажите, сколько звёзд нужно. Оплата рублями, цена за звезду 0,95 ₽.", starsAsk: "Сколько звёзд нужно", starsSend: "Оставить заявку", starsFree: (max, min) => `Доступно сейчас: до ${max} ⭐ (минимум ${min} ⭐)`, starsNone: "Сейчас звёзды закончились. Загляните позже.", starsRange: (min, max) => `Введите число от ${min} до ${max}.`, starsSending: "Отправляю заявку…", starsSent: (no) => `Заявка №${no} принята. Владелец пришлёт счёт в чат с ботом.`, starsErr: "Не получилось отправить заявку. Попробуйте ещё раз.",
+      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", navFav: "Избранное", bonusTitle: "🎁 Крутить бонус", bonusNoteClose: "Закрыть", bonusSub: "Скидка 10–50% на приваты, водянки, outro и озвучки", bonusLocked: "Бонус откроется после двух покупок", bonusWon: "Ваша скидка −{p}% на следующий заказ, действует до {d}", bonusWait: "Крутить можно снова с {d}", bonusErr: "Не получилось крутить. Попробуйте ещё раз.", favAdd: "В избранное", favEmpty: "Нажмите ♥ в карточке водянки — она сохранится здесь.", favErr: "Не получилось сохранить. Попробуйте ещё раз.", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
       how: "Как это работает", howSteps: ["Опишите, что нужно", "Оплатите в чате с ботом", "Готовый результат придёт в этот чат"], voicePrice: "Любая озвучка —",
       pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
       cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
@@ -490,7 +519,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       noCatalog: "Не удалось загрузить каталог — проверьте интернет и откройте магазин заново.",
       cartSent: "Корзина отправлена в чат — там кнопки оплаты.", noFiat: "Не у всех товаров есть цена в рублях — итог показан в звёздах.",
       wm: "Водянки", wmSub: "Готовые и на заказ", priv: "Приват", privSub: "Закрытые группы, доступ навсегда", voice: "Озвучки", voiceSub: "Послушайте и выберите", ava: "Аватарки", avaSub: "Нарисую по описанию",
-      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты — файл придёт в чат с ботом. Способ оплаты выберете там же.", custom: "Кастом", customSub: "Сделаю новую под вас",
+      from: "от", wmHead: "Какая водянка нужна?", ready: "Готовые", readySub: "Впишите ник, получите файл", flat2d: "2D водянки", flat2dSub: "По центру эдита, сам рендер", flat2dHead: "2D водянки", flat2dText: "Нажмите на водянку, чтобы посмотреть и купить. Ник и формат укажете в форме.", outro: "Outro", outroSub: "Вставка для конца ролика", outroHead: "Outro — вставки для конца ролика", outroText: "Нажмите на outro, чтобы посмотреть и купить.", noformNote: "Сделаю вручную после оплаты — файл придёт в чат с ботом. Способ оплаты выберете там же.", custom: "Кастом", customSub: "Сделаю новую под вас",
       readyHead: "Готовые водянки", readyText: "Нажмите на водянку, чтобы посмотреть и купить.",
       privHead: "Приват", privText: "Доступ навсегда. Ссылка приходит в чат с ботом и работает только для вашего аккаунта.",
       inside: "Что внутри", showAll: (n) => `Показать всё (${n})`, examples: "Примеры работ", example: (n) => `Пример ${n}`, groups: (n) => (n > 1 ? `${n} группы` : "1 группа"),
@@ -506,7 +535,8 @@ textarea.input { min-height: 132px; resize: vertical; }
     },
     en: {
       back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the bot chat.",
-      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", navFav: "Favorites", bonusTitle: "🎁 Spin for a bonus", bonusSub: "A discount on your next order — once a week", bonusWon: "Your −{p}% discount on the next order, valid until {d}", bonusWait: "You can spin again from {d}", bonusErr: "Could not spin. Try again.", favAdd: "Add to favorites", favEmpty: "Tap ♥ on a product to save it here.", favErr: "Could not save. Try again.", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
+      starsTile: "Stars", starsSub: "Telegram Stars for rubles", starsHead: "Stars", starsText: "Tell us how many stars you need. Paid in rubles, 0.95 ₽ per star.", starsAsk: "How many stars", starsSend: "Send request", starsFree: (max, min) => `Available now: up to ${max} ⭐ (minimum ${min} ⭐)`, starsNone: "No stars available right now. Check back later.", starsRange: (min, max) => `Enter a number from ${min} to ${max}.`, starsSending: "Sending request…", starsSent: (no) => `Request №${no} is in. The owner will send you an invoice in the bot chat.`, starsErr: "Could not send the request. Try again.",
+      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", navFav: "Favorites", bonusTitle: "🎁 Spin for a bonus", bonusNoteClose: "Close", bonusSub: "10–50% off private access, watermarks, outros and voice-overs", bonusLocked: "The bonus opens after two purchases", bonusWon: "Your −{p}% discount on the next order, valid until {d}", bonusWait: "You can spin again from {d}", bonusErr: "Could not spin. Try again.", favAdd: "Add to favorites", favEmpty: "Tap ♥ on a product to save it here.", favErr: "Could not save. Try again.", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
       how: "How it works", howSteps: ["Describe what you need", "Pay in the bot chat", "The result arrives in this chat"], voicePrice: "Any voice-over —",
       pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
       cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
@@ -518,7 +548,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       noCatalog: "Could not load the catalog — check your connection and reopen the shop.",
       cartSent: "Cart sent to the chat — the payment buttons are there.", noFiat: "Some items have no price in dollars — the total is shown in Stars.",
       wm: "Watermarks", wmSub: "Ready-made and custom", priv: "Private", privSub: "Closed groups, lifetime access", voice: "Voice-overs", voiceSub: "Listen and choose", ava: "Avatars", avaSub: "Drawn from your description",
-      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment — the file arrives in the bot chat. You choose how to pay there.", custom: "Custom", customSub: "A new one made for you",
+      from: "from", wmHead: "Which watermark do you need?", ready: "Ready-made", readySub: "Type your nickname, get the file", flat2d: "2D watermarks", flat2dSub: "Centered on your edit, auto-rendered", flat2dHead: "2D watermarks", flat2dText: "Tap a watermark to see it and buy. Enter your nickname and format in the form.", outro: "Outro", outroSub: "An outro for the end of your video", outroHead: "Outro — end-of-video inserts", outroText: "Tap an outro to see it and buy.", noformNote: "I make it by hand after payment — the file arrives in the bot chat. You choose how to pay there.", custom: "Custom", customSub: "A new one made for you",
       readyHead: "Ready-made watermarks", readyText: "Tap a watermark to preview and buy it.",
       privHead: "Private", privText: "Lifetime access. The link comes to the bot chat and works only for your account.",
       inside: "What's inside", showAll: (n) => `Show all (${n})`, examples: "Work examples", example: (n) => `Example ${n}`, groups: (n) => (n > 1 ? `${n} groups` : "1 group"),
@@ -581,7 +611,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   const itemTag = (i, big) => {
     if (!saleActive(i)) return priceTag(curPrice(i), curFiat(i), big);
     const pct = Math.round((1 - i.price / i.old) * 100);
-    const old = big ? `<s class="old">${esc(oldFiat(i) != null ? fmtFiat(oldFiat(i)) : i.old)}</s>` : "";
+    // Старая цена зачёркнута и на карточке, и на большом экране товара.
+    const old = `<s class="old">${esc(oldFiat(i) != null ? fmtFiat(oldFiat(i)) : i.old)}</s>`;
     return priceTag(i.price, curFiat(i), big, `<span class="pct">−${pct}%</span>${old}`).replace('class="price', 'class="price sale');
   };
   const buyLabel = (i) => `${esc(t("buyNow"))} · ${curFiat(i) != null ? esc(fmtFiat(curFiat(i))) + " / " : ""}<span class="pxf">${ICON.star}${esc(curPrice(i))}</span>`;
@@ -600,6 +631,29 @@ textarea.input { min-height: 132px; resize: vertical; }
 
   // ---------- catalog ----------
   let catalog = JSON.parse($("#catalog-fallback").textContent);
+  // Персональная скидка бонуса: показываем зачёркнутую цену и цену со скидкой на подходящих товарах.
+  // Формулы те же, что на сервере (priceFor и altPrices), поэтому цифры совпадут с оплатой.
+  var bonusActive = null; // { percent, until } — только если скидка уже получена и действует
+  const BONUS_CATS = ["private", "voice", "watermark", "flat2d"];
+  function personalize() {
+    if (!catalog || !Array.isArray(catalog.items)) return;
+    if (!catalog._base) catalog._base = catalog.items.map((i) => ({ ...i }));
+    const today = new Date();
+    catalog.items = catalog._base.map((i) => {
+      const x = { ...i };
+      const ownSale = i.old != null && (!i.until || today <= new Date(i.until + "T23:59:59"));
+      const eligible = BONUS_CATS.includes(i.cat) || (i.cat === "outro" && i.auto);
+      if (!bonusActive || ownSale || !eligible || !(typeof i.price === "number")) return x;
+      const k = (100 - bonusActive.percent) / 100;
+      x.old = i.price;
+      x.price = Math.max(1, Math.round(i.price * k));
+      if (typeof i.rub === "number") { x.rub_old = i.rub; x.rub = Math.max(1, Math.round(i.rub * k)); }
+      if (typeof i.usd === "number") { x.usd_old = i.usd; x.usd = Math.max(0.01, Math.round(i.usd * k * 100) / 100); }
+      x.until = bonusActive.until;
+      return x;
+    });
+  }
+  personalize();
   const items = (cat) => catalog.items.filter((i) => i.cat === cat);
   // Авто-водянка (ник и формат) или ручная без формы. Старый каталог без поля auto считаем по категории.
   const isAuto = (i) => i.auto ?? (i.cat === "watermark");
@@ -691,7 +745,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <p>${esc(t("tagline"))}</p>
         ${catalog.sold > 0 || channelOk() ? `<div class="trust">${catalog.sold > 0 ? `<span class="t">${ICON.flame}${esc(t("sold", catalog.sold))}</span>` : ""}${channelOk() ? `<button class="t tap" type="button" data-link="${esc(catalog.channel)}">${ICON.megaphone}@${esc(catalog.channel.replace(/^https:\/\/t\.me\//, "").replace(/\/$/, ""))}</button>` : ""}</div>` : ""}
         <div style="margin-top:14px">${payList()}</div>
-        ${featuresState ? `<button class="bonus glass tap" type="button" data-bonus="1"><span class="bub" aria-hidden="true"></span><b>${esc(t("bonusTitle"))}</b><span>${esc(t("bonusSub"))}</span></button>` : ""}
+        ${featuresState && bonusState && bonusState.available && !bonusGone ? `<button class="bonus tap" type="button" data-bonus="1"><span class="bub" aria-hidden="true"></span><b><span class="gift" aria-hidden="true">🎁</span> ${esc(t("bonusTitle").replace(/^🎁\s*/, ""))}</b><span class="sub">${esc(t("bonusSub"))}</span><span class="drum" aria-hidden="true">−10%</span></button>` : ""}
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap fx")} data-go="watermarks" type="button">
@@ -715,7 +769,28 @@ textarea.input { min-height: 132px; resize: vertical; }
           <h3>${esc(t("ava"))}</h3><span class="sub">${esc(t("avaSub"))}</span>
           <span class="from">${itemTag(avatar)}</span>
         </button>` : ""}
+        ${starsState ? `<button ${R("tile small glass tap fx")} data-go="stars" type="button">
+          ${fx.blobs}<span class="badge">${ICON.star || ICON.key}</span>
+          <h3>${esc(t("starsTile"))}</h3><span class="sub">${esc(t("starsSub"))}</span>
+          <span class="from">${esc(String(starsState.rub))} ₽ / ★</span>
+        </button>` : ""}
       </nav>`;
+    },
+    stars() {
+      const st = starsState || { free: 0, min: 50, max: 5000, rub: 0.95 };
+      const max = Math.min(st.max, st.free);
+      const enough = max >= st.min;
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("starsHead"))}</h2><p ${R("")}>${esc(t("starsText"))}</p></div>
+      <div class="glass" style="padding:18px;border-radius:20px">
+        ${enough ? `
+        <label class="sub" for="starsIn">${esc(t("starsAsk"))}</label>
+        <input class="input" id="starsIn" type="number" inputmode="numeric" min="${st.min}" max="${max}" step="1" value="${Math.min(max, 100)}">
+        <p class="sub" id="starsRub" style="margin:10px 0 0"></p>
+        <p class="sub" id="starsMsg" style="margin:10px 0 0;min-height:1em"></p>
+        <button class="buy tap" id="starsSend" type="button" style="margin-top:12px">${esc(t("starsSend"))}</button>
+        <p class="sub" style="margin:10px 0 0">${esc(t("starsFree", max, st.min))}</p>` : `<p class="sub">${esc(t("starsNone"))}</p>`}
+      </div>`;
     },
     watermarks() {
       const custom = items("custom")[0];
@@ -738,7 +813,18 @@ textarea.input { min-height: 132px; resize: vertical; }
           <span><h3>${esc(t("custom"))}</h3><p>${esc(t("customSub"))}</p></span>
           ${itemTag(custom)}
         </button>` : ""}
+        ${items("flat2d").length && featuresState === true ? `<button ${R("choice glass tap fx")} data-go="flat2d" type="button">
+          ${fx.blobs}<span class="badge">${ICON.film}</span>
+          <span><h3>${esc(t("flat2d"))}</h3><p>${esc(t("flat2dSub"))}</p></span>
+          ${fromTag(["flat2d"])}
+        </button>` : ""}
       </div>`;
+    },
+    flat2d() {
+      const list = items("flat2d");
+      return `
+      <div class="head"><h2 ${R("")}>${esc(t("flat2dHead"))}</h2><p ${R("")}>${esc(t("flat2dText"))}</p></div>
+      ${list.length ? `<div class="grid">${list.map(card).join("")}</div>` : `<div class="empty glass">${esc(t("empty"))}</div>`}`;
     },
     outro() {
       const list = items("outro");
@@ -886,6 +972,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     updateCart();
     const ta = $("#details");
     if (ta) ta.addEventListener("input", () => { $("#count").textContent = `${[...ta.value].length}/1000`; });
+    if ($("#starsIn")) bindStars();
     const search = $("#search");
     if (search) search.addEventListener("input", () => {
       const q = search.value.trim().toLowerCase();
@@ -896,7 +983,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   }
 
   // наклон плашек за курсором (только на устройствах с мышью и без «уменьшить движение»)
-  const TILT = ".tile, .choice, .card, .line, .buy, .cartbar";
+  const TILT = ".tile, .choice, .card, .line, .buy, .cartbar, .bonus";
   if (matchMedia("(hover: hover)").matches && !reduceMotion) {
     document.addEventListener("pointermove", (e) => {
       const el = e.target.closest ? e.target.closest(TILT) : null;
@@ -1162,27 +1249,128 @@ textarea.input { min-height: 132px; resize: vertical; }
   var featuresState = null;
   var favs = [];
   var bonusBusy = false;
+  var bonusGone = false; // после выигрыша плашка скрыта до перезагрузки страницы
+  var bonusState = null; // ответ сервера: можно ли крутить сейчас
+  const BONUS_MIN_SHOW = 10, BONUS_MAX_SHOW = 50;
   const ddmm = (v) => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { const [, m, d] = v.split("-"); return `${d}.${m}`; }
     const x = new Date(v);
     return `${String(x.getDate()).padStart(2, "0")}.${String(x.getMonth() + 1).padStart(2, "0")}`;
   };
-  function spinBonus() {
+  let starsState = null;
+  // Заявка на звёзды: количество и сумма в рублями; без оплаты, владелец пришлёт счёт в чат бота.
+  function bindStars() {
+    const input = $("#starsIn");
+    const rub = $("#starsRub");
+    const btn = $("#starsSend");
+    const msg = $("#starsMsg");
+    if (!input || !btn) return;
+    const st = starsState || { min: 50, max: 5000, rub: 0.95 };
+    const max = Math.min(st.max, st.free ?? st.max);
+    const value = () => Math.floor(Number(input.value));
+    const paint = () => {
+      const n = value();
+      rub.textContent = Number.isInteger(n) && n > 0 ? `${n} ⭐ = ${Math.ceil(n * st.rub)} ₽` : "";
+    };
+    input.addEventListener("input", paint);
+    paint();
+    btn.addEventListener("click", () => {
+      const n = value();
+      if (!Number.isInteger(n) || n < st.min || n > max) { msg.textContent = t("starsRange", st.min, max); return; }
+      btn.disabled = true;
+      msg.textContent = t("starsSending");
+      fetch(`${API_BASE}/api/buyer/stars`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ stars: n }) })
+        .then((r) => r.json())
+        .then((d) => {
+          if (d && d.ok) {
+            msg.textContent = t("starsSent", d.no); input.value = ""; paint();
+            // Одна открытая заявка на покупателя: повторно не отправляем, пока владелец не ответит.
+            if (starsState) starsState.free = Math.max(0, (starsState.free || 0) - n);
+            btn.remove();
+            return;
+          }
+          else msg.textContent = (d && d.error) || t("starsErr");
+        })
+        .catch(() => { msg.textContent = t("starsErr"); })
+        .finally(() => { btn.disabled = false; });
+    });
+  }
+  function bonusNote(msg) {
+    const el = $("#bonusNote");
+    if (!el) return;
+    el.querySelector(".txt").textContent = msg;
+    el.classList.add("on");
+  }
+  const bonusSleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  function bonusHide(btn) {
+    bonusGone = true;
+    if (!btn) return;
+    setTimeout(() => { btn.classList.add("gone"); setTimeout(() => btn.remove(), 460); }, reduceMotion ? 0 : 700);
+  }
+  function bonusConfetti(btn) {
+    const colors = ["#ffd68c", "#ffb8cb", "#ff4d6d", "#fff3d6", "#ffa552"];
+    for (let k = 0; k < 14; k++) {
+      const c = document.createElement("i");
+      c.className = "cf";
+      const a = (Math.PI * 2 * k) / 14 + Math.random() * 0.4;
+      const d = 90 + Math.random() * 70;
+      c.style.setProperty("--dx", `${Math.cos(a) * d}px`);
+      c.style.setProperty("--dy", `${Math.sin(a) * d - 30}px`);
+      c.style.setProperty("--r", `${Math.round(Math.random() * 540 - 270)}deg`);
+      c.style.setProperty("--c", colors[k % colors.length]);
+      btn.appendChild(c);
+      setTimeout(() => c.remove(), 1000);
+    }
+  }
+  /** Барабан: цифры мелькают, пока ждём сервер; потом замедляются и останавливаются на выпавшей скидке. */
+  async function spinBonus() {
     if (bonusBusy) return;
     bonusBusy = true;
-    fetch(`${API_BASE}/api/buyer/bonus`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: "spin" }) })
-      .then((r) => r.json())
-      .then((d) => {
-        bonusBusy = false;
-        if (!d || !d.ok) throw new Error((d && d.error) || "error");
-        const btn = document.querySelector(".bonus");
-        if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
-        haptic("medium");
-        if (d.available === false) toast(t("bonusWait").replace("{d}", ddmm(d.next)));
-        else toast(t("bonusWon").replace("{p}", d.percent).replace("{d}", ddmm(d.until)));
-      })
-      .catch(() => { bonusBusy = false; toast(t("bonusErr")); });
+    const btn = document.querySelector(".bonus");
+    const drum = btn && btn.querySelector(".drum");
+    const animate = Boolean(btn) && !reduceMotion;
+    const show = (v) => { if (drum) drum.textContent = `−${v}%`; };
+    const flick = () => show(BONUS_MIN_SHOW + Math.floor(Math.random() * (BONUS_MAX_SHOW - BONUS_MIN_SHOW + 1)));
+    if (animate) btn.classList.add("rolling", "spinning");
+    flick();
+    const timer = animate ? setInterval(flick, 60) : null;
+    const started = Date.now();
+    let d = null;
+    let failed = false;
+    try {
+      const r = await fetch(`${API_BASE}/api/buyer/bonus`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: "spin" }) });
+      d = await r.json();
+    } catch { failed = true; }
+    const left = Math.max(0, (animate ? 1300 : 0) - (Date.now() - started));
+    if (left) await bonusSleep(left);
+    if (timer) clearInterval(timer);
+    bonusBusy = false;
+    if (btn) btn.classList.remove("spinning");
+    if (failed || !d || !d.ok) { if (btn) btn.classList.remove("rolling"); toast(t("bonusErr")); return; }
+    if (!d.percent) {
+      // Прокрут закрыт: плашку убираем, покупателю — что нужно сделать.
+      if (btn) btn.classList.remove("rolling");
+      bonusNote(t("bonusLocked"));
+      bonusHide(btn);
+      return;
+    }
+    if (animate) {
+      // Замедление: 5 шагов, каждый дольше предыдущего, и остановка на выпавшей скидке.
+      for (const ms of [90, 120, 160, 220, 300]) { flick(); await bonusSleep(ms); }
+    }
+    show(d.percent);
+    if (btn) btn.classList.remove("rolling");
+    haptic("medium");
+    if (btn && d.fresh && !reduceMotion) bonusConfetti(btn);
+    bonusNote(t("bonusWon").replace("{p}", d.percent).replace("{d}", ddmm(d.until)));
+    bonusHide(btn);
+    // Цены на витрине сразу со скидкой (после того как плашка уйдёт).
+    bonusActive = { percent: d.percent, until: d.until };
+    personalize();
+    setTimeout(() => render(), reduceMotion ? 0 : 1200);
   }
+  $("#bonusNoteX")?.addEventListener("click", () => $("#bonusNote")?.classList.remove("on"));
+
   function toggleFav(code) {
     const was = favs.includes(code);
     favs = was ? favs.filter((c) => c !== code) : [code, ...favs];
@@ -1199,6 +1387,19 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (b) b.setAttribute("aria-pressed", String(favs.includes(code)));
     if (stack[stack.length - 1].screen === "fav" || !sheetOpen) render();
   }
+  function loadBonusStatus() {
+    if (!featuresState || !canAuth()) return;
+    fetch(`${API_BASE}/api/buyer/bonus`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: "status" }) })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d || !d.ok) return;
+        bonusState = d;
+        bonusActive = d.percent && d.until ? { percent: d.percent, until: d.until } : null;
+        personalize();
+        render();
+      })
+      .catch(() => {});
+  }
   function loadFeatures() {
     if (featuresState !== null || !canAuth()) return;
     featuresState = false;
@@ -1208,7 +1409,8 @@ textarea.input { min-height: 132px; resize: vertical; }
         if (!d || !d.ok) return;
         featuresState = Boolean(d.nav);
         if (Array.isArray(d.favorites)) favs = d.favorites;
-        if (featuresState) render();
+        if (d.stars) starsState = d.stars;
+        if (featuresState) { render(); loadBonusStatus(); }
         const dock = $("#dock");
         if (dock) dock.hidden = !featuresState;
       })
@@ -1234,7 +1436,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (favL) favL.textContent = t("navFav");
   }
   function mineStepsHtml(o) {
-    if (o.stage === "refunded" || o.stage === "attention") return `<p class="mine-note">${esc(o.stage_text)}</p>`;
+    if (o.stage === "refunded" || o.stage === "attention" || String(o.stage).startsWith("stars_")) return `<p class="mine-note">${esc(o.stage_text)}</p>`;
     const cur = o.stage === "ready" ? 2 : 1;
     const names = [t("stPaid"), t("stWork"), t("stReady")];
     return `<div class="mine-steps">${names.map((s, i) => `<span class="${i <= cur ? "on" : ""}${i === cur ? " now" : ""}">${esc(s)}</span>`).join("")}</div>`;
@@ -1372,17 +1574,17 @@ textarea.input { min-height: 132px; resize: vertical; }
       if (tg.MainButton) tg.MainButton.onClick(() => { if (stack[stack.length - 1].screen === "cart") checkout(); });
     }
     // Пока каталог грузится — спокойная заставка вместо пустого экрана.
-    $("#view").innerHTML = `<div aria-busy="true" aria-label="${esc(t("loading"))}" style="display:grid;gap:12px;padding-top:26px">
-      <div class="skel" style="height:58px;width:72%"></div><div class="skel" style="height:16px;width:88%;border-radius:8px"></div>
-      <div class="skel" style="height:220px;margin-top:14px;border-radius:26px"></div><div class="skel" style="height:150px"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="skel" style="height:132px"></div><div class="skel" style="height:132px"></div></div></div>`;
+    $("#view").innerHTML = `<div class="splash" role="status" aria-busy="true" aria-label="${esc(t("loading"))}">
+      <img class="splash3d" src="wm3d.webp" alt="" width="480" height="186" decoding="async">
+      <div class="splash-bar" aria-hidden="true"><span></span></div>
+      <p class="splash-text">${esc(t("loading"))}</p></div>`;
     // Каталог: две попытки. Не загрузился — честно говорим покупателю, а не показываем молча запасной.
     let loaded = false;
     for (let attempt = 0; attempt < 2 && !loaded; attempt++) {
       if (attempt) await new Promise((r) => setTimeout(r, 1500));
       try {
         const res = await fetch("catalog.json", { cache: "no-cache" });
-        if (res.ok) { const data = await res.json(); if (data && Array.isArray(data.items)) { catalog = data; loaded = true; } }
+        if (res.ok) { const data = await res.json(); if (data && Array.isArray(data.items)) { catalog = data; personalize(); loaded = true; } }
       } catch { /* сеть недоступна */ }
     }
     petals();
