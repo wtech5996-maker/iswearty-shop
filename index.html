@@ -380,18 +380,37 @@ textarea.input { min-height: 132px; resize: vertical; }
   /* «Мои водянки» и нижняя панель */
   #view { padding-bottom: 110px; }
   .dock[hidden] { display: none; }
-  .dock { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); transform: translateX(-50%); display: grid; grid-template-columns: 1fr 1fr; width: min(320px, calc(100% - 32px)); padding: 6px; border-radius: 999px; z-index: 20; background: rgba(18, 18, 22, .82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
-  .dock .pill { position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc(50% - 6px); border-radius: 999px; background: rgba(255, 255, 255, .16); transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
-  .dock[data-active="mine"] .pill { transform: translateX(100%); }
-  .dock button { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; background: none; border: 0; color: #fff; opacity: .6; font: inherit; font-size: 12px; cursor: pointer; }
+  .dock { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); transform: translateX(-50%); display: grid; grid-template-columns: repeat(3, 1fr); width: min(380px, calc(100% - 32px)); padding: 6px; border-radius: 999px; z-index: 20; background: rgba(18, 18, 22, .82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+  .dock .pill { position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc((100% - 12px) / 3); border-radius: 999px; background: rgba(255, 255, 255, .22); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+  .dock .pill.bump { animation: pillBump .5s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes pillBump { 0% { scale: 1 1; } 35% { scale: 1.12 .9; } 100% { scale: 1 1; } }
+  body.has-dock { padding-bottom: 104px; }
+  .dock[data-active="fav"] .pill { transform: translateX(100%); }
+  .dock[data-active="mine"] .pill { transform: translateX(200%); }
+  .dock button { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 0; background: none; border: 0; color: #fff; opacity: .78; font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: .2px; cursor: pointer; transition: opacity .3s; }
   .dock button[aria-current="true"] { opacity: 1; }
   .dock svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .titleline { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+  .favbtn { flex: none; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: #fff; cursor: pointer; transition: transform .2s, background .2s; }
+  .favbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .favbtn[aria-pressed="true"] { color: #ff4d6d; background: rgba(255, 77, 109, .14); border-color: rgba(255, 77, 109, .4); }
+  .favbtn[aria-pressed="true"] svg { fill: currentColor; }
+  .favbtn:active { transform: scale(.9); }
+  .card .thumb .favmark { position: absolute; z-index: 1; right: 8px; top: 8px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; background: rgba(20, 5, 10, 0.74); color: #ff4d6d; }
+  .card .thumb .favmark svg { width: 14px; height: 14px; fill: currentColor; }
+  .favgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .bonus { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; margin-top: 12px; padding: 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: inherit; font: inherit; cursor: pointer; }
+  .bonus b { font-size: 16px; }
+  .bonus span { font-size: 12.5px; opacity: .75; }
+  .bonus .bub { position: absolute; left: 50%; top: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .85), rgba(255, 120, 150, .45) 60%, rgba(255, 77, 109, .15)); opacity: 0; pointer-events: none; }
+  .bonus.pop .bub { animation: bpop .6s ease-out; }
+  @keyframes bpop { 0% { opacity: .9; transform: scale(.4); } 60% { opacity: .55; transform: scale(2.4); } 100% { opacity: 0; transform: scale(3); } }
   .mine-item { display: block; padding: 14px; margin: 0 0 10px; border-radius: 18px; }
   .mine-head { font-size: 15px; margin-bottom: 10px; }
   .mine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .mine-steps span { font-size: 12px; text-align: center; padding: 6px 4px; border-radius: 999px; background: rgba(127, 127, 127, .12); opacity: .5; }
   .mine-steps span.on { opacity: 1; }
-  .mine-steps span.now { background: rgba(127, 127, 127, .3); font-weight: 600; }
+  .mine-steps span.now { background: linear-gradient(135deg, #ff3d6e, #b8224d); color: #fff; font-weight: 700; opacity: 1; box-shadow: 0 4px 14px rgba(255, 61, 110, .35); }
   .mine-note, .mine-empty { font-size: 13px; opacity: .8; margin: 8px 0 0; line-height: 1.4; }
   .mine-empty { padding: 24px 4px; text-align: center; }
 </style>
@@ -418,6 +437,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   <nav class="dock glass" id="dock" data-active="home" aria-label="Разделы" hidden>
     <span class="pill" aria-hidden="true"></span>
     <button type="button" data-tab="home" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 01-1 1h-4v-5h-6v5H5a1 1 0 01-1-1z"/></svg><span id="navShopLabel"></span></button>
+    <button type="button" data-tab="fav"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg><span id="navFavLabel"></span></button>
     <button type="button" data-tab="mine"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z"/></svg><span id="navMineLabel"></span></button>
   </nav>
 </div>
@@ -456,7 +476,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   const T = {
     ru: {
       back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат с ботом.",
-      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
+      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", navFav: "Избранное", bonusTitle: "🎁 Крутить бонус", bonusSub: "Скидка на следующий заказ — раз в неделю", bonusWon: "Ваша скидка −{p}% на следующий заказ, действует до {d}", bonusWait: "Крутить можно снова с {d}", bonusErr: "Не получилось крутить. Попробуйте ещё раз.", favAdd: "В избранное", favEmpty: "Нажмите ♥ в карточке водянки — она сохранится здесь.", favErr: "Не получилось сохранить. Попробуйте ещё раз.", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
       how: "Как это работает", howSteps: ["Опишите, что нужно", "Оплатите в чате с ботом", "Готовый результат придёт в этот чат"], voicePrice: "Любая озвучка —",
       pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
       cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
@@ -484,7 +504,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     },
     en: {
       back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the bot chat.",
-      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
+      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", navFav: "Favorites", bonusTitle: "🎁 Spin for a bonus", bonusSub: "A discount on your next order — once a week", bonusWon: "Your −{p}% discount on the next order, valid until {d}", bonusWait: "You can spin again from {d}", bonusErr: "Could not spin. Try again.", favAdd: "Add to favorites", favEmpty: "Tap ♥ on a product to save it here.", favErr: "Could not save. Try again.", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
       how: "How it works", howSteps: ["Describe what you need", "Pay in the bot chat", "The result arrives in this chat"], voicePrice: "Any voice-over —",
       pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
       cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
@@ -604,7 +624,9 @@ textarea.input { min-height: 132px; resize: vertical; }
     return `<div class="ph" style="position:absolute;inset:0"><span>${esc(initials)}</span></div>`;
   };
   /** Метки «Новинка» / «Топ» на обложке карточки. */
-  const tags = (i) => `${i.new ? `<span class="tag new">${esc(t("newBadge"))}</span>` : ""}${i.top ? `<span class="tag hot">${esc(t("topBadge"))}</span>` : ""}`;
+  const HEART = `<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg>`;
+  const favMark = (i) => (featuresState && favs.includes(i.code) ? `<span class="favmark" aria-hidden="true">${HEART}</span>` : "");
+  const tags = (i) => `${favMark(i)}${i.new ? `<span class="tag new">${esc(t("newBadge"))}</span>` : ""}${i.top ? `<span class="tag hot">${esc(t("topBadge"))}</span>` : ""}`;
   /** Волна озвучки: столбики постоянной высоты для каждого товара; светлая часть — прослушано. */
   const wave = (code) => {
     let h = 7;
@@ -667,6 +689,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <p>${esc(t("tagline"))}</p>
         ${catalog.sold > 0 || channelOk() ? `<div class="trust">${catalog.sold > 0 ? `<span class="t">${ICON.flame}${esc(t("sold", catalog.sold))}</span>` : ""}${channelOk() ? `<button class="t tap" type="button" data-link="${esc(catalog.channel)}">${ICON.megaphone}@${esc(catalog.channel.replace(/^https:\/\/t\.me\//, "").replace(/\/$/, ""))}</button>` : ""}</div>` : ""}
         <div style="margin-top:14px">${payList()}</div>
+        ${featuresState ? `<button class="bonus glass tap" type="button" data-bonus="1"><span class="bub" aria-hidden="true"></span><b>${esc(t("bonusTitle"))}</b><span>${esc(t("bonusSub"))}</span></button>` : ""}
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap fx")} data-go="watermarks" type="button">
@@ -778,6 +801,10 @@ textarea.input { min-height: 132px; resize: vertical; }
           <div class="side">${samePrice ? "" : itemTag(i)}<button class="pick tap" type="button" data-go="form" data-code="${esc(i.code)}">${esc(t("choose"))}</button></div>
         </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
+    },
+    fav() {
+      const list = favs.map(byCode).filter(Boolean);
+      return `<section class="hero"><h1 class="logo" style="font-size:26px">${esc(t("navFav"))}</h1></section>${list.length ? `<div class="favgrid">${list.map(card).join("")}</div>` : `<p class="mine-empty">${esc(t("favEmpty"))}</p>`}`;
     },
     mine() {
       return `<section class="hero"><h1 class="logo" style="font-size:26px">${esc(t("mineTitle"))}</h1></section><div id="mine-list">${mineListHtml()}</div>`;
@@ -939,7 +966,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     $("#sheet").innerHTML = `
       <div class="grab"></div>
       <div class="video">${media(i)}</div>
-      <div class="row"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${itemTag(i, true)}</div>
+      <div class="row"><div class="titleline"><h3 id="sheetTitle">${esc(L(i.title))}</h3>${featuresState ? `<button class="favbtn tap" type="button" data-fav="${esc(i.code)}" aria-pressed="${favs.includes(i.code)}" aria-label="${esc(t("favAdd"))}">${HEART}</button>` : ""}</div>${itemTag(i, true)}</div>
       <div class="stack">${isAuto(i) ? `
         <div class="field">
           <label for="nick">${esc(t("nick"))}</label>
@@ -1131,6 +1158,45 @@ textarea.input { min-height: 132px; resize: vertical; }
     haptic("light");
   }
   var featuresState = null;
+  var favs = [];
+  var bonusBusy = false;
+  const ddmm = (v) => {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { const [, m, d] = v.split("-"); return `${d}.${m}`; }
+    const x = new Date(v);
+    return `${String(x.getDate()).padStart(2, "0")}.${String(x.getMonth() + 1).padStart(2, "0")}`;
+  };
+  function spinBonus() {
+    if (bonusBusy) return;
+    bonusBusy = true;
+    fetch(`${API_BASE}/api/buyer/bonus`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: "spin" }) })
+      .then((r) => r.json())
+      .then((d) => {
+        bonusBusy = false;
+        if (!d || !d.ok) throw new Error((d && d.error) || "error");
+        const btn = document.querySelector(".bonus");
+        if (btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
+        haptic("medium");
+        if (d.available === false) toast(t("bonusWait").replace("{d}", ddmm(d.next)));
+        else toast(t("bonusWon").replace("{p}", d.percent).replace("{d}", ddmm(d.until)));
+      })
+      .catch(() => { bonusBusy = false; toast(t("bonusErr")); });
+  }
+  function toggleFav(code) {
+    const was = favs.includes(code);
+    favs = was ? favs.filter((c) => c !== code) : [code, ...favs];
+    syncFav(code);
+    haptic(was ? "light" : "medium");
+    fetch(`${API_BASE}/api/buyer/favorites`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: was ? "remove" : "add", code }) })
+      .then((r) => r.json())
+      .then((d) => { if (!d || !d.ok) throw new Error((d && d.error) || "error"); favs = d.favorites; syncFav(code); })
+      .catch(() => { favs = was ? [code, ...favs.filter((c) => c !== code)] : favs.filter((c) => c !== code); syncFav(code); toast(t("favErr")); });
+  }
+  /** Обновить сердечко в открытой карточке и экран «Избранное». */
+  function syncFav(code) {
+    const b = document.querySelector(`.favbtn[data-fav="${CSS.escape(code)}"]`);
+    if (b) b.setAttribute("aria-pressed", String(favs.includes(code)));
+    if (stack[stack.length - 1].screen === "fav" || !sheetOpen) render();
+  }
   function loadFeatures() {
     if (featuresState !== null || !canAuth()) return;
     featuresState = false;
@@ -1139,6 +1205,8 @@ textarea.input { min-height: 132px; resize: vertical; }
       .then((d) => {
         if (!d || !d.ok) return;
         featuresState = Boolean(d.nav);
+        if (Array.isArray(d.favorites)) favs = d.favorites;
+        if (featuresState) render();
         const dock = $("#dock");
         if (dock) dock.hidden = !featuresState;
       })
@@ -1148,12 +1216,20 @@ textarea.input { min-height: 132px; resize: vertical; }
     const dock = $("#dock");
     if (!dock) return;
     loadFeatures();
-    const active = stack[0] && stack[0].screen === "mine" ? "mine" : "home";
+    const active = stack[0] && ["mine", "fav"].includes(stack[0].screen) ? stack[0].screen : "home";
+    const prevActive = dock.dataset.active;
     dock.dataset.active = active;
+    document.body.classList.toggle("has-dock", !dock.hidden);
+    if (prevActive && prevActive !== active) {
+      const pill = dock.querySelector(".pill");
+      if (pill) { pill.classList.remove("bump"); void pill.offsetWidth; pill.classList.add("bump"); }
+    }
     dock.querySelectorAll("button[data-tab]").forEach((b) => b.setAttribute("aria-current", String(b.dataset.tab === active)));
     const shopL = $("#navShopLabel"), mineL = $("#navMineLabel");
     if (shopL) shopL.textContent = t("navShop");
     if (mineL) mineL.textContent = t("navMine");
+    const favL = $("#navFavLabel");
+    if (favL) favL.textContent = t("navFav");
   }
   function mineStepsHtml(o) {
     if (o.stage === "refunded" || o.stage === "attention") return `<p class="mine-note">${esc(o.stage_text)}</p>`;
@@ -1166,7 +1242,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (mineState.status === "error") return `<p class="mine-empty">${esc(t("mineError"))}</p>`;
     if (mineState.status !== "ok") return `<p class="mine-empty">${esc(t("mineLoading"))}</p>`;
     if (!mineState.orders.length) return `<p class="mine-empty">${esc(t("mineEmpty"))}</p>`;
-    return mineState.orders.map((o) => `<article class="mine-item glass"><div class="mine-head"><b>${esc(o.no)} · ${esc(o.title)}</b></div>${mineStepsHtml(o)}${o.ready ? `<p class="mine-note">${esc(t("mineReady"))}</p>` : ""}</article>`).join("");
+    return mineState.orders.map((o) => `<article class="mine-item glass"><div class="mine-head"><b>${o.no ? `${esc(o.no)} · ` : ""}${esc(o.title)}</b></div>${mineStepsHtml(o)}${o.ready ? `<p class="mine-note">${esc(t("mineReady"))}</p>` : ""}</article>`).join("");
   }
   function paintMine() {
     const el = $("#mine-list");
@@ -1195,6 +1271,8 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (el.dataset.lang) { if (el.dataset.lang === lang) return; lang = el.dataset.lang; try { localStorage.setItem("isw-lang", lang); } catch {} closeSheet(); render(); return; }
     if (el.id === "back") return back();
     if (el.dataset.tab) return switchTab(el.dataset.tab);
+    if (el.dataset.fav) return toggleFav(el.dataset.fav);
+    if (el.dataset.bonus) return spinBonus();
     if (el.dataset.go === "cart" && stack[stack.length - 1].screen === "cart") return;
     if (el.dataset.go) { closeSheet(); return go(el.dataset.go, { code: el.dataset.code }); }
     if (el.dataset.sheet) return openSheet(el.dataset.sheet);
