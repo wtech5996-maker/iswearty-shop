@@ -401,15 +401,6 @@ textarea.input { min-height: 132px; resize: vertical; }
   .card .thumb .favmark { position: absolute; z-index: 1; right: 8px; top: 8px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; background: rgba(20, 5, 10, 0.74); color: #ff4d6d; }
   .card .thumb .favmark svg { width: 14px; height: 14px; fill: currentColor; }
   .favgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .bonus { --tilt: 8deg; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; margin-top: 14px; padding: 18px 16px; border-radius: 24px; border: 1.5px solid rgba(255, 214, 140, .55); background: linear-gradient(135deg, rgba(255, 214, 140, .22), rgba(255, 77, 109, .26) 55%, rgba(120, 20, 60, .35)); color: inherit; font: inherit; cursor: pointer; box-shadow: 0 0 0 1px rgba(255, 214, 140, .18), 0 12px 34px -8px rgba(255, 120, 150, .55); animation: bonusGlow 3.2s ease-in-out infinite; }
-  .bonus b { font-size: 18px; letter-spacing: -0.01em; text-shadow: 0 1px 0 rgba(0, 0, 0, .25); }
-  .bonus span { font-size: 12.5px; opacity: .85; }
-  .bonus .gift { display: inline-block; transform-origin: 50% 85%; animation: giftWob 2.6s ease-in-out infinite; }
-  .bonus.spinning .gift { animation: giftShake .32s ease-in-out infinite; }
-  .bonus .bub { position: absolute; left: 50%; top: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .85), rgba(255, 214, 140, .45) 60%, rgba(255, 77, 109, .15)); opacity: 0; pointer-events: none; }
-  .bonus.pop .bub { animation: bpop .6s ease-out; }
-  .bonus .cf { position: absolute; left: 50%; top: 40%; width: 8px; height: 8px; border-radius: 2px; background: var(--c); opacity: 0; pointer-events: none; animation: cfBurst .9s ease-out forwards; }
-  .bonus.gone { animation: bonusOut .45s ease forwards; pointer-events: none; }
   /* 3D-водянка на экране загрузки */
   @keyframes floaty { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
   .splash { display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 48px; text-align: center; }
@@ -419,21 +410,101 @@ textarea.input { min-height: 132px; resize: vertical; }
   @keyframes splashBar { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
   .splash-text { margin: 0; font-size: 14px; opacity: .8; }
   @media (prefers-reduced-motion: reduce) { .splash3d, .splash-bar span { animation: none; } }
-  .bonus .drum { display: none; font: 800 40px/1 var(--body); font-variant-numeric: tabular-nums; background: linear-gradient(180deg, #fff6d8, #ffb8cb 55%, #ff4d6d); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 4px 0; }
-  .bonus.rolling .drum { display: block; }
-  .bonus.rolling .sub { display: none; }
-  @keyframes bonusGlow { 0%, 100% { box-shadow: 0 0 0 1px rgba(255, 214, 140, .18), 0 12px 34px -8px rgba(255, 120, 150, .45); } 50% { box-shadow: 0 0 0 1px rgba(255, 214, 140, .45), 0 14px 40px -6px rgba(255, 184, 100, .7); } }
-  @keyframes giftWob { 0%, 62%, 100% { transform: rotate(0) translateY(0); } 68% { transform: rotate(-14deg) translateY(-2px); } 74% { transform: rotate(12deg) translateY(-3px); } 80% { transform: rotate(-8deg); } 86% { transform: rotate(5deg); } }
-  @keyframes giftShake { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
-  @keyframes cfBurst { 0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(.6); } }
-  @keyframes bonusOut { to { opacity: 0; transform: scale(.92); } }
-  @keyframes bpop { 0% { opacity: .9; transform: scale(.4); } 60% { opacity: .55; transform: scale(2.4); } 100% { opacity: 0; transform: scale(3); } }
-  /* Сообщение о скидке: не пропадает само, закрывает покупатель */
-  .bonus-note { position: fixed; z-index: 10; left: 50%; bottom: 24px; transform: translate(-50%, calc(100% + 40px)); visibility: hidden; width: min(480px, calc(100% - 32px)); padding: 14px 14px 14px 18px; border-radius: 18px; background: rgba(26, 6, 12, 0.96); border: 1.5px solid rgba(255, 214, 140, .55); box-shadow: 0 14px 40px -8px rgba(255, 120, 150, .5); display: flex; align-items: center; gap: 12px; transition: transform .45s var(--spring), visibility 0s .45s; }
-  .bonus-note.on { transform: translate(-50%, 0); visibility: visible; transition: transform .45s var(--spring), visibility 0s; }
+  /* ===== Пиксельный бонус: плашка, автомат, переход, сообщение ===== */
+  .bonus { --tilt: 9deg; --ink: #3a0b1c; overflow: hidden; display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 14px; padding: 14px 14px 14px 12px; border: 0; border-radius: 20px; cursor: pointer; text-align: left; color: #fff; font: inherit;
+    background: repeating-conic-gradient(rgba(0, 0, 0, .13) 0 25%, transparent 0 50%) 0 0 / 4px 4px, linear-gradient(115deg, #d93a62 0, #b81e45 45%, #8a1535 100%);
+    box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px rgba(255, 184, 203, .35), 0 16px 30px -10px rgba(255, 61, 99, .7), inset 0 3px 0 rgba(255, 255, 255, .28), inset 0 -4px 0 rgba(58, 11, 28, .35); }
+  .bonus::before { content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 28%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); transform: skewX(-20deg); animation: bnShine 3.2s cubic-bezier(.4, 0, .2, 1) infinite; pointer-events: none; }
+  .bonus::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(160px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .26), transparent 60%); opacity: 0; transition: opacity .2s; }
+  .bonus:hover::after { opacity: 1; }
+  @keyframes bnShine { 0%, 55% { left: -40%; } 100% { left: 130%; } }
+  .bn-gift { position: relative; flex: none; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: rgba(58, 11, 28, .45); box-shadow: inset 0 0 0 2px rgba(58, 11, 28, .6); }
+  .bn-gift svg { width: 40px; height: 40px; shape-rendering: crispEdges; overflow: visible; }
+  .bn-lid { animation: bnLid 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes bnLid { 0%, 70%, 100% { transform: translateY(0); } 74% { transform: translateY(-3px); } 78% { transform: translateY(-5px) rotate(-6deg); } 84% { transform: translateY(-2px); } 88% { transform: translateY(0); } }
+  .bn-gift i { position: absolute; width: 4px; height: 4px; background: #fff; opacity: 0; animation: bnSpk 2.4s ease-out infinite; }
+  .bn-gift i:nth-of-type(1) { left: 6px; top: 8px; } .bn-gift i:nth-of-type(2) { right: 5px; top: 5px; animation-delay: .15s; } .bn-gift i:nth-of-type(3) { right: 8px; bottom: 10px; animation-delay: .3s; }
+  @keyframes bnSpk { 0%, 72% { opacity: 0; transform: scale(1); } 78% { opacity: 1; transform: scale(1.6); } 90%, 100% { opacity: 0; } }
+  .bn-text { flex: 1; min-width: 0; position: relative; }
+  .bn-eyebrow { display: inline-block; font: 400 8px/1 var(--pixel); letter-spacing: .06em; color: #3a0b1c; background: #fff0f4; padding: 4px 5px 3px; border-radius: 4px; margin-bottom: 7px; }
+  .bn-text b { display: block; font: 800 19px/1.15 var(--body); color: #fff; text-shadow: 0 2px 6px rgba(40, 4, 16, .55); }
+  .bn-text small { display: block; margin-top: 5px; font: 600 12.5px/1.35 var(--body); color: rgba(255, 255, 255, .92); text-shadow: 0 1px 3px rgba(40, 4, 16, .5); }
+  .bn-badge { flex: none; position: relative; display: grid; place-items: center; gap: 4px; padding: 8px 8px 7px; border-radius: 10px; background: #3a0b1c; box-shadow: inset 0 0 0 2px #ff8fab; }
+  .bn-badge span { font: 400 7px/1 var(--pixel); color: #ffb8cb; }
+  .bn-badge strong { font: 400 13px/1 var(--pixel); color: #fff; text-shadow: 2px 2px 0 #b81e45; animation: bnBlink 1.6s ease-in-out infinite; }
+  @keyframes bnBlink { 50% { color: #ffb8cb; } }
+  /* окно автомата */
+  .bn-ov { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); background: repeating-conic-gradient(rgba(255, 255, 255, .025) 0 25%, transparent 0 50%) 0 0 / 8px 8px, #12040a; color: #fff0f4; }
+  .bn-ov[hidden] { display: none; }
+  .bn-ov.quake { animation: bnQuake .45s cubic-bezier(.36, .07, .19, .97); }
+  @keyframes bnQuake { 15% { transform: translate(-6px, 3px); } 30% { transform: translate(6px, -4px); } 45% { transform: translate(-4px, 2px); } 60% { transform: translate(3px, -2px); } 80% { transform: translate(-1px, 1px); } 100% { transform: none; } }
+  .bn-top { position: absolute; top: calc(14px + env(safe-area-inset-top)); left: 16px; right: 16px; display: flex; justify-content: space-between; }
+  .bn-top button { height: 40px; min-width: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: #3a0b1c; box-shadow: inset 0 0 0 2px #ff6f91; color: #fff; font: 400 10px/1 var(--pixel); cursor: pointer; }
+  .bn-top button .note-ic { font: 700 15px/1 var(--body); margin-right: 6px; vertical-align: -2px; }
+  .bn-top button[aria-pressed="false"] { color: #d3a1b0; box-shadow: inset 0 0 0 2px #5a1830; }
+  .bn-top button:disabled { opacity: .4; }
+  .bn-scene { width: min(330px, calc(100% - 20px)); perspective: 900px; filter: drop-shadow(8px 8px 0 #0a0205) drop-shadow(0 0 30px rgba(255, 61, 99, .35)); }
+  .bn-tilt { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .2s ease-out; }
+  .bn-machine { position: relative; }
+  .bn-machine.drop { animation: bnDrop .8s cubic-bezier(.2, .9, .3, 1) both; }
+  @keyframes bnDrop { 0% { transform: translateY(-110vh) rotate(-4deg); } 55% { transform: translateY(18px) rotate(1deg); } 72% { transform: translateY(-10px); } 86% { transform: translateY(4px); } 100% { transform: none; } }
+  .bn-machine.shake { animation: bnShake .6s cubic-bezier(.36, .07, .19, .97); }
+  @keyframes bnShake { 10% { transform: translate(-12px, 4px) rotate(-3deg); } 20% { transform: translate(12px, -5px) rotate(3deg); } 30% { transform: translate(-10px, 3px) rotate(-2.5deg); } 40% { transform: translate(9px, -3px) rotate(2deg); } 55% { transform: translate(-6px, 2px) rotate(-1deg); } 70% { transform: translate(4px, -1px); } 85% { transform: translate(-2px, 0); } 100% { transform: none; } }
+  .bn-machine.spin .bn-body { animation: bnRumble .09s linear infinite; }
+  @keyframes bnRumble { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(1.5px, -1px); } 50% { transform: translate(-1.5px, 1px); } 75% { transform: translate(1px, 1px); } }
+  .bn-body { position: relative; padding: 16px 16px 20px; background: repeating-conic-gradient(rgba(0, 0, 0, .12) 0 25%, transparent 0 50%) 0 0 / 4px 4px, linear-gradient(180deg, #ff8fab, #e8486c 55%, #b81e45); box-shadow: 0 0 0 4px #3a0b1c;
+    clip-path: polygon(0 8px, 8px 8px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)); }
+  .bn-sign { position: relative; padding: 14px 8px 12px; text-align: center; background: #1a0510; box-shadow: 0 0 0 4px #3a0b1c, inset 0 0 0 2px #ff6f91; min-height: 62px; }
+  .bn-sign b { display: block; min-height: 22px; font: 400 21px/1 var(--pixel); color: #fff; text-shadow: 3px 3px 0 #b81e45, 6px 6px 0 #3a0b1c; }
+  .bn-sign small { display: block; margin-top: 12px; font: 400 8px/1 var(--pixel); color: #ffb8cb; animation: bnFade 1.4s ease-in-out infinite; }
+  @keyframes bnFade { 50% { opacity: .15; } }
+  .bn-machine.win .bn-sign b { animation: bnFlash .4s ease-in-out 6; }
+  @keyframes bnFlash { 50% { color: #ffb8cb; text-shadow: 3px 3px 0 #fff, 6px 6px 0 #b81e45; } }
+  .bn-window { position: relative; margin-top: 14px; padding: 10px; background: #1a0510; box-shadow: 0 0 0 4px #3a0b1c, inset 4px 4px 0 rgba(0, 0, 0, .6); overflow: hidden; }
+  .bn-reels { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .bn-reel { position: relative; width: 84px; height: 204px; overflow: hidden; background: #fff0f4; box-shadow: inset 0 0 0 3px #3a0b1c; }
+  .bn-strip { position: absolute; left: 0; right: 0; top: 0; }
+  .bn-strip div { height: 68px; display: flex; align-items: center; justify-content: center; font: 400 42px/1 var(--pixel); color: #b81e45; text-shadow: 4px 4px 0 #ffb8cb; }
+  .bn-reel::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #3a0b1c 0 18%, rgba(58, 11, 28, .45) 18% 30%, transparent 30% 70%, rgba(58, 11, 28, .45) 70% 82%, #3a0b1c 82%); }
+  .bn-sym { font: 400 32px/1 var(--pixel); color: #fff; text-shadow: 3px 3px 0 #b81e45; }
+  .bn-payline { position: absolute; left: 6px; right: 6px; top: 50%; height: 4px; margin-top: -2px; background: #ff3d63; opacity: .7; pointer-events: none; z-index: 3; }
+  .bn-machine.win .bn-payline { animation: bnPl .4s ease-in-out infinite; }
+  @keyframes bnPl { 50% { opacity: .15; } }
+  .bn-boot { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; background: #1a0510; font: 400 10px/1.8 var(--pixel); color: #ffb8cb; text-align: center; }
+  .bn-boot[hidden] { display: none; }
+  .bn-go { display: block; width: 100%; margin-top: 16px; padding: 16px 10px; border: 0; cursor: pointer; color: #fff; font: 400 13px/1 var(--pixel); letter-spacing: .06em; background: #ff3d63; box-shadow: 0 0 0 4px #3a0b1c, 0 6px 0 4px #3a0b1c, inset -4px -4px 0 #b81e45, inset 4px 4px 0 #ff8fab; transition: transform .08s ease-out, box-shadow .08s ease-out; }
+  .bn-go:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 4px #3a0b1c, 0 2px 0 4px #3a0b1c, inset 4px 4px 0 #b81e45; }
+  .bn-go:disabled { filter: saturate(.5) brightness(.8); cursor: default; }
+  .bn-go.pulse { animation: bnPulse 1.2s ease-in-out infinite; }
+  @keyframes bnPulse { 50% { background: #ff6f91; } }
+  .bn-go:focus-visible, .bn-top button:focus-visible { outline: 3px solid #fff; outline-offset: 5px; }
+  .bn-lever { position: absolute; right: -30px; top: 84px; width: 44px; height: 150px; cursor: grab; touch-action: none; z-index: 3; }
+  .bn-lever .rod { position: absolute; left: 19px; bottom: 10px; width: 8px; height: 96px; background: #fff0f4; box-shadow: 0 0 0 2px #3a0b1c; transform-origin: 50% 100%; transform: scaleY(var(--pull, 1)); transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+  .bn-lever.drag .rod { transition: none; }
+  .bn-lever .knob { position: absolute; left: -8px; top: -18px; width: 24px; height: 24px; background: #ff3d63; box-shadow: 0 0 0 3px #3a0b1c, inset -4px -4px 0 #b81e45; }
+  .bn-lever .base { position: absolute; left: 12px; bottom: 4px; width: 22px; height: 16px; background: #b81e45; box-shadow: 0 0 0 2px #3a0b1c; }
+  .bn-machine.spin .bn-lever .rod { --pull: -.55; }
+  .bn-res { min-height: 52px; max-width: 330px; text-align: center; font-size: 14px; color: #d3a1b0; }
+  .bn-res b { display: block; font: 400 15px/1.6 var(--pixel); color: #fff0f4; }
+  .bn-bang { position: absolute; left: 50%; top: 44%; z-index: 6; font: 400 26px/1 var(--pixel); color: #fff; text-shadow: 3px 3px 0 #ff3d63, 6px 6px 0 #3a0b1c; transform: translate(-50%, -50%) scale(0); pointer-events: none; white-space: nowrap; }
+  .bn-bang.on { animation: bnBang 1.3s cubic-bezier(.2, .9, .3, 1) forwards; }
+  @keyframes bnBang { 0% { transform: translate(-50%, -50%) scale(0); } 30% { transform: translate(-50%, -50%) scale(1.3); } 45% { transform: translate(-50%, -50%) scale(1); } 80% { transform: translate(-50%, -60%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -80%) scale(1); opacity: 0; } }
+  .bn-wipe { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100%; pointer-events: none; }
+  .bn-wipe[hidden] { display: none; }
+  .bn-flash { position: fixed; inset: 0; z-index: 35; pointer-events: none; background: #fff; opacity: 0; }
+  .bn-flash.on { animation: bnFlashScr .35s ease-out; }
+  @keyframes bnFlashScr { 0% { opacity: .35; } 100% { opacity: 0; } }
+  .bn-fx { position: fixed; inset: 0; z-index: 38; pointer-events: none; overflow: hidden; }
+  .bn-fx i { position: absolute; width: 8px; height: 8px; }
+  /* сообщение о скидке: не пропадает само, закрывает покупатель */
+  .bonus-note { position: fixed; z-index: 10; left: 50%; bottom: 24px; transform: translate(-50%, calc(100% + 60px)); visibility: hidden; width: min(480px, calc(100% - 32px)); display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; border-radius: 16px; background: #1a0510; box-shadow: 0 0 0 3px #3a0b1c, 0 0 0 5px #ff6f91, 0 16px 34px -8px rgba(255, 61, 99, .6); transition: transform .45s cubic-bezier(.2, 1.3, .4, 1), visibility 0s .45s; }
+  .bonus-note.on { transform: translate(-50%, 0); visibility: visible; transition: transform .45s cubic-bezier(.2, 1.3, .4, 1), visibility 0s; }
   body.withbar .bonus-note { bottom: calc(92px + env(safe-area-inset-bottom)); }
-  .bonus-note .txt { flex: 1; font-size: 14.5px; line-height: 1.4; }
-  .bonus-note .x { flex: none; width: 36px; height: 36px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .08); color: inherit; font-size: 20px; line-height: 1; cursor: pointer; }
+  body:has(#dock:not([hidden])) .bonus-note { bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .bonus-note .ic { flex: none; font: 400 14px/1 var(--pixel); color: #fff; background: #ff3d63; padding: 9px 7px; border-radius: 8px; box-shadow: inset -3px -3px 0 #b81e45; }
+  .bonus-note .txt { flex: 1; min-width: 0; font-size: 14px; line-height: 1.4; }
+  .bonus-note .x { flex: none; width: 34px; height: 34px; border: 0; border-radius: 8px; background: #3a0b1c; color: #fff; font: 400 10px/1 var(--pixel); cursor: pointer; box-shadow: inset 0 0 0 2px #ff6f91; }
+  @media (prefers-reduced-motion: reduce) { .bonus::before, .bn-lid, .bn-gift i, .bn-badge strong, .bn-sign small, .bn-go.pulse, .bn-machine.drop, .bn-machine.shake, .bn-machine.spin .bn-body, .bn-ov.quake { animation: none; } }
   .mine-item { display: block; padding: 14px; margin: 0 0 10px; border-radius: 18px; }
   .mine-head { font-size: 15px; margin-bottom: 10px; }
   .mine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
@@ -474,7 +545,26 @@ textarea.input { min-height: 132px; resize: vertical; }
 <div class="scrim" id="scrim"></div>
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="bonus-note" id="bonusNote" role="status" aria-live="polite"><span class="txt"></span><button class="x tap" id="bonusNoteX" type="button" aria-label="Закрыть">×</button></div>
+<div class="bonus-note" id="bonusNote" role="status" aria-live="polite"><span class="ic" aria-hidden="true">%</span><span class="txt"></span><button class="x" id="bonusNoteX" type="button" aria-label="Закрыть">X</button></div>
+<div class="bn-ov" id="bnOv" role="dialog" aria-modal="true" aria-label="Бонус" hidden>
+  <div class="bn-top"><button type="button" id="bnSnd" aria-pressed="true"><span class="note-ic" aria-hidden="true">♪</span>ON</button><button type="button" id="bnX" aria-label="Закрыть">X</button></div>
+  <div class="bn-scene" id="bnScene"><div class="bn-tilt" id="bnTilt"><div class="bn-machine" id="bnM">
+    <div class="bn-body">
+      <div class="bn-sign"><b id="bnTitle"></b><small id="bnSub"></small></div>
+      <div class="bn-window">
+        <div class="bn-reels"><span class="bn-sym">-</span><div class="bn-reel" id="bnR0"><div class="bn-strip"></div></div><div class="bn-reel" id="bnR1"><div class="bn-strip"></div></div><span class="bn-sym">%</span></div>
+        <div class="bn-payline"></div><div class="bn-boot" id="bnBoot" hidden></div>
+      </div>
+      <button class="bn-go" id="bnGo" type="button"></button>
+    </div>
+    <div class="bn-lever" id="bnLever" aria-hidden="true"><div class="rod"><div class="knob"></div></div><div class="base"></div></div>
+    <div class="bn-bang" id="bnBang" aria-hidden="true"></div>
+  </div></div></div>
+  <div class="bn-res" id="bnRes" aria-live="polite"></div>
+</div>
+<canvas class="bn-wipe" id="bnWipe" hidden></canvas>
+<div class="bn-flash" id="bnFlash"></div>
+<div class="bn-fx" id="bnFx"></div>
 
 <!-- Запасной каталог для предпросмотра без интернета. На сайте используется catalog.json рядом с этим файлом. -->
 <script type="application/json" id="catalog-fallback">
@@ -507,7 +597,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     ru: {
       back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат с ботом.",
       starsTile: "Звёзды", starsSub: "Telegram Stars за рубли", starsHead: "Звёзды", starsText: "Укажите, сколько звёзд нужно. Оплата рублями, цена за звезду 0,95 ₽.", starsAsk: "Сколько звёзд нужно", starsSend: "Оставить заявку", starsFree: (max, min) => `Доступно сейчас: до ${max} ⭐ (минимум ${min} ⭐)`, starsNone: "Сейчас звёзды закончились. Загляните позже.", starsRange: (min, max) => `Введите число от ${min} до ${max}.`, starsSending: "Отправляю заявку…", starsSent: (no) => `Заявка №${no} принята. Владелец пришлёт счёт в чат с ботом.`, starsErr: "Не получилось отправить заявку. Попробуйте ещё раз.",
-      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", navFav: "Избранное", bonusTitle: "🎁 Крутить бонус", bonusNoteClose: "Закрыть", bonusSub: "Скидка 10–50% на приваты, водянки, outro и озвучки", bonusLocked: "Бонус откроется после двух покупок", bonusWon: "Ваша скидка −{p}% на следующий заказ, действует до {d}", bonusWait: "Крутить можно снова с {d}", bonusErr: "Не получилось крутить. Попробуйте ещё раз.", favAdd: "В избранное", favEmpty: "Нажмите ♥ в карточке водянки — она сохранится здесь.", favErr: "Не получилось сохранить. Попробуйте ещё раз.", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
+      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", navFav: "Избранное", bonusTitle: "🎁 Крутить бонус", bonusNoteClose: "Закрыть", bonusSub: "Скидка 10–50% на приваты, водянки, outro и озвучки", bonusShort: "Приваты, водянки, outro, озвучки", bonusUpTo: "ДО", bonusPress: "НАЖМИ СТАРТ", bonusSpinBtn: "КРУТИТЬ", bonusClaim: "ЗАБРАТЬ", bonusCloseBtn: "ЗАКРЫТЬ", bonusLuck: "УДАЧИ!", bonusWinTag: "ПОБЕДА!", bonusLockTag: "ЗАКРЫТО", bonusIdle: "Скидка 10–50%, действует 3 дня", bonusSpinning: "Крутим…", bonusResult: "СКИДКА -{p}%", bonusUntil: "Действует до {d}", bonusLoad: "ЗАГРУЗКА", bonusSound: "Звук", bonusCloseAria: "Закрыть", bonusLocked: "Бонус откроется после двух покупок", bonusWon: "Ваша скидка −{p}% на следующий заказ, действует до {d}", bonusWait: "Крутить можно снова с {d}", bonusErr: "Не получилось крутить. Попробуйте ещё раз.", favAdd: "В избранное", favEmpty: "Нажмите ♥ в карточке водянки — она сохранится здесь.", favErr: "Не получилось сохранить. Попробуйте ещё раз.", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
       how: "Как это работает", howSteps: ["Опишите, что нужно", "Оплатите в чате с ботом", "Готовый результат придёт в этот чат"], voicePrice: "Любая озвучка —",
       pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
       cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
@@ -536,7 +626,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     en: {
       back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the bot chat.",
       starsTile: "Stars", starsSub: "Telegram Stars for rubles", starsHead: "Stars", starsText: "Tell us how many stars you need. Paid in rubles, 0.95 ₽ per star.", starsAsk: "How many stars", starsSend: "Send request", starsFree: (max, min) => `Available now: up to ${max} ⭐ (minimum ${min} ⭐)`, starsNone: "No stars available right now. Check back later.", starsRange: (min, max) => `Enter a number from ${min} to ${max}.`, starsSending: "Sending request…", starsSent: (no) => `Request №${no} is in. The owner will send you an invoice in the bot chat.`, starsErr: "Could not send the request. Try again.",
-      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", navFav: "Favorites", bonusTitle: "🎁 Spin for a bonus", bonusNoteClose: "Close", bonusSub: "10–50% off private access, watermarks, outros and voice-overs", bonusLocked: "The bonus opens after two purchases", bonusWon: "Your −{p}% discount on the next order, valid until {d}", bonusWait: "You can spin again from {d}", bonusErr: "Could not spin. Try again.", favAdd: "Add to favorites", favEmpty: "Tap ♥ on a product to save it here.", favErr: "Could not save. Try again.", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
+      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", navFav: "Favorites", bonusTitle: "🎁 Spin for a bonus", bonusNoteClose: "Close", bonusSub: "10–50% off private access, watermarks, outros and voice-overs", bonusShort: "Private, watermarks, outros, voice", bonusUpTo: "UP TO", bonusPress: "PRESS START", bonusSpinBtn: "SPIN", bonusClaim: "CLAIM", bonusCloseBtn: "CLOSE", bonusLuck: "GOOD LUCK!", bonusWinTag: "WINNER!", bonusLockTag: "LOCKED", bonusIdle: "10–50% off, valid for 3 days", bonusSpinning: "Spinning…", bonusResult: "DISCOUNT -{p}%", bonusUntil: "Valid until {d}", bonusLoad: "LOADING", bonusSound: "Sound", bonusCloseAria: "Close", bonusLocked: "The bonus opens after two purchases", bonusWon: "Your −{p}% discount on the next order, valid until {d}", bonusWait: "You can spin again from {d}", bonusErr: "Could not spin. Try again.", favAdd: "Add to favorites", favEmpty: "Tap ♥ on a product to save it here.", favErr: "Could not save. Try again.", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
       how: "How it works", howSteps: ["Describe what you need", "Pay in the bot chat", "The result arrives in this chat"], voicePrice: "Any voice-over —",
       pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
       cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
@@ -669,7 +759,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   // ---------- navigation ----------
   const stack = [{ screen: "home" }];
   const go = (screen, params = {}) => { stack.push({ screen, params }); render(); window.scrollTo(0, 0); haptic("light"); };
-  const back = () => { if (sheetOpen) return closeSheet(); if (stack.length > 1) { stack.pop(); render(); window.scrollTo(0, 0); haptic("light"); } };
+  const back = () => { if (typeof bnIsOpen === "function" && bnIsOpen()) return bnClose(); if (sheetOpen) return closeSheet(); if (stack.length > 1) { stack.pop(); render(); window.scrollTo(0, 0); haptic("light"); } };
   const haptic = (s) => { try { inTelegram && tg.HapticFeedback.impactOccurred(s); } catch {} };
 
   const media = (item) => {
@@ -745,7 +835,7 @@ textarea.input { min-height: 132px; resize: vertical; }
         <p>${esc(t("tagline"))}</p>
         ${catalog.sold > 0 || channelOk() ? `<div class="trust">${catalog.sold > 0 ? `<span class="t">${ICON.flame}${esc(t("sold", catalog.sold))}</span>` : ""}${channelOk() ? `<button class="t tap" type="button" data-link="${esc(catalog.channel)}">${ICON.megaphone}@${esc(catalog.channel.replace(/^https:\/\/t\.me\//, "").replace(/\/$/, ""))}</button>` : ""}</div>` : ""}
         <div style="margin-top:14px">${payList()}</div>
-        ${featuresState && bonusState && bonusState.available && !bonusGone ? `<button class="bonus tap" type="button" data-bonus="1"><span class="bub" aria-hidden="true"></span><b><span class="gift" aria-hidden="true">🎁</span> ${esc(t("bonusTitle").replace(/^🎁\s*/, ""))}</b><span class="sub">${esc(t("bonusSub"))}</span><span class="drum" aria-hidden="true">−10%</span></button>` : ""}
+        ${featuresState && bonusState && bonusState.available && !bonusGone ? `<button class="bonus tap" type="button" data-bonus="1" aria-label="${esc(t("bonusTitle").replace(/^🎁\s*/, ""))}"><span class="bn-gift" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="1" y="7" width="14" height="9" fill="#3a0b1c"/><rect x="2" y="8" width="12" height="7" fill="#e8486c"/><rect x="11" y="8" width="3" height="7" fill="#b81e45"/><rect x="2" y="8" width="12" height="1" fill="#b81e45"/><rect x="7" y="8" width="2" height="7" fill="#ffb8cb"/><rect x="8" y="8" width="1" height="7" fill="#ff8fab"/><g class="bn-lid"><rect x="3" y="0" width="5" height="5" fill="#3a0b1c"/><rect x="8" y="0" width="5" height="5" fill="#3a0b1c"/><rect x="4" y="1" width="3" height="3" fill="#ffb8cb"/><rect x="9" y="1" width="3" height="3" fill="#ffb8cb"/><rect x="5" y="2" width="1" height="1" fill="#3a0b1c"/><rect x="10" y="2" width="1" height="1" fill="#3a0b1c"/><rect x="7" y="2" width="2" height="3" fill="#fff0f4"/><rect x="0" y="4" width="16" height="4" fill="#3a0b1c"/><rect x="1" y="5" width="14" height="2" fill="#ff6f91"/><rect x="1" y="5" width="14" height="1" fill="#ff9db5"/><rect x="7" y="5" width="2" height="2" fill="#fff0f4"/></g></svg><i></i><i></i><i></i></span><span class="bn-text"><span class="bn-eyebrow">BONUS</span><b>${esc(t("bonusTitle").replace(/^🎁\s*/, ""))}</b><small>${esc(t("bonusShort"))}</small></span><span class="bn-badge" aria-hidden="true"><span>${esc(t("bonusUpTo"))}</span><strong>-50%</strong></span></button>` : ""}
       </section>
       <nav class="tiles">
         <button ${R("tile wide glass tap fx")} data-go="watermarks" type="button">
@@ -1307,69 +1397,291 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (!btn) return;
     setTimeout(() => { btn.classList.add("gone"); setTimeout(() => btn.remove(), 460); }, reduceMotion ? 0 : 700);
   }
-  function bonusConfetti(btn) {
-    const colors = ["#ffd68c", "#ffb8cb", "#ff4d6d", "#fff3d6", "#ffa552"];
-    for (let k = 0; k < 14; k++) {
-      const c = document.createElement("i");
-      c.className = "cf";
-      const a = (Math.PI * 2 * k) / 14 + Math.random() * 0.4;
-      const d = 90 + Math.random() * 70;
-      c.style.setProperty("--dx", `${Math.cos(a) * d}px`);
-      c.style.setProperty("--dy", `${Math.sin(a) * d - 30}px`);
-      c.style.setProperty("--r", `${Math.round(Math.random() * 540 - 270)}deg`);
-      c.style.setProperty("--c", colors[k % colors.length]);
-      btn.appendChild(c);
-      setTimeout(() => c.remove(), 1000);
+  // ===== Пиксельный бонус: автомат открывается поверх экрана по нажатию на плашку =====
+  // 8-битные звуки синтезируются WebAudio, без файлов. Выключатель «♪» запоминается в браузере.
+  const bnSfx = (() => {
+    let ctx = null, out = null, on = true;
+    try { on = localStorage.getItem("bonus_sfx") !== "off"; } catch {}
+    function ac() {
+      if (!on) return null;
+      try {
+        if (!ctx) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; ctx = new C(); out = ctx.createGain(); out.gain.value = 0.22; out.connect(ctx.destination); }
+        if (ctx.state === "suspended") ctx.resume();
+      } catch { return null; }
+      return ctx;
+    }
+    function tone(f, d, { type = "square", v = 0.5, to = null, at = 0 } = {}) {
+      const c = ac(); if (!c) return;
+      const t0 = c.currentTime + at, o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t0); if (to) o.frequency.exponentialRampToValueAtTime(to, t0 + d);
+      g.gain.setValueAtTime(v, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + d);
+      o.connect(g).connect(out); o.start(t0); o.stop(t0 + d + 0.02);
+    }
+    function noise(d, { v = 0.4, f = 1200, to = null, at = 0, q = 1 } = {}) {
+      const c = ac(); if (!c) return;
+      const t0 = c.currentTime + at, n = Math.floor(c.sampleRate * d), b = c.createBuffer(1, n, c.sampleRate), a = b.getChannelData(0);
+      for (let i = 0; i < n; i++) a[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(), fl = c.createBiquadFilter(), g = c.createGain();
+      src.buffer = b; fl.type = "bandpass"; fl.Q.value = q;
+      fl.frequency.setValueAtTime(f, t0); if (to) fl.frequency.exponentialRampToValueAtTime(to, t0 + d);
+      g.gain.setValueAtTime(v, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + d);
+      src.connect(fl).connect(g).connect(out); src.start(t0);
+    }
+    return {
+      get on() { return on; },
+      toggle() { on = !on; try { localStorage.setItem("bonus_sfx", on ? "on" : "off"); } catch {} if (on) this.blip(); return on; },
+      blip() { tone(660, 0.06, { to: 1320, v: 0.35 }); },
+      back() { tone(880, 0.07, { to: 330, v: 0.3 }); },
+      wipe() { noise(0.42, { v: 0.25, f: 300, to: 3500, q: 0.8 }); },
+      type() { tone(1400 + Math.random() * 300, 0.025, { v: 0.18 }); },
+      load(p) { tone(500 + p * 70, 0.035, { type: "triangle", v: 0.3 }); },
+      ready() { tone(784, 0.08, { v: 0.3 }); tone(1175, 0.14, { v: 0.3, at: 0.09 }); },
+      land() { tone(140, 0.18, { to: 50, v: 0.6 }); noise(0.15, { v: 0.4, f: 400, q: 0.6 }); },
+      clunk() { noise(0.14, { v: 0.6, f: 500, to: 150, q: 0.7 }); tone(120, 0.16, { to: 45, v: 0.55 }); },
+      tick(pitch) { tone(pitch, 0.03, { v: 0.16 }); },
+      // щелчки при замедлении: сначала часто, к остановке реже
+      ticks(n, dur, pitch) { if (!ac()) return; for (let k = 1; k <= n; k++) { const at = (1 - Math.pow(1 - k / n, 0.25)) * dur / 1000; tone(pitch, 0.03, { v: 0.16, at }); } },
+      stop(at) { tone(260, 0.09, { to: 120, v: 0.45, at }); noise(0.06, { v: 0.3, f: 2000, at }); },
+      win(big) {
+        const seq = big ? [523, 659, 784, 1047, 784, 1047, 1319, 1568, 2093] : [523, 659, 784, 1047];
+        seq.forEach((f, i) => tone(f, 0.11, { v: 0.32, at: i * 0.085 }));
+        const e = seq.length * 0.085;
+        [1047, 1319, 1568].forEach((f) => tone(f, big ? 0.7 : 0.45, { v: 0.18, at: e }));
+        if (big) for (let i = 0; i < 8; i++) tone(i % 2 ? 2093 : 1760, 0.05, { v: 0.12, at: e + 0.1 + i * 0.06 });
+      },
+      lose() { [392, 330, 262].forEach((f, i) => tone(f, 0.16, { v: 0.3, at: i * 0.14 })); },
+      pop() { tone(988, 0.07, { v: 0.28 }); tone(1480, 0.1, { v: 0.24, at: 0.07 }); },
+    };
+  })();
+
+  const BN_H = 68, BN_N = 200;
+  const bnSleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  let bnBusy = false, bnResult = null, bnReels = null;
+  const bnIsOpen = () => { const o = $("#bnOv"); return Boolean(o && !o.hidden); };
+
+  function bnInitReels() {
+    if (bnReels) return bnReels;
+    bnReels = [0, 1].map((i) => {
+      const el = $("#bnR" + i), st = el.querySelector(".bn-strip");
+      st.innerHTML = Array.from({ length: BN_N }, (_, k) => `<div>${k % 10}</div>`).join("");
+      return { el, st, cur: i ? 0 : 1 };
+    });
+    bnReels.forEach((r) => bnPlace(r, 10 + r.cur, false));
+    return bnReels;
+  }
+  function bnPlace(r, idx, ms, ease) {
+    r.st.style.transition = ms ? `transform ${ms}ms ${ease || "cubic-bezier(.12,.72,.18,1)"}` : "none";
+    r.st.style.transform = `translateY(${-(idx - 1) * BN_H}px)`;
+  }
+  /** Где барабан сейчас (дробный номер строки по центру) — чтобы плавно перейти от разгона к остановке. */
+  function bnNow(r) {
+    const m = getComputedStyle(r.st).transform;
+    const ty = m && m !== "none" ? new DOMMatrixReadOnly(m).m42 : 0;
+    return 1 - ty / BN_H;
+  }
+
+  /** Пиксельный переход: квадраты закрывают (cover) или открывают экран по диагонали, 60 кадров/с. */
+  function bnWipe(cover) {
+    bnSfx.wipe();
+    const c = $("#bnWipe");
+    if (reduceMotion || !c) { if (c) c.hidden = true; return Promise.resolve(); }
+    const cell = Math.ceil(Math.max(innerWidth, innerHeight) / 16);
+    c.width = innerWidth; c.height = innerHeight; c.hidden = false;
+    const x = c.getContext("2d");
+    const cols = Math.ceil(c.width / cell), rows = Math.ceil(c.height / cell), cells = [];
+    for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) cells.push({ i, j, t: ((i + j) / (cols + rows - 2 || 1)) * 0.8 + Math.random() * 0.2 });
+    const dur = 420, t0 = performance.now();
+    return new Promise((done) => {
+      function frame(now) {
+        const p = Math.min(1, (now - t0) / dur);
+        x.clearRect(0, 0, c.width, c.height);
+        for (const q of cells) {
+          if (cover ? q.t >= p : q.t < p) continue;
+          const edge = Math.abs(q.t - p) < 0.07;
+          x.fillStyle = edge ? (q.i % 2 ? "#ff3d63" : "#7a0f2a") : "#12040a";
+          x.fillRect(q.i * cell, q.j * cell, cell + 1, cell + 1);
+        }
+        if (p < 1) requestAnimationFrame(frame);
+        else { if (cover) { x.fillStyle = "#12040a"; x.fillRect(0, 0, c.width, c.height); } else c.hidden = true; done(); }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function bnSetGo(label, fn) { const go = $("#bnGo"); go.textContent = label; go.onclick = fn; }
+
+  async function bnOpen() {
+    if (bnIsOpen() || bnBusy || bonusBusy) return;
+    bnBusy = true; bonusBusy = true; bnResult = null;
+    bnSfx.blip(); haptic("light");
+    const reels = bnInitReels();
+    await bnWipe(true);
+    const ov = $("#bnOv");
+    ov.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (inTelegram) { try { tg.BackButton.show(); } catch {} }
+    $("#bnRes").textContent = t("bonusIdle");
+    $("#bnSnd").setAttribute("aria-pressed", String(bnSfx.on));
+    $("#bnSnd").lastChild.textContent = bnSfx.on ? "ON" : "OFF";
+    $("#bnX").setAttribute("aria-label", t("bonusCloseAria"));
+    $("#bnM").classList.remove("win", "spin", "shake");
+    bnSetGo(t("bonusSpinBtn"), bnSpin);
+    // экран «загрузки» автомата
+    const go = $("#bnGo"), boot = $("#bnBoot"), title = $("#bnTitle"), sub = $("#bnSub"), m = $("#bnM");
+    title.textContent = ""; boot.hidden = false; boot.textContent = ""; go.disabled = true; go.classList.remove("pulse"); sub.textContent = t("bonusLoad");
+    $("#bnX").disabled = true;
+    await bnWipe(false);
+    m.classList.remove("drop"); void m.offsetWidth; m.classList.add("drop");
+    setTimeout(() => { bnSfx.land(); haptic("medium"); }, reduceMotion ? 0 : 420);
+    await bnSleep(reduceMotion ? 0 : 650);
+    for (const ch of "ISWEARTY") { title.textContent += ch; bnSfx.type(); await bnSleep(reduceMotion ? 0 : 55); }
+    for (let p = 0; p <= 10; p++) { boot.innerHTML = `LOAD BONUS<br>[${"#".repeat(p)}${".".repeat(10 - p)}]`; if (p) bnSfx.load(p); await bnSleep(reduceMotion ? 0 : 45); }
+    boot.hidden = true;
+    if (!reduceMotion) {
+      bnSfx.ticks(10, 550, 1100); bnSfx.ticks(10, 750, 1350);
+      reels.forEach((r, i) => { const s0 = 10 + r.cur; bnPlace(r, s0, 0); void r.st.offsetHeight; bnPlace(r, s0 + 10, 550 + i * 200, "cubic-bezier(.3,0,.2,1)"); });
+      await bnSleep(780);
+      reels.forEach((r) => bnPlace(r, 10 + r.cur, 0));
+    }
+    bnSfx.ready();
+    sub.textContent = t("bonusPress");
+    go.disabled = false; go.classList.add("pulse"); $("#bnX").disabled = false;
+    bnBusy = false;
+  }
+
+  function bnBurst() {
+    if (reduceMotion) return;
+    const fx = $("#bnFx"), r = $("#bnM").getBoundingClientRect();
+    const cols = ["#ff3d63", "#ffb8cb", "#fff0f4", "#ff6f91", "#b81e45"];
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement("i");
+      p.style.background = cols[i % 5];
+      const x0 = r.left + r.width / 2, y0 = r.top + r.height * 0.45, a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 200;
+      p.style.left = x0 + "px"; p.style.top = y0 + "px";
+      fx.appendChild(p);
+      p.animate([{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d + 170}px)`, opacity: 0 }],
+        { duration: 1400 + Math.random() * 900, easing: "cubic-bezier(.15,.7,.3,1)" }).onfinish = () => p.remove();
     }
   }
-  /** Барабан: цифры мелькают, пока ждём сервер; потом замедляются и останавливаются на выпавшей скидке. */
-  async function spinBonus() {
-    if (bonusBusy) return;
-    bonusBusy = true;
-    const btn = document.querySelector(".bonus");
-    const drum = btn && btn.querySelector(".drum");
-    const animate = Boolean(btn) && !reduceMotion;
-    const show = (v) => { if (drum) drum.textContent = `−${v}%`; };
-    const flick = () => show(BONUS_MIN_SHOW + Math.floor(Math.random() * (BONUS_MAX_SHOW - BONUS_MIN_SHOW + 1)));
-    if (animate) btn.classList.add("rolling", "spinning");
-    flick();
-    const timer = animate ? setInterval(flick, 60) : null;
+
+  /** Крутим: сразу удар, тряска и разгон барабанов; результат берём с сервера и останавливаемся на нём. */
+  async function bnSpin() {
+    if (bnBusy) return;
+    bnBusy = true;
+    const go = $("#bnGo"), m = $("#bnM"), ov = $("#bnOv"), sub = $("#bnSub"), res = $("#bnRes");
+    const reels = bnInitReels();
+    go.disabled = true; go.classList.remove("pulse"); $("#bnX").disabled = true;
+    m.classList.remove("win", "drop", "shake"); void m.offsetWidth; m.classList.add("spin", "shake");
+    setTimeout(() => m.classList.remove("shake"), 620);
+    if (!reduceMotion) {
+      ov.classList.remove("quake"); void ov.offsetWidth; ov.classList.add("quake");
+      const fl = $("#bnFlash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+    }
+    haptic("heavy"); bnSfx.clunk();
+    sub.textContent = t("bonusLuck"); res.textContent = t("bonusSpinning");
+    // разгон, пока ждём ответ сервера
+    reels.forEach((r) => { const s0 = 10 + r.cur; bnPlace(r, s0, 0); void r.st.offsetHeight; if (!reduceMotion) bnPlace(r, s0 + 60, 6000, "cubic-bezier(.5,0,1,1)"); });
+    const tick = reduceMotion ? null : setInterval(() => bnSfx.tick(1100 + Math.random() * 250), 70);
+    let d = null, failed = false;
     const started = Date.now();
-    let d = null;
-    let failed = false;
     try {
       const r = await fetch(`${API_BASE}/api/buyer/bonus`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ action: "spin" }) });
       d = await r.json();
     } catch { failed = true; }
-    const left = Math.max(0, (animate ? 1300 : 0) - (Date.now() - started));
-    if (left) await bonusSleep(left);
-    if (timer) clearInterval(timer);
-    bonusBusy = false;
-    if (btn) btn.classList.remove("spinning");
-    if (failed || !d || !d.ok) { if (btn) btn.classList.remove("rolling"); toast(t("bonusErr")); return; }
-    if (!d.percent) {
-      // Прокрут закрыт: плашку убираем, покупателю — что нужно сделать.
-      if (btn) btn.classList.remove("rolling");
-      bonusNote(t("bonusLocked"));
-      bonusHide(btn);
+    if (!reduceMotion) await bnSleep(Math.max(0, 450 - (Date.now() - started)));
+    if (tick) clearInterval(tick);
+    const ok = !failed && d && d.ok;
+    const v = ok && d.percent ? Number(d.percent) : null;
+    const dig = v ? [Math.floor(v / 10), v % 10] : [0, 0];
+    const T = reduceMotion ? [0, 0] : [2000, 3000];
+    reels.forEach((r, i) => {
+      const now = bnNow(r);
+      bnPlace(r, now, 0); void r.st.offsetHeight;
+      const base = Math.ceil(now), digNow = ((base % 10) + 10) % 10;
+      const end = base + 10 * (2 + i * 2) + ((dig[i] - digNow + 10) % 10);
+      bnPlace(r, end, T[i]);
+      bnSfx.ticks(Math.min(end - base, 40), T[i] || 1, i ? 1350 : 1100);
+      bnSfx.stop((T[i] || 0) / 1000);
+      r.cur = dig[i];
+      // после остановки «переносим» барабан к началу ленты, чтобы следующий раз было куда крутить
+      setTimeout(() => bnPlace(r, 10 + r.cur, 0), (T[i] || 0) + 60);
+    });
+    await bnSleep((T[1] || 0) + 250);
+    m.classList.remove("spin");
+    if (!ok) {
+      sub.textContent = t("bonusPress"); res.textContent = t("bonusErr");
+      go.disabled = false; go.classList.add("pulse"); $("#bnX").disabled = false; bnBusy = false;
       return;
     }
-    if (animate) {
-      // Замедление: 5 шагов, каждый дольше предыдущего, и остановка на выпавшей скидке.
-      for (const ms of [90, 120, 160, 220, 300]) { flick(); await bonusSleep(ms); }
+    if (!v) {
+      // крутить пока нельзя: закрываем автомат, плашку убираем
+      bnSfx.lose(); haptic("light");
+      sub.textContent = t("bonusLockTag");
+      res.textContent = t("bonusLocked");
+      bnResult = { locked: true };
+    } else {
+      m.classList.add("win"); bnBurst(); bnSfx.win(v >= 36); haptic("heavy");
+      const bang = $("#bnBang"); bang.textContent = v >= 36 ? "JACKPOT!" : "BONUS!"; bang.classList.remove("on"); void bang.offsetWidth; bang.classList.add("on");
+      sub.textContent = t("bonusWinTag");
+      res.innerHTML = `<b>${esc(t("bonusResult").replace("{p}", v))}</b>${esc(t("bonusUntil").replace("{d}", ddmm(d.until)))}`;
+      bnResult = { percent: v, until: d.until };
+      bonusActive = { percent: v, until: d.until };
+      personalize();
     }
-    show(d.percent);
-    if (btn) btn.classList.remove("rolling");
-    haptic("medium");
-    if (btn && d.fresh && !reduceMotion) bonusConfetti(btn);
-    bonusNote(t("bonusWon").replace("{p}", d.percent).replace("{d}", ddmm(d.until)));
-    bonusHide(btn);
-    // Цены на витрине сразу со скидкой (после того как плашка уйдёт).
-    bonusActive = { percent: d.percent, until: d.until };
-    personalize();
-    setTimeout(() => render(), reduceMotion ? 0 : 1200);
+    bonusGone = true;
+    await bnSleep(reduceMotion ? 0 : 1500);
+    m.classList.remove("win");
+    bnSetGo(v ? t("bonusClaim") : t("bonusCloseBtn"), bnClose);
+    go.disabled = false; $("#bnX").disabled = false;
+    bnBusy = false;
   }
-  $("#bonusNoteX")?.addEventListener("click", () => $("#bonusNote")?.classList.remove("on"));
+
+  async function bnClose() {
+    if (!bnIsOpen() || bnBusy) return;
+    bnBusy = true;
+    bnSfx.back();
+    await bnWipe(true);
+    $("#bnOv").hidden = true;
+    document.body.style.overflow = "";
+    if (inTelegram && stack.length === 1) { try { tg.BackButton.hide(); } catch {} }
+    if (bnResult) render();
+    await bnWipe(false);
+    if (bnResult && bnResult.percent) { bonusNote(t("bonusWon").replace("{p}", bnResult.percent).replace("{d}", ddmm(bnResult.until))); setTimeout(() => bnSfx.pop(), 150); }
+    else if (bnResult && bnResult.locked) bonusNote(t("bonusLocked"));
+    bnResult = null;
+    bnBusy = false; bonusBusy = false;
+  }
+
+  $("#bnX")?.addEventListener("click", () => bnClose());
+  $("#bnSnd")?.addEventListener("click", () => {
+    const v = bnSfx.toggle();
+    $("#bnSnd").setAttribute("aria-pressed", String(v));
+    $("#bnSnd").lastChild.textContent = v ? "ON" : "OFF";
+  });
+  // рычаг: потянуть вниз или просто нажать
+  (() => {
+    const lever = $("#bnLever");
+    if (!lever) return;
+    let ly = null;
+    const canPull = () => !bnBusy && $("#bnGo").onclick === bnSpin && !$("#bnGo").disabled;
+    lever.addEventListener("pointerdown", (e) => { if (!canPull()) return; ly = e.clientY; lever.classList.add("drag"); try { lever.setPointerCapture(e.pointerId); } catch {} });
+    lever.addEventListener("pointermove", (e) => { if (ly === null) return; const dd = Math.max(0, Math.min(110, e.clientY - ly)); lever.style.setProperty("--pull", (1 - (dd / 110) * 1.55).toFixed(3)); });
+    const end = (e, cancel) => { if (ly === null) return; const dd = e.clientY - ly; ly = null; lever.classList.remove("drag"); lever.style.removeProperty("--pull"); if (!cancel && (dd > 35 || dd < 5)) bnSpin(); };
+    lever.addEventListener("pointerup", (e) => end(e, false));
+    lever.addEventListener("pointercancel", (e) => end(e, true));
+  })();
+  // 3D-наклон автомата за пальцем или мышью
+  (() => {
+    const sc = $("#bnScene"), tl = $("#bnTilt");
+    if (!sc || !tl || reduceMotion) return;
+    sc.addEventListener("pointermove", (e) => {
+      const r = sc.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      tl.style.setProperty("--ry", ((px - 0.5) * 16).toFixed(2) + "deg");
+      tl.style.setProperty("--rx", ((0.5 - py) * 12).toFixed(2) + "deg");
+    });
+    sc.addEventListener("pointerleave", () => { tl.style.removeProperty("--rx"); tl.style.removeProperty("--ry"); });
+  })();
+  $("#bonusNoteX")?.addEventListener("click", () => { bnSfx.back(); $("#bonusNote")?.classList.remove("on"); });
 
   function toggleFav(code) {
     const was = favs.includes(code);
@@ -1476,7 +1788,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (el.id === "back") return back();
     if (el.dataset.tab) return switchTab(el.dataset.tab);
     if (el.dataset.fav) return toggleFav(el.dataset.fav);
-    if (el.dataset.bonus) return spinBonus();
+    if (el.dataset.bonus) return bnOpen();
     if (el.dataset.go === "cart" && stack[stack.length - 1].screen === "cart") return;
     if (el.dataset.go) { closeSheet(); return go(el.dataset.go, { code: el.dataset.code }); }
     if (el.dataset.sheet) return openSheet(el.dataset.sheet);
