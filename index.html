@@ -389,6 +389,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   .dock[data-active="mine"] .pill { transform: translateX(200%); }
   .dock button { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 0; background: none; border: 0; color: #fff; opacity: .78; font: inherit; font-size: 12.5px; font-weight: 600; letter-spacing: .2px; cursor: pointer; transition: opacity .3s; }
   .dock button[aria-current="true"] { opacity: 1; }
+  .dock button:focus, .dock button:focus-visible { outline: none; }
+  .dock button:focus-visible .pill, .dock:focus-within .pill { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25); }
   .dock svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .titleline { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
   .favbtn { flex: none; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: #fff; cursor: pointer; transition: transform .2s, background .2s; }
