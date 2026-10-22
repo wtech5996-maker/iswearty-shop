@@ -441,6 +441,10 @@ textarea.input { min-height: 132px; resize: vertical; }
   const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
   // Адрес сервера бота: покупатель получает свои заказы только по подписи Telegram.
   const API_BASE = "https://iswearty.duckdns.org";
+  // Ключ покупателя из ссылки кнопки под полем ввода (там Telegram не передаёт initData).
+  const LAUNCH_KEY = (() => { try { return new URLSearchParams(location.search).get("k") || ""; } catch { return ""; } })();
+  const authBody = (extra = {}) => JSON.stringify({ initData: (tg && tg.initData) || "", key: LAUNCH_KEY, ...extra });
+  const canAuth = () => inTelegram && Boolean((tg && tg.initData) || LAUNCH_KEY);
   const $ = (s, r = document) => r.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1128,9 +1132,9 @@ textarea.input { min-height: 132px; resize: vertical; }
   }
   var featuresState = null;
   function loadFeatures() {
-    if (featuresState !== null || !inTelegram || !tg.initData) return;
+    if (featuresState !== null || !canAuth()) return;
     featuresState = false;
-    fetch(`${API_BASE}/api/buyer/config`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ initData: tg.initData }) })
+    fetch(`${API_BASE}/api/buyer/config`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody() })
       .then((r) => r.json())
       .then((d) => {
         if (!d || !d.ok) return;
@@ -1169,12 +1173,12 @@ textarea.input { min-height: 132px; resize: vertical; }
     if (el) el.innerHTML = mineListHtml();
   }
   async function loadMine() {
-    if (!inTelegram || !tg.initData) { mineState = { status: "outside", orders: [] }; return paintMine(); }
+    if (!canAuth()) { mineState = { status: "outside", orders: [] }; return paintMine(); }
     if (mineState.status === "loading") return;
     mineState = { status: "loading", orders: mineState.orders };
     paintMine();
     try {
-      const res = await fetch(`${API_BASE}/api/buyer/orders`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ initData: tg.initData, lang }) });
+      const res = await fetch(`${API_BASE}/api/buyer/orders`, { method: "POST", headers: { "content-type": "application/json" }, body: authBody({ lang }) });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || "error");
       mineState = { status: "ok", orders: data.orders };
