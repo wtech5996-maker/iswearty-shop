@@ -377,6 +377,23 @@ textarea.input { min-height: 132px; resize: vertical; }
   .sheet, .scrim, .toast, .tap, .tile, .choice, .card, .line, .buy, .tile .badge, .choice .badge, .paylist .m { transition: none; }
   .tile, .choice, .card, .line, .buy, .tap:is(.tile, .choice, .card, .buy):active { transform: none; }
 }
+  /* «Мои водянки» и нижняя панель */
+  #view { padding-bottom: 110px; }
+  .dock[hidden] { display: none; }
+  .dock { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); transform: translateX(-50%); display: grid; grid-template-columns: 1fr 1fr; width: min(320px, calc(100% - 32px)); padding: 6px; border-radius: 999px; z-index: 20; background: rgba(18, 18, 22, .82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+  .dock .pill { position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc(50% - 6px); border-radius: 999px; background: rgba(255, 255, 255, .16); transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+  .dock[data-active="mine"] .pill { transform: translateX(100%); }
+  .dock button { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; background: none; border: 0; color: #fff; opacity: .6; font: inherit; font-size: 12px; cursor: pointer; }
+  .dock button[aria-current="true"] { opacity: 1; }
+  .dock svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .mine-item { display: block; padding: 14px; margin: 0 0 10px; border-radius: 18px; }
+  .mine-head { font-size: 15px; margin-bottom: 10px; }
+  .mine-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .mine-steps span { font-size: 12px; text-align: center; padding: 6px 4px; border-radius: 999px; background: rgba(127, 127, 127, .12); opacity: .5; }
+  .mine-steps span.on { opacity: 1; }
+  .mine-steps span.now { background: rgba(127, 127, 127, .3); font-weight: 600; }
+  .mine-note, .mine-empty { font-size: 13px; opacity: .8; margin: 8px 0 0; line-height: 1.4; }
+  .mine-empty { padding: 24px 4px; text-align: center; }
 </style>
 </head>
 <body>
@@ -398,6 +415,11 @@ textarea.input { min-height: 132px; resize: vertical; }
   </header>
   <main id="view"></main>
   <p class="legal" id="legal"></p>
+  <nav class="dock glass" id="dock" data-active="home" aria-label="Разделы" hidden>
+    <span class="pill" aria-hidden="true"></span>
+    <button type="button" data-tab="home" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 01-1 1h-4v-5h-6v5H5a1 1 0 01-1-1z"/></svg><span id="navShopLabel"></span></button>
+    <button type="button" data-tab="mine"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z"/></svg><span id="navMineLabel"></span></button>
+  </nav>
 </div>
 <button class="cartbar" id="cartBar" type="button" data-go="cart" tabindex="-1"></button>
 <div class="scrim" id="scrim"></div>
@@ -417,6 +439,8 @@ textarea.input { min-height: 132px; resize: vertical; }
   "use strict";
   const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
   const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
+  // Адрес сервера бота: покупатель получает свои заказы только по подписи Telegram.
+  const API_BASE = "https://iswearty.duckdns.org";
   const $ = (s, r = document) => r.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -428,7 +452,7 @@ textarea.input { min-height: 132px; resize: vertical; }
   const T = {
     ru: {
       back: "Назад", tagline: "Водянки, приваты, озвучки и аватарки. Готовые водянки приходят в чат с ботом.",
-      sold: (n) => `${n}+ покупок`, newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
+      sold: (n) => `Куплено: ${n} шт.`, navShop: "Магазин", navMine: "Мои водянки", mineTitle: "Мои водянки", mineLoading: "Загружаю ваши заказы…", mineEmpty: "Пока нет купленных водянок. Они появятся здесь после оплаты.", mineError: "Не получилось загрузить заказы. Попробуйте позже.", mineOutside: "Откройте магазин из Telegram, чтобы увидеть свои заказы.", mineReady: "Файл готов: заберите его в боте, раздел «📥 Мои водянки».", stPaid: "Оплачено", stWork: "В работе", stReady: "Готово", newBadge: "Новинка", topBadge: "Топ", search: "Найти водянку", nothing: "Ничего не нашлось.", loading: "Загружаю магазин…",
       how: "Как это работает", howSteps: ["Опишите, что нужно", "Оплатите в чате с ботом", "Готовый результат придёт в этот чат"], voicePrice: "Любая озвучка —",
       pay: "Оплата", payStars: "звёзды", payCrypto: "крипта", payTransfer: "карта / СБП", payNote: "Способ оплаты выберете в чате с ботом.",
       cart: "Корзина", toCart: "В корзину", buyNow: "Купить", added: "Добавлено в корзину", inCart: "Этот приват уже в корзине.", cartFull: (n) => `В корзине уже ${n} товаров — больше за один заказ нельзя.`,
@@ -456,7 +480,7 @@ textarea.input { min-height: 132px; resize: vertical; }
     },
     en: {
       back: "Back", tagline: "Watermarks, private groups, voice-overs and avatars. Ready-made watermarks arrive in the bot chat.",
-      sold: (n) => `${n}+ orders`, newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
+      sold: (n) => `Sold: ${n} pcs.`, navShop: "Shop", navMine: "My videos", mineTitle: "My videos", mineLoading: "Loading your orders…", mineEmpty: "No purchased videos yet. They will appear here after payment.", mineError: "Could not load orders. Try again later.", mineOutside: "Open the shop from Telegram to see your orders.", mineReady: "The file is ready: get it in the bot, section «📥 My videos».", stPaid: "Paid", stWork: "In progress", stReady: "Ready", newBadge: "New", topBadge: "Top", search: "Find a watermark", nothing: "Nothing found.", loading: "Loading the shop…",
       how: "How it works", howSteps: ["Describe what you need", "Pay in the bot chat", "The result arrives in this chat"], voicePrice: "Any voice-over —",
       pay: "Payment", payStars: "Stars", payCrypto: "crypto", payTransfer: "bank card (RU)", payNote: "You choose how to pay in the bot chat.",
       cart: "Cart", toCart: "Add to cart", buyNow: "Buy", added: "Added to cart", inCart: "This private group is already in the cart.", cartFull: (n) => `The cart already has ${n} items — that's the limit for one order.`,
@@ -751,6 +775,9 @@ textarea.input { min-height: 132px; resize: vertical; }
         </div>`).join("") || `<div class="empty glass">${esc(t("empty"))}</div>`}
       </div>`;
     },
+    mine() {
+      return `<section class="hero"><h1 class="logo" style="font-size:26px">${esc(t("mineTitle"))}</h1></section><div id="mine-list">${mineListHtml()}</div>`;
+    },
     cart() {
       const last = loadList(LAST_KEY);
       if (!cart.length) return `
@@ -817,6 +844,8 @@ textarea.input { min-height: 132px; resize: vertical; }
     document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     stopAudio();
     $("#view").innerHTML = screens[screen](params || {});
+    updateDock();
+    if (screen === "mine") loadMine();
     booted = true;
     if (inTelegram) { stack.length > 1 ? tg.BackButton.show() : tg.BackButton.hide(); }
     else $("#back").classList.toggle("on", stack.length > 1);
@@ -1087,12 +1116,81 @@ textarea.input { min-height: 132px; resize: vertical; }
   let toastTimer;
   function toast(msg) { const el = $("#toast"); el.textContent = msg; el.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("on"), 4200); }
 
+  // ---------- «Мои водянки» и нижняя панель ----------
+  var mineState = { status: "idle", orders: [] };
+  function switchTab(tab) {
+    if (stack.length > 1) stack.length = 1;
+    if (stack[0].screen === tab) { window.scrollTo(0, 0); return; }
+    stack[0] = { screen: tab, params: {} };
+    render();
+    window.scrollTo(0, 0);
+    haptic("light");
+  }
+  var featuresState = null;
+  function loadFeatures() {
+    if (featuresState !== null || !inTelegram || !tg.initData) return;
+    featuresState = false;
+    fetch(`${API_BASE}/api/buyer/config`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ initData: tg.initData }) })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d || !d.ok) return;
+        featuresState = Boolean(d.nav);
+        const dock = $("#dock");
+        if (dock) dock.hidden = !featuresState;
+      })
+      .catch(() => {});
+  }
+  function updateDock() {
+    const dock = $("#dock");
+    if (!dock) return;
+    loadFeatures();
+    const active = stack[0] && stack[0].screen === "mine" ? "mine" : "home";
+    dock.dataset.active = active;
+    dock.querySelectorAll("button[data-tab]").forEach((b) => b.setAttribute("aria-current", String(b.dataset.tab === active)));
+    const shopL = $("#navShopLabel"), mineL = $("#navMineLabel");
+    if (shopL) shopL.textContent = t("navShop");
+    if (mineL) mineL.textContent = t("navMine");
+  }
+  function mineStepsHtml(o) {
+    if (o.stage === "refunded" || o.stage === "attention") return `<p class="mine-note">${esc(o.stage_text)}</p>`;
+    const cur = o.stage === "ready" ? 2 : 1;
+    const names = [t("stPaid"), t("stWork"), t("stReady")];
+    return `<div class="mine-steps">${names.map((s, i) => `<span class="${i <= cur ? "on" : ""}${i === cur ? " now" : ""}">${esc(s)}</span>`).join("")}</div>`;
+  }
+  function mineListHtml() {
+    if (mineState.status === "outside") return `<p class="mine-empty">${esc(t("mineOutside"))}</p>`;
+    if (mineState.status === "error") return `<p class="mine-empty">${esc(t("mineError"))}</p>`;
+    if (mineState.status !== "ok") return `<p class="mine-empty">${esc(t("mineLoading"))}</p>`;
+    if (!mineState.orders.length) return `<p class="mine-empty">${esc(t("mineEmpty"))}</p>`;
+    return mineState.orders.map((o) => `<article class="mine-item glass"><div class="mine-head"><b>${esc(o.no)} · ${esc(o.title)}</b></div>${mineStepsHtml(o)}${o.ready ? `<p class="mine-note">${esc(t("mineReady"))}</p>` : ""}</article>`).join("");
+  }
+  function paintMine() {
+    const el = $("#mine-list");
+    if (el) el.innerHTML = mineListHtml();
+  }
+  async function loadMine() {
+    if (!inTelegram || !tg.initData) { mineState = { status: "outside", orders: [] }; return paintMine(); }
+    if (mineState.status === "loading") return;
+    mineState = { status: "loading", orders: mineState.orders };
+    paintMine();
+    try {
+      const res = await fetch(`${API_BASE}/api/buyer/orders`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ initData: tg.initData, lang }) });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "error");
+      mineState = { status: "ok", orders: data.orders };
+    } catch {
+      mineState = { status: "error", orders: [] };
+    }
+    paintMine();
+  }
+
   // ---------- events ----------
   document.addEventListener("click", (e) => {
     const el = e.target.closest("button, [data-go]");
     if (!el) return;
     if (el.dataset.lang) { if (el.dataset.lang === lang) return; lang = el.dataset.lang; try { localStorage.setItem("isw-lang", lang); } catch {} closeSheet(); render(); return; }
     if (el.id === "back") return back();
+    if (el.dataset.tab) return switchTab(el.dataset.tab);
     if (el.dataset.go === "cart" && stack[stack.length - 1].screen === "cart") return;
     if (el.dataset.go) { closeSheet(); return go(el.dataset.go, { code: el.dataset.code }); }
     if (el.dataset.sheet) return openSheet(el.dataset.sheet);
