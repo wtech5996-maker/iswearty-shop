@@ -1578,6 +1578,7 @@ textarea.input { min-height: 132px; resize: vertical; }
       <img class="splash3d" src="wm3d.webp" alt="" width="480" height="186" decoding="async">
       <div class="splash-bar" aria-hidden="true"><span></span></div>
       <p class="splash-text">${esc(t("loading"))}</p></div>`;
+    const splashStart = Date.now();
     // Каталог: две попытки. Не загрузился — честно говорим покупателю, а не показываем молча запасной.
     let loaded = false;
     for (let attempt = 0; attempt < 2 && !loaded; attempt++) {
@@ -1587,6 +1588,9 @@ textarea.input { min-height: 132px; resize: vertical; }
         if (res.ok) { const data = await res.json(); if (data && Array.isArray(data.items)) { catalog = data; personalize(); loaded = true; } }
       } catch { /* сеть недоступна */ }
     }
+    // Заставка держится минимум ~2,6 с, чтобы 3D-надпись успели увидеть.
+    const wait = 2600 - (Date.now() - splashStart);
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
     petals();
     render();
     if (!loaded && location.protocol !== "file:") toast(t("noCatalog"));
